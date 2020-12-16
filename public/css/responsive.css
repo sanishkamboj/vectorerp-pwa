@@ -1,0 +1,116 @@
+@media(max-width:1050px){
+#content .wrapper {
+    min-height: 640px;
+}
+}
+@media(max-width:991px){
+.wrapper {
+    margin: auto;
+    width: 100%;
+    max-width: 100%;
+    padding-top: 75px;
+    display: block;
+    float: left;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.leftSection {
+    padding-right: 0px;
+}
+.rightSection {
+    width: 100%;
+    max-width: 100%;
+}
+.datePickerOuter{
+	margin-bottom:0px;
+}
+.mainTitle{
+	margin-bottom:25px;
+}
+
+.mainLogo{
+	margin-right: 38px;
+}
+footer .wrapper{padding:15px 20px}
+#content .wrapper {
+    min-height: 900px;
+}
+}
+@media(max-width:767px){
+.evolusSteps{
+	display:none;
+}
+.providerMain{
+	display:none;
+}
+.mobileView{
+	display:block;
+	margin-bottom:25px;
+}
+.desktopView{
+	display:none;
+}
+.mainTitle {
+    margin-bottom: 17px;
+    font-size: 23px;
+}
+.datePicker{
+	margin-bottom:20px;
+}
+.mobileView .providerSection{border:none;}
+.mobileView .providerSection .totalAmount{padding:0px;margin-top:-23px;}
+.thankyouText{width:100%;margin-top:0px;}
+.bookedInfo .providerDetail p{font-size:13px;line-height: inherit;}
+.subTitle{margin-bottom: 15px;}
+.socialOuter{margin-bottom:20px;}
+.bookedInfo {
+    margin-bottom: 20px;
+    margin-right:0px;
+    width:100%;
+}
+.phoneDetail{margin-top:0px;}
+}
+@media(max-width:540px){
+	.mainBtn, .lineBtn, .newBackbtn{
+		width:100%;
+		max-width:100%;
+		margin-bottom:15px;
+		margin-right:0px;
+		display:block;
+	}
+	.mainBtn:hover, .lineBtn:hover, .newBackbtn:hover{
+		width:100%;
+	}
+	.subTitle{
+		font-size:15px;
+	}
+	.codeInput {
+		height: 40px;
+		width: 40px;
+		border-radius: 10px;
+		-webkit-border-radius: 10px;
+		padding: 5px 10px;
+		text-align: center;
+		font-size: 20px;
+		font-weight: 400;
+		display: inline-block;
+		border: 1px solid #dddddd;
+		margin-right: 5px;
+		background: #fafafa;
+		color: #000000;
+	}
+	#content .wrapper {
+		min-height: 610px;
+	}
+	#otp{letter-spacing: 30px;width:100%!important;}
+	#datepicker .ui-widget.ui-widget-content{
+		padding: 10px!important;
+		width: 242px!important;
+	}
+	ul.timesortOuter{
+		width:100%;
+		max-height: 169px;
+	}
+	ul.timesortOuter li{width:48%;}
+	.verfify-phone a {width:100%;}
+}
