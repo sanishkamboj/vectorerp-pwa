@@ -313,7 +313,7 @@ export default {
 					let cities = response.data.data.cities
 
 					siteTypes.map(function(value) {
-						new SiteTypeService().addSiteType(value).then(this.changeSpinnerStatus())
+						new SiteTypeService().addSiteType(value)
 					});
 
 					siteSubType.map(function(value) {
@@ -335,7 +335,7 @@ export default {
 				
 			})
 			.catch(function (error) {
-				this.$notify({ group: 'app', type: 'warn', text: error })
+				this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
 			});
 	},
     async refreshSites() {
