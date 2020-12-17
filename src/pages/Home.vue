@@ -328,7 +328,7 @@ export default {
 						new CityService().addCity(value)
 					});
 					
-					//this.changeSpinnerStatus()
+					this.changeSpinnerStatus()
 				} else {
 					this.changeSpinnerStatus()
 				}
