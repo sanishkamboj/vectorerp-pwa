@@ -30,13 +30,27 @@
 
 <script>
 import { delDbJsStore } from "../service/idb_service";
-        export default {
+    export default {
         data(){
             return {
                 API_URL: this.$store.state.API_URL,
                 country: "",
                 email : "",
                 password : ""
+            }
+        },
+        async beforeCreate() {
+            if (localStorage.getItem('jwt') != null){
+                this.$emit('loggedIn')
+                if(this.$route.params.nextUrl != null){
+                    this.$router.push(this.$route.params.nextUrl)
+                }
+                else {
+                    
+                    this.$router.push('home')
+                    
+                }
+                this.$router.push('home')
             }
         },
         methods : {

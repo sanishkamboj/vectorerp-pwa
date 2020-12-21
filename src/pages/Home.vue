@@ -1,22 +1,11 @@
 <template>
 	<div class="map">
-		<GmapMap
-		:center="{lat:10, lng:10}"
-		:zoom="7"
-		map-type-id="terrain"
-		style="width: 100%; height: 100%"
-		>
-		<GmapMarker
-			:key="index"
-			v-for="(m, index) in markers"
-			:position="m.position"
-			:clickable="true"
-			:draggable="true"
-			@click="center=m.position"
-		/>
-		</GmapMap>
+		
+		<gmap-map ref="mapRef" :center="center" :zoom="10" style="width: 100%; height: 100%">
+			<gmap-polygon :paths="paths" :editable="true" @paths_changed="updateEdited($event)">
+			</gmap-polygon>
+		</gmap-map>
 		<div class="right-bar" :class="sidebarClass" >
-			
 			<h5 class="mobile-view">
 				<div class="mobile-title mb-3" @click="$store.commit('toggleSidebarMobile')"><i class="fa fa-arrow-left"></i> Main</div>
 			</h5>
@@ -243,7 +232,7 @@ export default {
     
   },
   data: {
-    markers: [],
+	markers: [],
     createSite: {
         siteName: '',
         geometryType: '',
@@ -260,7 +249,8 @@ export default {
       if (isDbCreated) {
 		console.log("db created");
 		// prefill database
-		this.getData()
+		this.changeSpinnerStatus(true)
+		await this.getData().then(this.changeSpinnerStatus())
       } else {
 		console.log("db opened");
 		
@@ -285,12 +275,16 @@ export default {
   data() {
     return {
 	  sites: [],
+	  center: {lat: 1.38, lng: 103.8},
 	  API_URL: this.$store.state.API_URL,
 	  siteModalClass: 'd-none',
 	  siteTypeOpt: '',
 	  siteSubTypeOpt: '',
 	  siteAttributeOpt: '',
-      markers: []
+	  markers: [],
+	  edited: null,
+	  paths: [
+	  ]
     };
   },
   computed: {
@@ -299,13 +293,24 @@ export default {
     }
   },
   methods: {
+	updateEdited(mvcArray) {
+		let paths = [];
+		for (let i=0; i<mvcArray.getLength(); i++) {
+			let path = [];
+			for (let j=0; j<mvcArray.getAt(i).getLength(); j++) {
+			let point = mvcArray.getAt(i).getAt(j);
+			path.push({lat: point.lat(), lng: point.lng()});
+			}
+			paths.push(path);
+		}
+		this.edited = paths;
+	},
 	async getData(){
-		this.changeSpinnerStatus(true)
 		const country = localStorage.getItem('country')
 		const url = `${this.API_URL}/user/get-data?country=`+country
-		this.$http.get(url)
+		await this.$http.get(url)
 			.then(response => {
-				console.log(response);
+				let insertRes = false
 				if(response.data.status == 200){
 					let siteTypes = response.data.data.site_types
 					let siteSubType = response.data.data.site_sub_types
@@ -328,9 +333,9 @@ export default {
 						new CityService().addCity(value)
 					});
 					
-					this.changeSpinnerStatus()
+					//this.changeSpinnerStatus()
 				} else {
-					this.changeSpinnerStatus()
+					//this.changeSpinnerStatus()
 				}
 				
 			})
@@ -399,10 +404,18 @@ export default {
 				status: parseInt(this.createSite.status)
 			}
 			//console.log(data)
-			await new SitesService().addSite(data);
-			this.changeSpinnerStatus()
+			await new SitesService().addSite(data).then(res => {
+				this.center = {lat: this.createSite.address.geometry.location.lat(), lng: this.createSite.address.geometry.location.lng() }
+				this.paths = [
+					[ {lat: 1.380, lng: 103.800}, {lat:1.380, lng: 103.810}, {lat: 1.390, lng: 103.810}, {lat: 1.390, lng: 103.800} ],
+					[ {lat: 1.382, lng: 103.802}, {lat:1.382, lng: 103.808}, {lat: 1.388, lng: 103.808}, {lat: 1.388, lng: 103.802} ],
+				]
+				//this.paths = this.center
+				//this.edited = this.paths;
+				this.changeSpinnerStatus()
+				this.createSiteModel()
+			});
 			this.resetForm()
-			this.createSiteModel()
 			this.$notify({ group: 'app', text: 'Site Created Successfully' })
 		} catch(error){
 			this.changeSpinnerStatus()
