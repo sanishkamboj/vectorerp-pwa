@@ -1,7 +1,7 @@
 <template>
 	<div class="map">
 		
-		<gmap-map ref="mapRef" :center="center" :zoom="10" style="width: 100%; height: 100%">
+		<gmap-map ref="mapRef" :center="center" :zoom="14" style="width: 100%; height: 100%">
 			<gmap-polygon :paths="paths" :editable="true" @paths_changed="updateEdited($event)">
 			</gmap-polygon>
 		</gmap-map>
