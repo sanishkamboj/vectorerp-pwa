@@ -406,10 +406,9 @@ export default {
 			//console.log(data)
 			await new SitesService().addSite(data).then(res => {
 				this.center = {lat: this.createSite.address.geometry.location.lat(), lng: this.createSite.address.geometry.location.lng() }
-				this.paths = [
-					[ {lat: 1.380, lng: 103.800}, {lat:1.380, lng: 103.810}, {lat: 1.390, lng: 103.810}, {lat: 1.390, lng: 103.800} ],
-					[ {lat: 1.382, lng: 103.802}, {lat:1.382, lng: 103.808}, {lat: 1.388, lng: 103.808}, {lat: 1.388, lng: 103.802} ],
-				]
+				this.paths = 
+					[ {lat: 1.380, lng: 103.800}, {lat:1.380, lng: 103.810}, {lat: 1.390, lng: 103.810}, {lat: 1.390, lng: 103.800} ]
+				
 				//this.paths = this.center
 				//this.edited = this.paths;
 				this.changeSpinnerStatus()
