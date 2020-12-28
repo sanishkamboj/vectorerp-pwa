@@ -7,7 +7,7 @@ export class SiteTypeService {
         this.tableName = "site_types";
     }
 
-    getSiteTypes() {
+    async getSiteTypes() {
         return connection.select({
             from: this.tableName,
         })

@@ -7,7 +7,7 @@ export class SiteAttrService {
         this.tableName = "site_attributes";
     }
 
-    getSiteAttrs() {
+    async getSiteAttrs() {
         return connection.select({
             from: this.tableName,
         })

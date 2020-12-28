@@ -77,7 +77,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	justify-content: center;
     display: flex;
     align-items: center;
-    color:#ffffff;
+	color:#ffffff;
+	width: 60px;
 }
 .right-bar > div span{
 	-ms-transform: rotate(90deg);

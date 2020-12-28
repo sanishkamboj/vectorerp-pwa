@@ -1,0 +1,134 @@
+<template>
+    <div class="right-section" :class="filterSideBar">
+		
+		<h3 class="popup-title desktop-view">Filters <a class="float-right" @click="$store.commit('toggleFilterSideBar')"><i class="uil uil-times"></i></a></h3>
+		<h5 class="mobile-view">
+			<div class="mobile-title" @click="$store.commit('toggleFilterSideBar')"><i class="fa fa-arrow-left"></i> Filters</div>
+		</h5>
+		<form>
+			<div id="accordion">
+				<div class="card">
+					<div class="card-header" id="headingOne">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+						<!--input type="checkbox" class="form-check-input" id="exampleCheck1"--> Site Types <i class="uil uil-angle-right"></i>
+						</button>
+					</h5>
+					</div>
+
+					<div id="collapseOne" class="collapse" aria-labelledby="headingOnenew" data-parent="#accordion">
+					<div class="card-body pt-1">
+						
+							<div class="form-check" v-for="record in filters" :key="record.id">
+								<input type="checkbox" class="form-check-input" id="exampleCheck1">
+								<label class="form-check-label" for="exampleCheck1">{{record.name}}</label>
+							</div>
+							
+					</div>
+					</div>
+				</div>
+				
+				<div class="card">
+					<div class="card-header" id="headingThree">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseTwo">
+						Site Attributes <i class="uil uil-angle-right"></i>
+						</button>
+					</h5>
+					</div>
+					<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+					<div class="card-body pt-1">
+							<div class="form-check" v-for="record in siteAttr" :key="record.id">
+								<input type="checkbox" class="form-check-input" id="exampleCheck1">
+								<label class="form-check-label" for="exampleCheck1">{{record.name}}</label>
+							</div>
+							
+					</div>
+					</div>
+				</div>
+				
+				<div class="card">
+					<div class="card-header" id="headingTwo">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						Cities <i class="uil uil-angle-right"></i>
+						</button>
+					</h5>
+					</div>
+					<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+					<div class="card-body pt-1">
+							<div class="form-check" v-for="record in city" :key="record.id">
+								<input type="checkbox" class="form-check-input" id="exampleCheck1">
+								<label class="form-check-label" for="exampleCheck1">{{record.name}}</label>
+							</div>
+							
+					</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header" id="headingFour">
+					<h5 class="mb-0">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+						Zones <i class="uil uil-angle-right"></i>
+						</button>
+					</h5>
+					</div>
+					<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+					<div class="card-body pt-1">
+							<div class="form-check" >
+								<input type="checkbox" class="form-check-input" id="exampleCheck1">
+								<label class="form-check-label" for="exampleCheck1">Sample Data</label>
+							</div>
+							
+					</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row pt-4">
+				<div class="col">
+					<button type="submit" class="btn btn-blue w-100">Submit</button>
+				</div>
+				<div class="col">
+					<button type="submit" class="btn btn-red w-100">Clear</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>
+<script>
+import { SiteTypeService } from "../service/siteType_service";
+import { CityService } from "../service/city_service";
+import { SiteAttrService } from "../service/siteAttr_service";
+
+export default {
+   name: "Filters", 
+   data(){
+       return {
+        filters: [],
+		city: [],
+		siteAttr: []
+        
+       }
+   },
+   computed: {
+	filterSideBar(){
+		return this.$store.state.filterSideBar
+	}
+  },
+  created(){
+      new SiteTypeService().getSiteTypes().then(res => {
+          this.filters = res
+          //console.log(res)
+	  })
+	  new CityService().getCities().then(res => {
+          this.city = res
+          //console.log(res)
+	  })
+	  new SiteAttrService().getSiteAttrs().then(res => {
+          this.siteAttr = res
+          console.log(res)
+      })
+  }
+}
+</script>

@@ -17,7 +17,7 @@ export class SitesService {
         return connection.insert({
             into: this.tableName,
             values: [data],
-           // skipDataCheck: true
+            skipDataCheck: true
         })
     }
 

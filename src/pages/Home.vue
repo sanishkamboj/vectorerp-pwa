@@ -10,10 +10,10 @@
 				<div class="mobile-title mb-3" @click="$store.commit('toggleSidebarMobile')"><i class="fa fa-arrow-left"></i> Main</div>
 			</h5>
 			
-			<div><span><a><i class="uil uil-bars desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i> </a> Tools</span></div>
-			<div><span><a><i class="uil uil-bars desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Filters</span></div>
-			<div><span><a><i class="uil uil-bars desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Layers</span></div>
-			<div><span><a><i class="uil uil-bars desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Search</span></div>
+			<div @click="$store.commit('toggleToolsSideBar')"><span><a><i class="uil uil-cog desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i> </a> Tools</span></div>
+			<div @click="$store.commit('toggleFilterSideBar')"><span><a><i class="uil uil-filter desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Filters</span></div>
+			<div><span><a><i class="uil uil-layer-group desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Layers</span></div>
+			<div><span><a><i class="uil uil-search-alt desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Search</span></div>
 		</div>
 		
 		<div class="map-icon-outer desktop-view">
@@ -107,113 +107,8 @@
 			</div>
 		</div>
 		
-		<div class="right-section d-none">
-			
-			<h3 class="popup-title desktop-view">Map Tools <a class="float-right"><i class="uil uil-times"></i></a></h3>
-			<h5 class="mobile-view">
-				<div class="mobile-title"><i class="fa fa-arrow-left"></i> Map Tools</div>
-			</h5>
-			
-			<div id="accordion">
-			<div class="card">
-				<div class="card-header" id="headingOne">
-				<h5 class="mb-0 pl-4">
-					<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-					<input type="checkbox" class="form-check-input" id="exampleCheck1"> Collapsible Group Item #1 <i class="uil uil-angle-right"></i>
-					</button>
-				</h5>
-				</div>
-
-				<div id="collapseOne" class="collapse show" aria-labelledby="headingOnenew" data-parent="#accordion">
-				<div class="card-body pt-1">
-					
-						<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="exampleCheck1">
-							<label class="form-check-label" for="exampleCheck1">Check me out</label>
-						</div>
-						<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="exampleCheck1">
-							<label class="form-check-label" for="exampleCheck1">Check me out</label>
-						</div>
-						<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="exampleCheck1">
-							<label class="form-check-label" for="exampleCheck1">Check me out</label>
-						</div>
-						
-			
-						
-				
-
-					
-				</div>
-				</div>
-			</div>
-			<div class="card">
-				<div class="card-header" id="headingTwo">
-				<h5 class="mb-0">
-					<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-					Collapsible Group Item #2 <i class="uil uil-angle-right"></i>
-					</button>
-				</h5>
-				</div>
-				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-				<div class="card-body pt-1">
-						<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="exampleCheck1">
-							<label class="form-check-label" for="exampleCheck1">Check me out</label>
-						</div>
-						<button class="accordion-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						Collapsible Group Item #1
-						</button>
-						<button class="accordion-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						Collapsible Group Item #1
-						</button>
-						<button class="accordion-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						Collapsible Group Item #1
-						</button>
-				</div>
-				</div>
-			</div>
-			<div class="card">
-				<div class="card-header" id="headingThree">
-				<h5 class="mb-0">
-					<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-					Collapsible Group Item #3 <i class="uil uil-angle-right"></i>
-					</button>
-				</h5>
-				</div>
-				<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-				<div class="card-body pt-1">
-						<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="exampleCheck1">
-							<label class="form-check-label" for="exampleCheck1">Check me out</label>
-						</div>
-						<button class="accordion-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						Collapsible Group Item #1
-						</button>
-						<button class="accordion-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						Collapsible Group Item #1
-						</button>
-						<button class="accordion-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						Collapsible Group Item #1
-						</button>
-				</div>
-				</div>
-			</div>
-			</div>
-			
-			<div class="row pt-4">
-				<div class="col">
-					<button type="submit" class="btn btn-blue w-100">Submit</button>
-				</div>
-				<div class="col">
-					<button type="submit" class="btn btn-red w-100">Clear</button>
-				</div>
-			</div>
-			
-		</div>
-		
-	
+		<Tools />
+		<Filters />
 	</div>
   
 </template>
@@ -226,10 +121,14 @@ import { SiteSubTypeService } from "../service/siteSubType_service";
 import { SiteAttrService } from "../service/siteAttr_service";
 import { CityService } from "../service/city_service";
 import { Global } from "../global";
+import Tools  from "../components/Tools";
+import Filters  from "../components/Filters";
+
 export default {
   name: "Home",
   components: {
-    
+	Tools,
+	Filters
   },
   data: {
 	markers: [],
@@ -251,6 +150,7 @@ export default {
 		// prefill database
 		this.changeSpinnerStatus(true)
 		await this.getData().then(this.changeSpinnerStatus())
+		await this.getSiteData()
       } else {
 		console.log("db opened");
 		
@@ -290,7 +190,13 @@ export default {
   computed: {
     sidebarClass() {
       return this.$store.state.sidebarClass
-    }
+	},
+	toolsSideBar(){
+		return this.$store.state.toolsSideBar
+	},
+	filterSideBar(){
+		return this.$store.state.filterSideBar
+	}
   },
   methods: {
 	updateEdited(mvcArray) {
@@ -342,6 +248,30 @@ export default {
 			.catch(function (error) {
 				this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
 			});
+	},
+	async getSiteData(){
+		const country = localStorage.getItem('country')
+		let page = 0
+		let apiFlag = true
+		const url = `${this.API_URL}/user/get-sites?country=`+country+`&page=`+page
+		
+		while(apiFlag){
+			await this.$http.get(url)
+			.then(response => {
+				let insertRes = false
+				if(response.data.status == 200){
+					let sites = response.data.data.sites
+					sites.map(function(value) {
+						new SitesService().addSite(value)
+					});
+				} else {
+					apiFlag = false
+				}
+			})
+			.catch(function (error) {
+				this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
+			});
+		}
 	},
     async refreshSites() {
       this.sites = await new SitesService().getSitesData();
@@ -453,6 +383,7 @@ export default {
 <style>
 .show-sidebar {
 transition: .3s all ease;
+z-index: 999999999;
 }
 .vue-map-container{
 	position: absolute !important;

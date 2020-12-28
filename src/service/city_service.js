@@ -7,7 +7,7 @@ export class CityService {
         this.tableName = "city";
     }
 
-    getCities() {
+    async getCities() {
         return connection.select({
             from: this.tableName,
         })

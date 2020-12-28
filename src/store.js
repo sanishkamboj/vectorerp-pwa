@@ -7,7 +7,9 @@ const state = {
   API_URL: 'https://pwa.sanish.info/api',  
   sidebarClass: 'd-none',
   showSpinner: false,
-  country: ''
+  country: '',
+  toolsSideBar: 'd-none',
+  filterSideBar: 'd-none'
 }
 
 const mutations = {
@@ -20,6 +22,22 @@ const mutations = {
         state.sidebarClass = 'show-sidebar'
     } else {
         state.sidebarClass = 'd-none'
+    }
+  },
+  toggleToolsSideBar(state){
+    const currState = state.toolsSideBar
+    if(currState == 'd-none'){
+        state.toolsSideBar = 'show-sidebar'
+    } else {
+        state.toolsSideBar = 'd-none'
+    }
+  },
+  toggleFilterSideBar(state){
+    const currState = state.filterSideBar
+    if(currState == 'd-none'){
+        state.filterSideBar = 'show-sidebar'
+    } else {
+        state.filterSideBar = 'd-none'
     }
   },
   setCountry(state, country){
