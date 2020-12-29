@@ -116,6 +116,7 @@
 <script>
 import { initJsStore } from "../service/idb_service";
 import { SitesService } from "../service/sites_service";
+import { SiteDataService } from "../service/siteData_service";
 import { SiteTypeService } from "../service/siteType_service";
 import { SiteSubTypeService } from "../service/siteSubType_service";
 import { SiteAttrService } from "../service/siteAttr_service";
@@ -144,13 +145,14 @@ export default {
     },
   async beforeCreate() {
     try {
-      const isDbCreated = await initJsStore();
+	  const isDbCreated = await initJsStore();
+	 
       if (isDbCreated) {
 		console.log("db created");
 		// prefill database
 		this.changeSpinnerStatus(true)
-		await this.getData().then(this.changeSpinnerStatus())
-		await this.getSiteData()
+		await this.getData().then()
+		await this.getSiteData(this.changeSpinnerStatus())
       } else {
 		console.log("db opened");
 		
@@ -255,23 +257,42 @@ export default {
 		let apiFlag = true
 		const url = `${this.API_URL}/user/get-sites?country=`+country+`&page=`+page
 		
-		while(apiFlag){
+		//while(apiFlag){
 			await this.$http.get(url)
 			.then(response => {
-				let insertRes = false
+				
 				if(response.data.status == 200){
 					let sites = response.data.data.sites
+					//console.log(sites)
 					sites.map(function(value) {
-						new SitesService().addSite(value)
+						//console.log(value)
+						var siteData = {
+							'siteid': value.siteid,
+							'cityId': value.cityid,
+							'siteTypeId': value.stypeid,
+							'zoneId': value.zoneid,
+						}
+						if(value.point != null){
+							siteData.point = JSON.stringify(value.point)
+						}
+						if(value.poly_line != null){
+							siteData.poly_line = JSON.stringify(value.poly_line)
+						}
+						if(value.polygon != null){
+							siteData.polygon = JSON.stringify(value.polygon)
+							siteData.polyCenter = JSON.stringify(value.polyCenter)
+						}
+						//console.log(siteData)
+						new SiteDataService().addSiteData(siteData)
 					});
 				} else {
 					apiFlag = false
 				}
 			})
 			.catch(function (error) {
-				this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
+				//this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
 			});
-		}
+		//}
 	},
     async refreshSites() {
       this.sites = await new SitesService().getSitesData();

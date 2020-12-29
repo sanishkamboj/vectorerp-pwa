@@ -27,8 +27,7 @@ export class SitesService {
         zoneid: "25"}]
         return connection.insert({
             into: this.tableName,
-            values: [data],
-            skipDataCheck: true
+            values: [data]
         })
     }
 
