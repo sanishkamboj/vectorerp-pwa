@@ -21,11 +21,22 @@ export class SiteTypeService {
         })
     }
 
-    getSiteTypeById(id) {
+    async getSiteTypeById(id) {
         return connection.select({
             from: this.tableName,
             where: {
                 id: id
+            }
+        })
+    }
+
+    async getSiteTypeByIds(ids) {
+        return connection.select({
+            from: this.tableName,
+            where: {
+                id: {
+                    in : ids
+                }
             }
         })
     }
