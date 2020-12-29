@@ -13,18 +13,7 @@ export class SitesService {
         })
     }
 
-    async addSite() {
-        let data = [{cityid: "687",
-        icon: "https://lee.vectorcontrolsystem.com/storage/site_type_icon/1597665212_catchbasin-02.png",
-        point: [{lat: 41.755416, lng: -72.680677}],
-        stypeid: "3",
-        zoneid: "25"},
-
-        {cityid: "687",
-        icon: "https://lee.vectorcontrolsystem.com/storage/site_type_icon/1597665212_catchbasin-02.png",
-        point: [{lat: 41.755416, lng: -72.680710333333}],
-        stypeid: "3",
-        zoneid: "25"}]
+    addSite(data) {
         return connection.insert({
             into: this.tableName,
             values: [data]

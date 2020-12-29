@@ -101,6 +101,7 @@ import { SiteTypeService } from "../service/siteType_service";
 import { CityService } from "../service/city_service";
 import { SiteAttrService } from "../service/siteAttr_service";
 import { SitesService } from "../service/sites_service";
+import { SiteDataService } from "../service/siteData_service";
 
 export default {
    name: "Filters", 
@@ -134,10 +135,32 @@ export default {
   },
   methods: {
 	  processFilter(){
-	  	console.log(this.checkedCategories);
-	  	new SitesService().addSite().then(res => {console.log(res)})
-	  	new SitesService().getSitesByIds(this.checkedCategories).then(res => {
-          console.log(res)
+	  	new SiteDataService().getSitesByIds(this.checkedCategories).then(res => {
+          if(res && res.length) {
+          	let siteMarker = [];
+          	let siteLines = [];
+          	let sitePolygon = [];
+          	res.map((obj, idx) => {
+          		if(obj.point !== undefined) {
+          			let point = JSON.parse(obj.point);
+          			point.map((pts) => {
+          				siteMarker.push({ position: pts})
+          			})
+          		}
+          		if(obj.poly_line !== undefined) {
+          			let poly_line = JSON.parse(obj.poly_line);
+      				siteLines.push(poly_line)          		
+          		}
+          		if(obj.polygon !== undefined) {
+          			let polygon = JSON.parse(obj.polygon);
+      				sitePolygon.push(polygon)          		
+          		}
+          	})
+          	console.log(sitePolygon);
+          this.$emit('changeMarkers', siteMarker)
+          this.$emit('changeLines', siteLines)
+          this.$emit('changePolygon', sitePolygon)
+          }
 	    })
 
 	  }
