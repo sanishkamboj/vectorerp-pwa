@@ -104,9 +104,22 @@ const getDatabase = () => {
         name: 'sites_data',
         columns: {
             id: {
+                primaryKey: true,
+                autoIncrement: true
+            },
+            siteid: {
                 dataType: DATA_TYPE.Number
             },
             point: {
+                dataType: DATA_TYPE.String
+            },
+            polygon: {
+                dataType: DATA_TYPE.String
+            },
+            poly_line: {
+                dataType: DATA_TYPE.String
+            },
+            polyCenter: {
                 dataType: DATA_TYPE.String
             },
             cityId: {
