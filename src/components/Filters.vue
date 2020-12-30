@@ -5,12 +5,12 @@
 		<h5 class="mobile-view">
 			<div class="mobile-title" @click="$store.commit('toggleFilterSideBar')"><i class="fa fa-arrow-left"></i> Filters</div>
 		</h5>
-		<form>
+		<form id="filter-form" @submit.prevent="processFilter">
 			<div id="accordion">
 				<div class="card">
 					<div class="card-header" id="headingOne">
 					<h5 class="mb-0">
-						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" type="button">
 						<!--input type="checkbox" class="form-check-input" id="exampleCheck1"--> Site Types <i class="uil uil-angle-right"></i>
 						</button>
 					</h5>
@@ -20,8 +20,8 @@
 					<div class="card-body pt-1">
 						
 							<div class="form-check" v-for="record in filters" :key="record.id">
-								<input type="checkbox" class="form-check-input" id="exampleCheck1">
-								<label class="form-check-label" for="exampleCheck1">{{record.name}}</label>
+								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id" v-model="checkedCategories">
+								<label class="form-check-label" :for="record.id">{{record.name}}</label>
 							</div>
 							
 					</div>
@@ -31,7 +31,7 @@
 				<div class="card">
 					<div class="card-header" id="headingThree">
 					<h5 class="mb-0">
-						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseTwo">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseTwo" type="button">
 						Site Attributes <i class="uil uil-angle-right"></i>
 						</button>
 					</h5>
@@ -50,7 +50,7 @@
 				<div class="card">
 					<div class="card-header" id="headingTwo">
 					<h5 class="mb-0">
-						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" type="button">
 						Cities <i class="uil uil-angle-right"></i>
 						</button>
 					</h5>
@@ -68,7 +68,7 @@
 				<div class="card">
 					<div class="card-header" id="headingFour">
 					<h5 class="mb-0">
-						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+						<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" type="button">
 						Zones <i class="uil uil-angle-right"></i>
 						</button>
 					</h5>
@@ -100,12 +100,15 @@
 import { SiteTypeService } from "../service/siteType_service";
 import { CityService } from "../service/city_service";
 import { SiteAttrService } from "../service/siteAttr_service";
+import { SitesService } from "../service/sites_service";
+import { SiteDataService } from "../service/siteData_service";
 
 export default {
    name: "Filters", 
    data(){
        return {
         filters: [],
+        checkedCategories: [],
 		city: [],
 		siteAttr: []
         
@@ -129,6 +132,38 @@ export default {
           this.siteAttr = res
           console.log(res)
       })
+  },
+  methods: {
+	  processFilter(){
+	  	new SiteDataService().getSitesByIds(this.checkedCategories).then(res => {
+          if(res && res.length) {
+          	let siteMarker = [];
+          	let siteLines = [];
+          	let sitePolygon = [];
+          	res.map((obj, idx) => {
+          		if(obj.point !== undefined) {
+          			let point = JSON.parse(obj.point);
+          			point.map((pts) => {
+          				siteMarker.push({ position: pts})
+          			})
+          		}
+          		if(obj.poly_line !== undefined) {
+          			let poly_line = JSON.parse(obj.poly_line);
+      				siteLines.push(poly_line)          		
+          		}
+          		if(obj.polygon !== undefined) {
+          			let polygon = JSON.parse(obj.polygon);
+      				sitePolygon.push(polygon)          		
+          		}
+          	})
+          	console.log(sitePolygon);
+          this.$emit('changeMarkers', siteMarker)
+          this.$emit('changeLines', siteLines)
+          this.$emit('changePolygon', sitePolygon)
+          }
+	    })
+
+	  }
   }
 }
 </script>

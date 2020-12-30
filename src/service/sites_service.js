@@ -52,4 +52,16 @@ export class SitesService {
             }
         })
     }
+
+    async getSitesByIds(siteTypes) {
+
+        return connection.select({
+            from: this.tableName,
+            where: {
+                siteTypeId: {
+                    in : siteTypes
+                }
+            }
+        })
+    }
 }

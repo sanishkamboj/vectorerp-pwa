@@ -4,6 +4,14 @@
 		<gmap-map ref="mapRef" :center="center" :zoom="12" style="width: 100%; height: 100%">
 			<gmap-polygon :paths="paths" :editable="true" @paths_changed="updateEdited($event)">
 			</gmap-polygon>
+			<gmap-polyline :paths="lines" :editable="true" @paths_changed="updateEdited($event)">
+			</gmap-polyline>
+		        <gmap-marker v-for="(m, index) in markers"
+		          :position="m.position"
+		          :clickable="true" :draggable="true"
+		          @click="center=m.position"
+		          :key="index"
+		          ></gmap-marker>
 		</gmap-map>
 		<div class="right-bar" :class="sidebarClass" >
 			<h5 class="mobile-view">
@@ -108,7 +116,7 @@
 		</div>
 		
 		<Tools />
-		<Filters />
+		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon"/>
 	</div>
   
 </template>
@@ -141,7 +149,8 @@ export default {
         address: '',
         siteSubType: '',
         status: '',
-        siteAttribute: ''
+        siteAttribute: '',
+
       },
     },
   async beforeCreate() {
@@ -179,16 +188,35 @@ export default {
   data() {
     return {
 	  sites: [],
-	  center: {lat: 1.38, lng: 103.8},
+	  center: {
+            lat: 1.380, lng: 103.800
+          },
 	  API_URL: this.$store.state.API_URL,
 	  siteModalClass: 'd-none',
 	  siteTypeOpt: '',
 	  siteSubTypeOpt: '',
 	  siteAttributeOpt: '',
-	  markers: [],
+	  markers: [{
+            position: {
+              lat: 10.0,
+              lng: 10.0
+            }
+          }, {
+            position: {
+              lat: 11.0,
+              lng: 11.0
+            }
+          }],
 	  edited: null,
 	  paths: [
-	  ]
+            [ {lat: 1.380, lng: 103.800}, {lat:1.380, lng: 103.810}, {lat: 1.390, lng: 103.810}, {lat: 1.390, lng: 103.800} ],
+            [ {lat: 1.382, lng: 103.802}, {lat:1.382, lng: 103.808}, {lat: 1.388, lng: 103.808}, {lat: 1.388, lng: 103.802} ],
+          ],
+      lines: [],
+	  shape: {
+            coords: [10, 10, 10, 15, 15, 15, 15, 10],
+            type: 'poly'
+          },
     };
   },
   computed: {
@@ -203,6 +231,18 @@ export default {
 	}
   },
   methods: {
+  	changeMarkers(newMarkers) {
+  		this.markers = newMarkers;
+  		if(newMarkers && newMarkers.length) {
+  			this.center = newMarkers[0].position;
+  		}
+  	},
+  	changeLines(newLines) {
+  		this.lines = newLines;
+  	},
+  	changePolygon(newPolygon) {
+  		this.paths = newPolygon;
+  	},
 	updateEdited(mvcArray) {
 		let paths = [];
 		for (let i=0; i<mvcArray.getLength(); i++) {
