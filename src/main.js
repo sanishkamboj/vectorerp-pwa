@@ -40,7 +40,7 @@ Vue.use(VueGoogleMaps, {
   //// then disable the following:
   // installComponents: true,
 })
-
+Vue.component('gmap-cluster', VueGoogleMaps.Cluster);
 new Vue({
   el: '#app',
   router,
