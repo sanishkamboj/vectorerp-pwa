@@ -2,13 +2,13 @@
 	<div class="map">
 		
 		<gmap-map ref="mapRef" :center="center" :zoom="15" style="width: 100%; height: 100%">
-			<gmap-polygon :paths="paths" :editable="true" @paths_changed="updateEdited($event)">
+			<gmap-polygon :paths="paths" :editable="polygonEditable" @paths_changed="updateEdited($event)">
 			</gmap-polygon>
-			<gmap-polyline :paths="lines" :editable="true" @paths_changed="updateEdited($event)">
+			<gmap-polyline :paths="lines" :editable="lineEditable" @paths_changed="updateEdited($event)">
 			</gmap-polyline>
 		        <gmap-marker v-for="(m, index) in markers"
 		          :position="m.position"
-		          :clickable="true" :draggable="true"
+		          :clickable="markerEditable" :draggable="markerEditable"
 		          @click="center=m.position"
 		          :key="index"
 		          ></gmap-marker>
@@ -188,6 +188,9 @@ export default {
   data() {
     return {
 	  sites: [],
+	  markerEditable: false,
+	  lineEditable: false,
+	  polygonEditable: false,
 	  center: {
             lat: 1.380, lng: 103.800
           },
@@ -241,7 +244,17 @@ export default {
   	},
   	changePolygon(newPolygon) {
   		this.paths = newPolygon;
-  	},
+	  },
+	  changePolygonEditable(val){
+		  console.log(val)
+		  this.polygonEditable = val
+	  },
+	  changeLineEditable(val){
+		  this.lineEditable = val
+	  },
+	  changeMarkerEditable(val){
+		  this.markerEditable = val
+	  },
 	updateEdited(mvcArray) {
 		let paths = [];
 		for (let i=0; i<mvcArray.getLength(); i++) {

@@ -162,7 +162,10 @@ export default {
           	console.log(sitePolygon);
           this.$emit('changeMarkers', siteMarker)
           this.$emit('changeLines', siteLines)
-          this.$emit('changePolygon', sitePolygon)
+		  this.$emit('changePolygon', sitePolygon)
+		   this.$emit('changePolygonEditable', true)
+		   this.$emit('changeLineEditable', true)
+		   this.$emit('changeMarkerEditable', true)
 			this.changeSpinnerStatus()
 		  } else {
 			  this.$notify({ group: 'app', type: 'warn', text: 'No Data Found' })
