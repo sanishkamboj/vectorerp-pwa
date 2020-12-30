@@ -216,6 +216,9 @@ const getDatabase = () => {
             id: {
                 dataType: DATA_TYPE.Number 
             },
+            zoneid: {
+                dataType: DATA_TYPE.Number 
+            },
             lat_long: {
                 dataType: DATA_TYPE.String
             }

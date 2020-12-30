@@ -121,6 +121,7 @@ import { SiteTypeService } from "../service/siteType_service";
 import { SiteSubTypeService } from "../service/siteSubType_service";
 import { SiteAttrService } from "../service/siteAttr_service";
 import { CityService } from "../service/city_service";
+import { ZoneService } from "../service/zone_service";
 import { Global } from "../global";
 import Tools  from "../components/Tools";
 import Filters  from "../components/Filters";
@@ -153,6 +154,7 @@ export default {
 		this.changeSpinnerStatus(true)
 		await this.getData().then()
 		await this.getSiteData(this.changeSpinnerStatus())
+		await this.getZoneData()
       } else {
 		console.log("db opened");
 		
@@ -284,6 +286,37 @@ export default {
 						}
 						//console.log(siteData)
 						new SiteDataService().addSiteData(siteData)
+					});
+				} else {
+					apiFlag = false
+				}
+			})
+			.catch(function (error) {
+				//this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
+			});
+		//}
+	},
+	async getZoneData(){
+		const country = localStorage.getItem('country')
+		let page = 0
+		let apiFlag = true
+		const url = `${this.API_URL}/user/get-zones?country=`+country
+		
+		//while(apiFlag){
+			await this.$http.get(url)
+			.then(response => {
+				
+				if(response.data.status == 200){
+					let zones = response.data.data.polyZone
+					//console.log(sites)
+					zones.map(function(value) {
+						//console.log(value)
+						var zoneData = {
+							'zoneid': value.zoneid,
+							'lat_long': JSON.stringify(value.cityid),
+						}
+						//console.log(siteData)
+						new ZoneService().addZone(zoneData)
 					});
 				} else {
 					apiFlag = false
