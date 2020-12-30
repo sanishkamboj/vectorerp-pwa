@@ -1,7 +1,7 @@
 <template>
 	<div class="map">
 		
-		<gmap-map ref="mapRef" :center="center" :zoom="12" style="width: 100%; height: 100%">
+		<gmap-map ref="mapRef" :center="center" :zoom="15" style="width: 100%; height: 100%">
 			<gmap-polygon :paths="paths" :editable="true" @paths_changed="updateEdited($event)">
 			</gmap-polygon>
 			<gmap-polyline :paths="lines" :editable="true" @paths_changed="updateEdited($event)">
@@ -209,8 +209,7 @@ export default {
           }],
 	  edited: null,
 	  paths: [
-            [ {lat: 1.380, lng: 103.800}, {lat:1.380, lng: 103.810}, {lat: 1.390, lng: 103.810}, {lat: 1.390, lng: 103.800} ],
-            [ {lat: 1.382, lng: 103.802}, {lat:1.382, lng: 103.808}, {lat: 1.388, lng: 103.808}, {lat: 1.388, lng: 103.802} ],
+           
           ],
       lines: [],
 	  shape: {

@@ -39,7 +39,7 @@
 					<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 					<div class="card-body pt-1">
 							<div class="form-check" v-for="record in siteAttr" :key="record.id">
-								<input type="checkbox" class="form-check-input" id="exampleCheck1">
+								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id">
 								<label class="form-check-label" for="exampleCheck1">{{record.name}}</label>
 							</div>
 							
@@ -58,7 +58,7 @@
 					<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
 					<div class="card-body pt-1">
 							<div class="form-check" v-for="record in city" :key="record.id">
-								<input type="checkbox" class="form-check-input" id="exampleCheck1">
+								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id">
 								<label class="form-check-label" for="exampleCheck1">{{record.name}}</label>
 							</div>
 							
@@ -135,7 +135,10 @@ export default {
   },
   methods: {
 	  processFilter(){
+		console.log(this.checkedCategories)
+		this.changeSpinnerStatus(true)
 	  	new SiteDataService().getSitesByIds(this.checkedCategories).then(res => {
+			
           if(res && res.length) {
           	let siteMarker = [];
           	let siteLines = [];
@@ -160,10 +163,18 @@ export default {
           this.$emit('changeMarkers', siteMarker)
           this.$emit('changeLines', siteLines)
           this.$emit('changePolygon', sitePolygon)
-          }
+			this.changeSpinnerStatus()
+		  } else {
+			  this.$notify({ group: 'app', type: 'warn', text: 'No Data Found' })
+			  this.changeSpinnerStatus()
+		  }
+		   
 	    })
 
-	  }
+	  },
+		changeSpinnerStatus(status = false) {
+		this.$store.dispatch('changeSpinnerStatus', status)
+		},
   }
 }
 </script>
