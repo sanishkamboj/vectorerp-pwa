@@ -10,6 +10,7 @@ const state = {
   country: '',
   toolsSideBar: 'd-none',
   filterSideBar: 'd-none',
+  searchSidebar: 'd-none',
   polygonEditable: false,
   lineEditable: false,
   markerEditable: false,
@@ -54,6 +55,15 @@ const mutations = {
         state.filterSideBar = 'show-sidebar'
     } else {
         state.filterSideBar = 'd-none'
+    }
+  },
+  toggleSearchSideBar(state){
+    const currState = state.searchSidebar
+    console.log(currState)
+    if(currState == 'd-none'){
+        state.searchSidebar = 'show-sidebar'
+    } else {
+        state.searchSidebar = 'd-none'
     }
   },
   setCountry(state, country){

@@ -9,7 +9,7 @@
 			<gmap-circle
 				v-if="circleCenter"
 				:center="circleCenter"
-				:radius="100"
+				:radius="500"
 				:visible="true"
 				:editable="true"
 				fillColor="red"
@@ -30,7 +30,7 @@
 			<div @click="$store.commit('toggleToolsSideBar')"><span><a><i class="uil uil-cog desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i> </a> Tools</span></div>
 			<div @click="$store.commit('toggleFilterSideBar')"><span><a><i class="uil uil-filter desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Filters</span></div>
 			<div><span><a><i class="uil uil-layer-group desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Layers</span></div>
-			<div><span><a><i class="uil uil-search-alt desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Search</span></div>
+			<div @click="$store.commit('toggleSearchSideBar')"><span><a><i class="uil uil-search-alt desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Search</span></div>
 		</div>
 		
 		<div class="map-icon-outer desktop-view">
@@ -123,7 +123,47 @@
 				
 			</div>
 		</div>
-		
+		<div class="right-section" :class="searchSidebar">
+			
+			<h3 class="popup-title desktop-view">Search <a class="float-right" @click="$store.commit('toggleSearchSideBar')"><i class="uil uil-times"></i></a></h3>
+			<h5 class="mobile-view">
+				<div class="mobile-title" @click="$store.commit('toggleSearchSideBar')"><i class="fa fa-arrow-left"></i> Search</div>
+			</h5>
+			<div id="accordion">
+			<div class="card">
+
+				
+				<form>
+					<div class="form-group">
+						<label for="formGroupExampleInput">Site ID</label>
+						<input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Site ID">
+					</div>
+					<div class="form-group">
+						<label for="formGroupExampleInput2">Site Name</label>
+						<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter Site Name">
+					</div>
+					<div class="form-group">
+						<label for="formGroupExampleInput2">Address</label>
+						<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter Location">
+					</div>
+					<div class="form-group">
+						<label for="formGroupExampleInput2">SR ID</label>
+						<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter sr id">
+					</div>
+				</form>
+				</div>
+				<div class="row pt-4">
+				<div class="col">
+					<button type="submit" class="btn btn-blue w-100" @click="searchSite">Submit</button>
+				</div>
+				<div class="col">
+					<button type="submit" class="btn btn-red w-100">Clear</button>
+				</div>
+			</div>
+			
+			
+			</div>
+		</div>
 		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" />
 		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon"/>
 	</div>
@@ -240,6 +280,9 @@ export default {
 	},
 	filterSideBar(){
 		return this.$store.state.filterSideBar
+	},
+	searchSidebar(){
+		return this.$store.state.searchSidebar
 	},
 	polygonEditable(){
 		return this.$store.state.polygonEditable
@@ -492,7 +535,11 @@ export default {
         Object.keys(this.createSite).forEach(function(key,index) {
           self.createSite[key] = '';
         });
-      }
+	},
+	async searchSite(){
+		this.changeSpinnerStatus(true)
+
+	}
     /*addStudent(student) {
       this.students.push(student);
     } */
