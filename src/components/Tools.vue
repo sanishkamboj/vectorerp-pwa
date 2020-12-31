@@ -18,7 +18,7 @@
 				<div class="card-body pt-1">
 					
 						<div class="form-check">
-							<input type="checkbox" class="form-check-input" >
+							<input type="checkbox" class="form-check-input" @click="drawPolylineShape" id="drawLine">
 							<label class="form-check-label" for="exampleCheck1">Draw Polyline</label>
 						</div>
 						<input type="text" class="form-control accordion-link" placeholder="Length in ft" />
@@ -113,7 +113,7 @@ export default {
 			   this.drawPolygon = false
 			   this.paths = []
 			   this.$emit('changePolygon', this.paths)
-				this.$store.dispatch('changePolygonEditable', true)
+				this.$store.dispatch('changePolygonEditable', false)
 		  }
 	  },
 	  drawCircleShape(){
@@ -128,16 +128,41 @@ export default {
 
             // Draw a triangle. Use f to control the size of the triangle.
             // i.e., every time we add a path, we reduce the size of the triangle
-            var path = 
-              { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() }
+            var path = { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() }
 			//this.paths.push(path)
 			this.$emit('changeCircle', path)
-			
-			console.log(this.paths)
 		  } else{
 			   this.drawCircle = false
 			   this.paths = []
 			   this.$emit('changeCircle', this.paths)
+		  }
+	  },
+	  drawPolylineShape(){
+		   if(!this.drawLine){
+			this.drawLine = true
+			var bounds = this.$store.state.map.$mapObject.getBounds()
+            var northEast = bounds.getNorthEast()
+            var southWest = bounds.getSouthWest()
+            var center = bounds.getCenter()
+            var degree = this.paths.length + 1;
+            var f = Math.pow(0.66, degree)
+
+            // Draw a triangle. Use f to control the size of the triangle.
+            // i.e., every time we add a path, we reduce the size of the triangle
+            var path = [
+            { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() },
+            { lng: (1-f) * center.lng() + (f) * southWest.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
+            { lng: (1-f) * center.lng() + (f) * northEast.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
+			]
+			console.log(path)
+			this.paths.push(path)
+			this.$emit('changeLines', this.paths)
+			this.$store.dispatch('changeLineEditable', true)
+		  } else{
+			   this.drawLine = false
+			   this.paths = []
+			   this.$emit('changeLines', this.paths)
+			   this.$store.dispatch('changeLineEditable', false)
 		  }
 	  }
   },

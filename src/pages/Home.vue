@@ -7,6 +7,7 @@
 			<gmap-polyline :paths="lines" :editable="lineEditable" @paths_changed="updateEdited($event)">
 			</gmap-polyline>
 			<gmap-circle
+				v-if="circleCenter"
 				:center="circleCenter"
 				:radius="100"
 				:visible="true"
@@ -257,6 +258,7 @@ export default {
   		}
   	},
   	changeLines(newLines) {
+		console.log(newLines)
   		this.lines = newLines;
   	},
   	changePolygon(newPolygon) {
