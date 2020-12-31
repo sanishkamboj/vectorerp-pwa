@@ -233,7 +233,7 @@ export default {
     } else {
         this.$store.commit('set', ['sidebarClass', 'show-sidebar'])
 	}
-
+	this.geolocation();
 	this.$store.commit('set',['map', this.$refs.map])
   },
   data() {
@@ -293,6 +293,7 @@ export default {
 	markerEditable(){
 		return this.$store.state.markerEditable
 	}
+	
   },
   methods: {
   	changeMarkers(newMarkers) {
@@ -539,7 +540,15 @@ export default {
 	async searchSite(){
 		this.changeSpinnerStatus(true)
 
-	}
+	},
+	geolocation : function() {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+      });
+    }
     /*addStudent(student) {
       this.students.push(student);
     } */
