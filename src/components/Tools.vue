@@ -134,8 +134,8 @@ export default {
 			this.$emit('changeCircle', path)
 		  } else{
 			   this.drawCircle = false
-			   this.paths = []
-			   this.$emit('changeCircle', this.paths)
+			   var path = { lng: 0, lat: 0 }
+			   this.$emit('changeCircle', path)
 		  }
 	  },
 	  drawPolylineShape(){
