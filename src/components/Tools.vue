@@ -76,7 +76,8 @@ export default {
 		drawCircle: false,
 		drawLine: false,
 		polygonPath: [],
-		paths: []
+		paths: [],
+		lines: []
         
        }
    },
@@ -152,11 +153,11 @@ export default {
             var path = [
             { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() },
             { lng: (1-f) * center.lng() + (f) * southWest.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
-            { lng: (1-f) * center.lng() + (f) * northEast.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
+            
 			]
 			console.log(path)
 			this.paths.push(path)
-			this.$emit('changeLines', this.paths)
+			this.$emit('changeLines', path)
 			this.$store.dispatch('changeLineEditable', true)
 		  } else{
 			   this.drawLine = false

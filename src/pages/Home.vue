@@ -1,10 +1,10 @@
 <template>
 	<div class="map">
 		
-		<gmap-map ref="map" :center="center" :zoom="15" style="width: 100%; height: 100%">
+		<gmap-map ref="map" :center="center" :zoom="12" style="width: 100%; height: 100%">
 			<gmap-polygon :paths="paths" :editable="polygonEditable" @paths_changed="updateEdited($event)">
 			</gmap-polygon>
-			<gmap-polyline :paths="lines" :editable="lineEditable" @paths_changed="updateEdited($event)">
+			<gmap-polyline v-if="lines" :path="lines" :editable="lineEditable">
 			</gmap-polyline>
 			<gmap-circle
 				v-if="circleCenter"
@@ -223,7 +223,8 @@ export default {
 	  paths: [
            
           ],
-      lines: [],
+	  lines: [
+          ],
 	  shape: {
             coords: [10, 10, 10, 15, 15, 15, 15, 10],
             type: 'poly'
