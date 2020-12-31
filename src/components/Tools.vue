@@ -18,7 +18,7 @@
 				<div class="card-body pt-1">
 					
 						<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="exampleCheck1">
+							<input type="checkbox" class="form-check-input" >
 							<label class="form-check-label" for="exampleCheck1">Draw Polyline</label>
 						</div>
 						<input type="text" class="form-control accordion-link" placeholder="Length in ft" />
@@ -37,7 +37,7 @@
 				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
 				<div class="card-body pt-1">
 						<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="exampleCheck1">
+							<input type="checkbox" class="form-check-input" @click="drawPolygonShape" id="drawPolygon">
 							<label class="form-check-label" for="exampleCheck1">Draw polygon</label>
 						</div>
 						<input type="text" class="form-control accordion-link" placeholder="Area in sq. ft" />
@@ -56,7 +56,7 @@
 				<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 				<div class="card-body pt-1">
 						<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="exampleCheck1">
+							<input type="checkbox" class="form-check-input" @click="drawCircleShape" id="drawCircle">
 							<label class="form-check-label" for="exampleCheck1">Draw Circle</label>
 						</div>
 						<input type="text" class="form-control accordion-link" placeholder="Radius of circle" />
@@ -70,10 +70,76 @@
 <script>
 export default {
    name: "Tools", 
+   data(){
+       return {
+		drawPolygon: false,
+		drawCircle: false,
+		drawLine: false,
+		polygonPath: [],
+		paths: []
+        
+       }
+   },
    computed: {
 	toolsSideBar(){
 		return this.$store.state.toolsSideBar
-	}
+	},
+  },
+  methods: {
+	  drawPolygonShape(){
+		  
+		  if(!this.drawPolygon){
+			this.drawPolygon = true
+			var bounds = this.$store.state.map.$mapObject.getBounds()
+            var northEast = bounds.getNorthEast()
+            var southWest = bounds.getSouthWest()
+            var center = bounds.getCenter()
+            var degree = this.paths.length + 1;
+            var f = Math.pow(0.66, degree)
+
+            // Draw a triangle. Use f to control the size of the triangle.
+            // i.e., every time we add a path, we reduce the size of the triangle
+            var path = [
+              { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() },
+              { lng: (1-f) * center.lng() + (f) * southWest.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
+              { lng: (1-f) * center.lng() + (f) * northEast.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
+            ]
+
+			this.paths.push(path)
+			this.$emit('changePolygon', this.paths)
+			this.$store.dispatch('changePolygonEditable', true)
+			console.log(this.paths)
+		  } else{
+			   this.drawPolygon = false
+			   this.paths = []
+			   this.$emit('changePolygon', this.paths)
+				this.$store.dispatch('changePolygonEditable', true)
+		  }
+	  },
+	  drawCircleShape(){
+		  if(!this.drawCircle){
+			this.drawCircle = true
+			var bounds = this.$store.state.map.$mapObject.getBounds()
+            var northEast = bounds.getNorthEast()
+            var southWest = bounds.getSouthWest()
+            var center = bounds.getCenter()
+            var degree = this.paths.length + 1;
+            var f = Math.pow(0.66, degree)
+
+            // Draw a triangle. Use f to control the size of the triangle.
+            // i.e., every time we add a path, we reduce the size of the triangle
+            var path = 
+              { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() }
+			//this.paths.push(path)
+			this.$emit('changeCircle', path)
+			
+			console.log(this.paths)
+		  } else{
+			   this.drawCircle = false
+			   this.paths = []
+			   this.$emit('changeCircle', this.paths)
+		  }
+	  }
   },
 }
 </script>

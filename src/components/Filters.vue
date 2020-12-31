@@ -135,7 +135,7 @@ export default {
   },
   methods: {
 	  processFilter(){
-		console.log(this.checkedCategories)
+		//console.log(this.checkedCategories)
 		this.changeSpinnerStatus(true)
 	  	new SiteDataService().getSitesByIds(this.checkedCategories).then(res => {
 			
@@ -159,13 +159,12 @@ export default {
       				sitePolygon.push(polygon)          		
           		}
           	})
-          	console.log(sitePolygon);
-          this.$emit('changeMarkers', siteMarker)
-          this.$emit('changeLines', siteLines)
-		  this.$emit('changePolygon', sitePolygon)
-		   this.$emit('changePolygonEditable', true)
-		   this.$emit('changeLineEditable', true)
-		   this.$emit('changeMarkerEditable', true)
+          	//console.log(sitePolygon);
+			this.$emit('changeMarkers', siteMarker)
+			this.$emit('changeLines', siteLines)
+			this.$emit('changePolygon', sitePolygon)
+			
+			//this.$store.dispatch('changeMarkerEditable', true)
 			this.changeSpinnerStatus()
 		  } else {
 			  this.$notify({ group: 'app', type: 'warn', text: 'No Data Found' })

@@ -9,7 +9,11 @@ const state = {
   showSpinner: false,
   country: '',
   toolsSideBar: 'd-none',
-  filterSideBar: 'd-none'
+  filterSideBar: 'd-none',
+  polygonEditable: false,
+  lineEditable: false,
+  markerEditable: false,
+  map: []
 }
 
 const mutations = {
@@ -23,6 +27,18 @@ const mutations = {
     } else {
         state.sidebarClass = 'd-none'
     }
+  },
+  changePolygonEditable(state, status){
+    console.log(status)
+    state.polygonEditable = status
+  },
+  changeLineEditable(state, status){
+    console.log(status)
+    state.lineEditable = status
+  },
+  changeMarkerEditable(state, status){
+    console.log(status)
+    state.markerEditable = status
   },
   toggleToolsSideBar(state){
     const currState = state.toolsSideBar
@@ -54,6 +70,16 @@ const actions = {
   },
   setCountry({commit}, country){
     commit('setCountry', country)
+  },
+  changePolygonEditable({commit}, status){
+    commit('changePolygonEditable', status)
+  }
+  ,
+  changeLineEditable({commit}, status){
+    commit('changeLineEditable', status)
+  },
+  changeMarkerEditable({commit}, status){
+    commit('changeMarkerEditable', status)
   }
 }
 

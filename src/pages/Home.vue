@@ -1,11 +1,19 @@
 <template>
 	<div class="map">
 		
-		<gmap-map ref="mapRef" :center="center" :zoom="15" style="width: 100%; height: 100%">
+		<gmap-map ref="map" :center="center" :zoom="15" style="width: 100%; height: 100%">
 			<gmap-polygon :paths="paths" :editable="polygonEditable" @paths_changed="updateEdited($event)">
 			</gmap-polygon>
 			<gmap-polyline :paths="lines" :editable="lineEditable" @paths_changed="updateEdited($event)">
 			</gmap-polyline>
+			<gmap-circle
+				:center="circleCenter"
+				:radius="100"
+				:visible="true"
+				:editable="true"
+				fillColor="red"
+				fillOpacity="1.0">
+        	</gmap-circle>
 		        <gmap-marker v-for="(m, index) in markers"
 		          :position="m.position"
 		          :clickable="markerEditable" :draggable="markerEditable"
@@ -115,7 +123,7 @@
 			</div>
 		</div>
 		
-		<Tools />
+		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" />
 		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon"/>
 	</div>
   
@@ -184,13 +192,12 @@ export default {
     } else {
         this.$store.commit('set', ['sidebarClass', 'show-sidebar'])
 	}
+
+	this.$store.commit('set',['map', this.$refs.map])
   },
   data() {
     return {
 	  sites: [],
-	  markerEditable: false,
-	  lineEditable: false,
-	  polygonEditable: false,
 	  center: {
             lat: 1.380, lng: 103.800
           },
@@ -199,6 +206,7 @@ export default {
 	  siteTypeOpt: '',
 	  siteSubTypeOpt: '',
 	  siteAttributeOpt: '',
+	  circleCenter: '',
 	  markers: [{
             position: {
               lat: 10.0,
@@ -230,6 +238,15 @@ export default {
 	},
 	filterSideBar(){
 		return this.$store.state.filterSideBar
+	},
+	polygonEditable(){
+		return this.$store.state.polygonEditable
+	},
+	lineEditable(){
+		return this.$store.state.lineEditable
+	},
+	markerEditable(){
+		return this.$store.state.markerEditable
 	}
   },
   methods: {
@@ -243,18 +260,12 @@ export default {
   		this.lines = newLines;
   	},
   	changePolygon(newPolygon) {
-  		this.paths = newPolygon;
-	  },
-	  changePolygonEditable(val){
-		  console.log(val)
-		  this.polygonEditable = val
-	  },
-	  changeLineEditable(val){
-		  this.lineEditable = val
-	  },
-	  changeMarkerEditable(val){
-		  this.markerEditable = val
-	  },
+		this.paths = newPolygon;
+	},
+	changeCircle(newCircleCenter){
+		console.log(newCircleCenter)
+		this.circleCenter = newCircleCenter
+	},
 	updateEdited(mvcArray) {
 		let paths = [];
 		for (let i=0; i<mvcArray.getLength(); i++) {
