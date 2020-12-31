@@ -131,7 +131,8 @@ export default {
 	  new SiteAttrService().getSiteAttrs().then(res => {
           this.siteAttr = res
           console.log(res)
-      })
+	  })
+	  
   },
   methods: {
 	  processFilter(){

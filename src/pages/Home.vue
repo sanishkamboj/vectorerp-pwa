@@ -1,7 +1,7 @@
 <template>
 	<div class="map">
 		
-		<gmap-map ref="map" :center="center" :zoom="12" style="width: 100%; height: 100%">
+		<gmap-map ref="map" :center="center" map-type-id="roadmap" :zoom="7" style="width: 100%; height: 100%">
 			<gmap-polygon :paths="paths" :editable="polygonEditable" @paths_changed="updateEdited($event)">
 			</gmap-polygon>
 			<gmap-polyline v-if="lines" :path="lines" :editable="lineEditable">
@@ -240,7 +240,7 @@ export default {
     return {
 	  sites: [],
 	  center: {
-            lat: 1.380, lng: 103.800
+            lat: 0, lng: 0
           },
 	  API_URL: this.$store.state.API_URL,
 	  siteModalClass: 'd-none',
