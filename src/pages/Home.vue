@@ -572,30 +572,31 @@ export default {
 			path.push({lat: point.lat(), lng: point.lng()});
 		}
 		
-		console.log(path)
 		let marker1 = []
+		let _this = this;
 		if(path.length > 2){
 			path.map(function(value){
 				if(marker1){
-					var distance = this.calDistance(marker1, value)
-					this.totalDistance = this.totalDistance + distance
+					var distance = _this.calDistance(marker1, value)
+					_this.totalDistance = _this.totalDistance + distance
 				}
 				marker1 = value
-				console.log(this.totalDistance)
+				console.log(_this.totalDistance)
 			})
 		} else {
 			path.map(function(value){
 				if(marker1){
-					var distance = this.calDistance(marker1, value)
-					this.totalDistance = this.totalDistance + distance
+					var distance = _this.calDistance(marker1, value)
+					_this.totalDistance = _this.totalDistance + distance
 				}
 				marker1 = value
-				console.log(this.totalDistance)
+				console.log(_this.totalDistance)
 			})
 		}
 		//return path
 	},
-	calDistance: function(mk1, mk2) {
+	calDistance(mk1, mk2) {
+		console.log(mk1, mk2);
 		var R = 3958.8; // Radius of the Earth in miles
 		var rlat1 = mk1.lat * (Math.PI / 180); // Convert degrees to radians
 		var rlat2 = mk2.lat * (Math.PI / 180); // Convert degrees to radians
