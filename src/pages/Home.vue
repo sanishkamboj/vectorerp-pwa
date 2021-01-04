@@ -571,7 +571,6 @@ export default {
 		
 		console.log(path)
 		let marker1 = []
-		this.calDistance(marker1, path)
 		if(path.length > 2){
 			path.map(function(value){
 				if(marker1){
