@@ -397,6 +397,7 @@ export default {
 							'cityId': value.cityid,
 							'siteTypeId': value.stypeid,
 							'zoneId': value.zoneid,
+							'site_attr': value.site_attr
 						}
 						if(value.point != null){
 							siteData.point = JSON.stringify(value.point)
@@ -437,7 +438,8 @@ export default {
 						//console.log(value)
 						var zoneData = {
 							'zoneid': value.zoneid,
-							'lat_long': JSON.stringify(value.cityid),
+							'name': value.name,
+							'lat_long': JSON.stringify(value.lat_long),
 						}
 						//console.log(siteData)
 						new ZoneService().addZone(zoneData)

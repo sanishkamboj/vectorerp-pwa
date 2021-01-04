@@ -133,7 +133,10 @@ const getDatabase = () => {
             },
             zoneId: {
                 dataType: DATA_TYPE.Number
-            }
+            },
+            site_attr: {
+                dataType: DATA_TYPE.Number
+            },
 
         }
     };
@@ -218,6 +221,9 @@ const getDatabase = () => {
             },
             zoneid: {
                 dataType: DATA_TYPE.Number 
+            },
+            name: {
+                dataType: DATA_TYPE.String
             },
             lat_long: {
                 dataType: DATA_TYPE.String
