@@ -20,8 +20,8 @@
 					<div class="card-body pt-1">
 						
 							<div class="form-check" v-for="record in filters" :key="record.id">
-								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id" v-model="checkedSiteTypes">
-								<label class="form-check-label" :for="record.id">{{record.name}}</label>
+								<input type="checkbox" class="form-check-input" :value="record.id" :id="'sites-'+record.id" v-model="checkedSiteTypes">
+								<label class="form-check-label" :for="'sites-'+record.id">{{record.name}}</label>
 							</div>
 							
 					</div>
@@ -39,8 +39,8 @@
 					<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 					<div class="card-body pt-1">
 							<div class="form-check" v-for="record in siteAttr" :key="record.id">
-								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id" v-model="checkedSiteAttr">
-								<label class="form-check-label" for="exampleCheck1">{{record.name}}</label>
+								<input type="checkbox" class="form-check-input" :value="record.id" :id="'sites-attr-'+record.id" v-model="checkedSiteAttr">
+								<label class="form-check-label" :for="'sites-attr-'+record.id" >{{record.name}}</label>
 							</div>
 							
 					</div>
@@ -58,8 +58,8 @@
 					<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
 					<div class="card-body pt-1">
 							<div class="form-check" v-for="record in city" :key="record.id">
-								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id" v-model="checkedCities">
-								<label class="form-check-label" for="exampleCheck1">{{record.name}}</label>
+								<input type="checkbox" class="form-check-input" :value="record.id" :id="'cities-'+record.id" v-model="checkedCities">
+								<label class="form-check-label" :for="'cities-'+record.id" >{{record.name}}</label>
 							</div>
 							
 					</div>
@@ -75,9 +75,9 @@
 					</div>
 					<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
 					<div class="card-body pt-1">
-							<div class="form-check" >
-								<input type="checkbox" class="form-check-input" id="exampleCheck1">
-								<label class="form-check-label" for="exampleCheck1">Sample Data</label>
+							<div class="form-check" v-for="record in zones" :key="record.zoneid">
+								<input type="checkbox" class="form-check-input" :value="record.zoneid" :id="'zones-'+record.zoneid" v-model="checkedZones">
+								<label class="form-check-label" :for="'zones-'+record.zoneid">{{record.name}}</label>
 							</div>
 							
 					</div>
@@ -102,12 +102,14 @@ import { CityService } from "../service/city_service";
 import { SiteAttrService } from "../service/siteAttr_service";
 import { SitesService } from "../service/sites_service";
 import { SiteDataService } from "../service/siteData_service";
+import { ZoneService } from "../service/zone_service";
 
 export default {
    name: "Filters", 
    data(){
        return {
         filters: [],
+        checkedZones: [],
         checkedSiteTypes: [],
         checkedSiteAttr: [],
         checkedCities: [],
@@ -133,13 +135,17 @@ export default {
           this.siteAttr = res
           console.log(res)
 	  })
+	  new ZoneService().getZoneData().then(res => {
+          this.zones = res
+          console.log(res)
+	  })
 	  
   },
   methods: {
 	  processFilter(){
 		//console.log(this.checkedSiteTypes)
 		this.changeSpinnerStatus(true)
-	  	new SiteDataService().getSitesByIds( this.checkedSiteTypes, this.checkedSiteAttr, this.checkedCities ).then(res => {
+	  	new SiteDataService().getSitesByIds( this.checkedSiteTypes, this.checkedSiteAttr, this.checkedCities, this.checkedZones ).then(res => {
           if(res && res.length) {
           	let siteMarker = [];
           	let siteLines = [];

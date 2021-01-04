@@ -7,7 +7,7 @@ export class ZoneService {
         this.tableName = "zones";
     }
 
-    getZoneData() {
+    async getZoneData() {
         return connection.select({
             from: this.tableName,
         })

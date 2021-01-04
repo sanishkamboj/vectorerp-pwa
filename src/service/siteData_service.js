@@ -38,7 +38,7 @@ export class SiteDataService {
         })
     }
 
-    async getSitesByIds(siteTypes, siteAttr, siteCities) {
+    async getSitesByIds(siteTypes, siteAttr, siteCities, siteZones) {
         let query = {
             from: this.tableName,
             where: [],
@@ -51,6 +51,9 @@ export class SiteDataService {
         }
         if(siteCities && siteCities.length) {
             query.where.push({cityId: {in: siteCities}})
+        }
+        if(siteZones && siteZones.length) {
+            query.where.push({zoneId: {in: siteZones}})
         }
         return connection.select(query);
     }
