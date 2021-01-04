@@ -305,9 +305,9 @@ export default {
   	changeLines(newLines) {
 		console.log(newLines)
   		this.lines = newLines;
-  		if(newLines && newLines.length) {
+  		/*if(newLines && newLines.length) {
   			this.center = newLines[0][0];
-  		}
+  		}*/
   	},
   	changePolygon(newPolygon) {
 		this.paths = newPolygon;
