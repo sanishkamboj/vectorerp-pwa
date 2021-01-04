@@ -4,7 +4,7 @@
 		<gmap-map ref="map" :center="center" map-type-id="roadmap" :zoom="7" style="width: 100%; height: 100%">
 			<gmap-polygon :paths="paths" :editable="polygonEditable" @paths_changed="updateEdited($event)">
 			</gmap-polygon>
-			<gmap-polyline v-if="lines" :path="lines" :editable="lineEditable">
+			<gmap-polyline v-if="lines" :path="lines" :editable="lineEditable" ref="polyline" @path_changed="updatePolyline($event)">
 			</gmap-polyline>
 			<gmap-circle
 				v-if="circleCenter"
@@ -182,6 +182,7 @@ import { ZoneService } from "../service/zone_service";
 import { Global } from "../global";
 import Tools  from "../components/Tools";
 import Filters  from "../components/Filters";
+import _ from 'lodash';
 
 export default {
   name: "Home",
@@ -215,7 +216,6 @@ export default {
 		await this.getZoneData()
       } else {
 		console.log("db opened");
-		
       }
     } catch (ex) {
       console.error(ex);
@@ -248,6 +248,12 @@ export default {
 	  siteSubTypeOpt: '',
 	  siteAttributeOpt: '',
 	  circleCenter: '',
+	  mvcPath: null,
+	  polylineGeojson: '',
+	  marker1: [
+
+	  ],
+	  totalDistance: 0,
 	  markers: [{
             position: {
               lat: 10.0,
@@ -292,10 +298,15 @@ export default {
 	},
 	markerEditable(){
 		return this.$store.state.markerEditable
-	}
+	},
+	polylinePath () {
+		
+	},
+	
 	
   },
   methods: {
+
   	changeMarkers(newMarkers) {
   		this.markers = newMarkers;
   		if(newMarkers && newMarkers.length) {
@@ -548,10 +559,50 @@ export default {
           lng: position.coords.longitude
         };
       });
-    }
-    /*addStudent(student) {
-      this.students.push(student);
-    } */
+	},
+	updatePolyline: function (mvcPath) {
+		this.mvcPath = mvcPath
+		if (!this.mvcPath) return null
+		let path = [];
+		for (let j=0; j<this.mvcPath.getLength(); j++) {
+			let point = this.mvcPath.getAt(j);
+			path.push({lat: point.lat(), lng: point.lng()});
+		}
+		
+		console.log(path)
+		let marker1 = []
+		this.calDistance(marker1, path)
+		if(path.length > 2){
+			path.map(function(value){
+				if(marker1){
+					var distance = this.calDistance(marker1, value)
+					this.totalDistance = this.totalDistance + distance
+				}
+				marker1 = value
+				console.log(this.totalDistance)
+			})
+		} else {
+			path.map(function(value){
+				if(marker1){
+					var distance = this.calDistance(marker1, value)
+					this.totalDistance = this.totalDistance + distance
+				}
+				marker1 = value
+				console.log(this.totalDistance)
+			})
+		}
+		//return path
+	},
+	calDistance: function(mk1, mk2) {
+		var R = 3958.8; // Radius of the Earth in miles
+		var rlat1 = mk1.lat * (Math.PI / 180); // Convert degrees to radians
+		var rlat2 = mk2.lat * (Math.PI / 180); // Convert degrees to radians
+		var difflat = rlat2 - rlat1; // Radian difference (latitudes)
+		var difflon = (mk2.lng - mk1.lng) * (Math.PI / 180); // Radian difference (longitudes)
+
+		var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat / 2) * Math.sin(difflat / 2) + Math.cos(rlat1) * Math.cos(rlat2) * Math.sin(difflon / 2) * Math.sin(difflon / 2)));
+		return d;
+	},
   }
 };
 </script>

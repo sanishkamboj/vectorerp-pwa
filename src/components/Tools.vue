@@ -97,9 +97,6 @@ export default {
             var center = bounds.getCenter()
             var degree = this.paths.length + 1;
             var f = Math.pow(0.66, degree)
-
-            // Draw a triangle. Use f to control the size of the triangle.
-            // i.e., every time we add a path, we reduce the size of the triangle
             var path = [
               { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() },
               { lng: (1-f) * center.lng() + (f) * southWest.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
@@ -126,9 +123,6 @@ export default {
             var center = bounds.getCenter()
             var degree = this.paths.length + 1;
             var f = Math.pow(0.66, degree)
-
-            // Draw a triangle. Use f to control the size of the triangle.
-            // i.e., every time we add a path, we reduce the size of the triangle
             var path = { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() }
 			//this.paths.push(path)
 			this.$emit('changeCircle', path)
@@ -147,9 +141,6 @@ export default {
             var center = bounds.getCenter()
             var degree = this.paths.length + 1;
             var f = Math.pow(0.66, degree)
-
-            // Draw a triangle. Use f to control the size of the triangle.
-            // i.e., every time we add a path, we reduce the size of the triangle
             var path = [
             { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() },
             { lng: (1-f) * center.lng() + (f) * southWest.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
