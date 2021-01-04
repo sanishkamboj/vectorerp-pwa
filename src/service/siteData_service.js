@@ -38,14 +38,20 @@ export class SiteDataService {
         })
     }
 
-    async getSitesByIds(siteTypes) {
-        return connection.select({
+    async getSitesByIds(siteTypes, siteAttr, siteCities) {
+        let query = {
             from: this.tableName,
-            where: {
-                siteTypeId: {
-                    in : siteTypes
-                }
-            }
-        })
+            where: [],
+        }
+        if(siteTypes && siteTypes.length) {
+            query.where.push({siteTypeId: {in: siteTypes}})
+        }
+        if(siteAttr && siteAttr.length) {
+            query.where.push({site_attr: {in: siteAttr}})
+        }
+        if(siteCities && siteCities.length) {
+            query.where.push({cityId: {in: siteCities}})
+        }
+        return connection.select(query);
     }
 }

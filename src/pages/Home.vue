@@ -4,7 +4,7 @@
 		<gmap-map ref="map" :center="center" map-type-id="roadmap" :zoom="7" style="width: 100%; height: 100%">
 			<gmap-polygon :paths="paths" :editable="polygonEditable" @paths_changed="updateEdited($event)">
 			</gmap-polygon>
-			<gmap-polyline v-if="lines" :path="lines" :editable="lineEditable" ref="polyline" @path_changed="updatePolyline($event)">
+			<gmap-polyline v-bind:path.sync="lines" v-bind:options="{ strokeColor:'#008000'}" :editable="lineEditable" ref="polyline" @path_changed="updatePolyline($event)">
 			</gmap-polyline>
 			<gmap-circle
 				v-if="circleCenter"
@@ -15,12 +15,12 @@
 				fillColor="red"
 				fillOpacity="1.0">
         	</gmap-circle>
-		        <gmap-marker v-for="(m, index) in markers"
-		          :position="m.position"
-		          :clickable="markerEditable" :draggable="markerEditable"
-		          @click="center=m.position"
-		          :key="index"
-		          ></gmap-marker>
+	        <gmap-marker v-for="(m, index) in markers"
+	          :position="m.position"
+	          :clickable="markerEditable" :draggable="markerEditable"
+	          @click="center=m.position"
+	          :key="index"
+	          ></gmap-marker>
 		</gmap-map>
 		<div class="right-bar" :class="sidebarClass" >
 			<h5 class="mobile-view">
@@ -316,6 +316,9 @@ export default {
   	changeLines(newLines) {
 		console.log(newLines)
   		this.lines = newLines;
+  		if(newLines && newLines.length) {
+  			this.center = newLines[0][0];
+  		}
   	},
   	changePolygon(newPolygon) {
 		this.paths = newPolygon;

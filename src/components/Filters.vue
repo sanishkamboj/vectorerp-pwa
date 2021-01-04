@@ -20,7 +20,7 @@
 					<div class="card-body pt-1">
 						
 							<div class="form-check" v-for="record in filters" :key="record.id">
-								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id" v-model="checkedCategories">
+								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id" v-model="checkedSiteTypes">
 								<label class="form-check-label" :for="record.id">{{record.name}}</label>
 							</div>
 							
@@ -39,7 +39,7 @@
 					<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 					<div class="card-body pt-1">
 							<div class="form-check" v-for="record in siteAttr" :key="record.id">
-								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id">
+								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id" v-model="checkedSiteAttr">
 								<label class="form-check-label" for="exampleCheck1">{{record.name}}</label>
 							</div>
 							
@@ -58,7 +58,7 @@
 					<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
 					<div class="card-body pt-1">
 							<div class="form-check" v-for="record in city" :key="record.id">
-								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id">
+								<input type="checkbox" class="form-check-input" :value="record.id" :id="record.id" v-model="checkedCities">
 								<label class="form-check-label" for="exampleCheck1">{{record.name}}</label>
 							</div>
 							
@@ -108,10 +108,11 @@ export default {
    data(){
        return {
         filters: [],
-        checkedCategories: [],
+        checkedSiteTypes: [],
+        checkedSiteAttr: [],
+        checkedCities: [],
 		city: [],
-		siteAttr: []
-        
+		siteAttr: []        
        }
    },
    computed: {
@@ -136,10 +137,9 @@ export default {
   },
   methods: {
 	  processFilter(){
-		//console.log(this.checkedCategories)
+		//console.log(this.checkedSiteTypes)
 		this.changeSpinnerStatus(true)
-	  	new SiteDataService().getSitesByIds(this.checkedCategories).then(res => {
-			
+	  	new SiteDataService().getSitesByIds( this.checkedSiteTypes, this.checkedSiteAttr, this.checkedCities ).then(res => {
           if(res && res.length) {
           	let siteMarker = [];
           	let siteLines = [];
@@ -153,7 +153,10 @@ export default {
           		}
           		if(obj.poly_line !== undefined) {
           			let poly_line = JSON.parse(obj.poly_line);
-      				siteLines.push(poly_line)          		
+          			poly_line.map((pts) => {
+          				siteLines.push(pts)
+          			})
+      				//siteLines.push(poly_line)          		
           		}
           		if(obj.polygon !== undefined) {
           			let polygon = JSON.parse(obj.polygon);
