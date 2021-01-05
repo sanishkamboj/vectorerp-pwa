@@ -114,7 +114,8 @@ export default {
         checkedSiteAttr: [],
         checkedCities: [],
 		city: [],
-		siteAttr: []        
+		siteAttr: [],
+		zones: []     
        }
    },
    computed: {
@@ -185,7 +186,7 @@ export default {
 
 	  },
 		changeSpinnerStatus(status = false) {
-		this.$store.dispatch('changeSpinnerStatus', status)
+			this.$store.dispatch('changeSpinnerStatus', status)
 		},
   }
 }

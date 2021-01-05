@@ -21,8 +21,8 @@
 							<input type="checkbox" class="form-check-input" @click="drawPolylineShape" id="drawLine">
 							<label class="form-check-label" for="exampleCheck1">Draw Polyline</label>
 						</div>
-						<input type="text" class="form-control accordion-link" placeholder="Length in ft" />
-						<input type="text" class="form-control accordion-link" placeholder="Length in mile" />		
+						<input type="text" class="form-control accordion-link" :value="lineDistance || ''" placeholder="Length in ft" />
+						<input type="text" class="form-control accordion-link" :value="polylineDistanceInFt || ''" placeholder="Length in mile" />		
 				</div>
 				</div>
 			</div>
@@ -70,6 +70,10 @@
 <script>
 export default {
    name: "Tools", 
+   props: [
+	   'lineDistance',
+	   'polylineDistanceInFt',
+   ],
    data(){
        return {
 		drawPolygon: false,

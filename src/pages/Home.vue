@@ -2,7 +2,7 @@
 	<div class="map">
 		
 		<gmap-map ref="map" :center="center" map-type-id="roadmap" :zoom="7" style="width: 100%; height: 100%">
-			<gmap-polygon :paths="paths" :editable="polygonEditable" @paths_changed="updateEdited($event)">
+			<gmap-polygon :paths="paths" :editable="polygonEditable" ref="polygon" @paths_changed="updatePolygone($event)">
 			</gmap-polygon>
 			<gmap-polyline v-if="lines" :path="lines" v-bind:options="{ strokeColor:'#008000'}" :editable="lineEditable" ref="polyline" @path_changed="updatePolyline($event)">
 			</gmap-polyline>
@@ -123,49 +123,10 @@
 				
 			</div>
 		</div>
-		<div class="right-section" :class="searchSidebar">
-			
-			<h3 class="popup-title desktop-view">Search <a class="float-right" @click="$store.commit('toggleSearchSideBar')"><i class="uil uil-times"></i></a></h3>
-			<h5 class="mobile-view">
-				<div class="mobile-title" @click="$store.commit('toggleSearchSideBar')"><i class="fa fa-arrow-left"></i> Search</div>
-			</h5>
-			<div id="accordion">
-			<div class="card">
-
-				
-				<form>
-					<div class="form-group">
-						<label for="formGroupExampleInput">Site ID</label>
-						<input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Site ID">
-					</div>
-					<div class="form-group">
-						<label for="formGroupExampleInput2">Site Name</label>
-						<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter Site Name">
-					</div>
-					<div class="form-group">
-						<label for="formGroupExampleInput2">Address</label>
-						<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter Location">
-					</div>
-					<div class="form-group">
-						<label for="formGroupExampleInput2">SR ID</label>
-						<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter sr id">
-					</div>
-				</form>
-				</div>
-				<div class="row pt-4">
-				<div class="col">
-					<button type="submit" class="btn btn-blue w-100" @click="searchSite">Submit</button>
-				</div>
-				<div class="col">
-					<button type="submit" class="btn btn-red w-100">Clear</button>
-				</div>
-			</div>
-			
-			
-			</div>
-		</div>
-		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" />
+		
+		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt"/>
 		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon"/>
+		<Search />
 	</div>
   
 </template>
@@ -182,13 +143,16 @@ import { ZoneService } from "../service/zone_service";
 import { Global } from "../global";
 import Tools  from "../components/Tools";
 import Filters  from "../components/Filters";
+import Search  from "../components/Search";
 import _ from 'lodash';
+import {gmapApi} from 'vue2-google-maps';
 
 export default {
   name: "Home",
   components: {
 	Tools,
-	Filters
+	Filters,
+	Search,
   },
   data: {
 	markers: [],
@@ -253,7 +217,8 @@ export default {
 	  marker1: [
 
 	  ],
-	  totalDistance: 0,
+	  polylineDistance: 0.00,
+	  polylineDistanceInFt: 0.00,
 	  markers: [{
             position: {
               lat: 10.0,
@@ -278,6 +243,7 @@ export default {
     };
   },
   computed: {
+	google: gmapApi,
     sidebarClass() {
       return this.$store.state.sidebarClass
 	},
@@ -567,6 +533,7 @@ export default {
 	},
 	updatePolyline: function (mvcPath) {
 		this.mvcPath = mvcPath
+		let netDistance = 0.00
 		if (!this.mvcPath) return null
 		let path = [];
 		for (let j=0; j<this.mvcPath.getLength(); j++) {
@@ -574,39 +541,58 @@ export default {
 			path.push({lat: point.lat(), lng: point.lng()});
 		}
 		
-		let marker1 = []
+		let marker1 = null
 		let _this = this;
 		if(path.length > 2){
 			path.map(function(value){
 				if(marker1){
 					var distance = _this.calDistance(marker1, value)
-					_this.totalDistance = _this.totalDistance + distance
+					netDistance = parseFloat(netDistance) + parseFloat(distance)
 				}
 				marker1 = value
-				console.log(_this.totalDistance)
+				
 			})
 		} else {
 			path.map(function(value){
 				if(marker1){
 					var distance = _this.calDistance(marker1, value)
-					_this.totalDistance = _this.totalDistance + distance
+					netDistance = parseFloat(netDistance) + parseFloat(distance)
 				}
 				marker1 = value
-				console.log(_this.totalDistance)
+				console.log(netDistance)
 			})
 		}
+		_this.polylineDistance = netDistance.toFixed(2)
+		_this.polylineDistanceInFt = (netDistance * 5280).toFixed(2); 
 		//return path
 	},
+	updatePolygone: function (mvcArray) {
+		let paths = [];
+		for (let i=0; i<mvcArray.getLength(); i++) {
+			let path = [];
+			for (let j=0; j<mvcArray.getAt(i).getLength(); j++) {
+				let point = mvcArray.getAt(i).getAt(j);
+				path.push({lat: point.lat(), lng: point.lng()});
+			}
+			paths.push(path);
+		}
+		console.log(paths[0])
+		var polyArea = google.maps.geometry.spherical.computeArea(10)
+		console.log(polyArea);
+	},
 	calDistance(mk1, mk2) {
-		console.log(mk1, mk2);
+		
 		var R = 3958.8; // Radius of the Earth in miles
-		var rlat1 = mk1.lat * (Math.PI / 180); // Convert degrees to radians
-		var rlat2 = mk2.lat * (Math.PI / 180); // Convert degrees to radians
+		var rlat1 = parseFloat(mk1.lat) * (Math.PI / 180); // Convert degrees to radians
+		var rlat2 = parseFloat(mk2.lat) * (Math.PI / 180); // Convert degrees to radians
 		var difflat = rlat2 - rlat1; // Radian difference (latitudes)
-		var difflon = (mk2.lng - mk1.lng) * (Math.PI / 180); // Radian difference (longitudes)
-
+		var difflon = (parseFloat(mk2.lng) - parseFloat(mk1.lng)) * (Math.PI / 180); // Radian difference (longitudes)
+		
 		var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat / 2) * Math.sin(difflat / 2) + Math.cos(rlat1) * Math.cos(rlat2) * Math.sin(difflon / 2) * Math.sin(difflon / 2)));
+		console.log("d = " + d);
 		return d;
+		
+		//console.log('d = '+d)
 	},
   }
 };
