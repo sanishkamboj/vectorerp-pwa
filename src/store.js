@@ -7,6 +7,7 @@ const state = {
   API_URL: 'https://pwa.sanish.info/api',  
   sidebarClass: 'd-none',
   showSpinner: false,
+  loadingText: 'Loading...',
   country: '',
   toolsSideBar: 'd-none',
   filterSideBar: 'd-none',
@@ -20,6 +21,9 @@ const state = {
 const mutations = {
   changeSpinnerStatus(state, status) {
     state.showSpinner = status
+  },
+  loadingText(state, status) {
+    state.loadingText = status
   },
   toggleSidebarMobile(state) {
     const currState = state.sidebarClass
@@ -78,6 +82,9 @@ const actions = {
   changeSpinnerStatus({ commit }, status) {
     commit('changeSpinnerStatus', status)
   },
+  loadingText({ commit }, status) {
+    commit('loadingText', status)
+  },
   setCountry({commit}, country){
     commit('setCountry', country)
   },
@@ -96,6 +103,9 @@ const actions = {
 const getters = {
   showSpinner(state) {
     return state.showSpinner
+  },
+  loadingText(state) {
+    return state.loadingText
   },
   getCountry(state){
     return state.country
