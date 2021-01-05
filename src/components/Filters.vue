@@ -115,7 +115,7 @@ export default {
         checkedCities: [],
 		city: [],
 		siteAttr: [],
-
+		zones: []
        }
    },
    computed: {
