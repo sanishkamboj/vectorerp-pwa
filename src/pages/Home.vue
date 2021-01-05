@@ -170,14 +170,16 @@ export default {
   async beforeCreate() {
     try {
 	  const isDbCreated = await initJsStore();
-	 
+	 console.log('======', isDbCreated)
       if (isDbCreated) {
 		console.log("db created");
 		// prefill database
 		this.changeSpinnerStatus(true)
 		await this.getData().then()
-		await this.getSiteData(this.changeSpinnerStatus())
+		await this.getSiteData()
 		await this.getZoneData()
+		await this.$refs.childFilter.fetchFilterData();
+		this.changeSpinnerStatus()
       } else {
 		console.log("db opened");
       }

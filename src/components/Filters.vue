@@ -115,7 +115,7 @@ export default {
         checkedCities: [],
 		city: [],
 		siteAttr: [],
-		zones: []     
+
        }
    },
    computed: {
@@ -143,6 +143,24 @@ export default {
 	  
   },
   methods: {
+  	  fetchFilterData : async function() {
+		await new SiteTypeService().getSiteTypes().then(res => {
+	          this.filters = res
+	          //console.log(res)
+		  })
+		await  new CityService().getCities().then(res => {
+	          this.city = res
+	          //console.log(res)
+		  })
+		await  new SiteAttrService().getSiteAttrs().then(res => {
+	          this.siteAttr = res
+	          console.log(res)
+		  })
+		await  new ZoneService().getZoneData().then(res => {
+	          this.zones = res
+	          console.log(res)
+		  })
+  	  },
 	  processFilter(){
 		//console.log(this.checkedSiteTypes)
 		this.changeSpinnerStatus(true)
