@@ -125,7 +125,7 @@
 		</div>
 		
 		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt"/>
-		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon"/>
+		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter"/>
 		<Search />
 	</div>
   
@@ -175,8 +175,11 @@ export default {
 		console.log("db created");
 		// prefill database
 		this.changeSpinnerStatus(true)
+		this.$store.dispatch('loadingText', 'Fetching Data...');
 		await this.getData().then()
+		this.$store.dispatch('loadingText', 'Fetching Sites Data...');
 		await this.getSiteData()
+		this.$store.dispatch('loadingText', 'Fetching Zone Data...');
 		await this.getZoneData()
 		await this.$refs.childFilter.fetchFilterData();
 		this.changeSpinnerStatus()
@@ -360,6 +363,7 @@ export default {
 					//console.log(sites)
 					sites.map(function(value) {
 						//console.log(value)
+						this.$store.dispatch('loadingText', 'Adding Site Data...');
 						var siteData = {
 							'siteid': value.siteid,
 							'cityId': value.cityid,
@@ -402,6 +406,7 @@ export default {
 				if(response.data.status == 200){
 					let zones = response.data.data.polyZone
 					//console.log(sites)
+					this.$store.dispatch('loadingText', 'Adding Zone Data...');
 					zones.map(function(value) {
 						//console.log(value)
 						var zoneData = {

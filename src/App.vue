@@ -15,7 +15,7 @@
           font-size: 13px;
           margin-top: 10px;
           text-align: center;
-      ">Loading...</p></loading>
+      ">{{loadingText}}</p></loading>
    
 	<router-view v-bind:key="$route.params.id"></router-view>
 	<resize-observer @notify="handleResize" />
@@ -34,7 +34,7 @@ export default {
     Loading
   },
   computed: {
-    ...mapGetters({ showSpinner: 'showSpinner' })
+    ...mapGetters({ showSpinner: 'showSpinner', loadingText: 'loadingText' })
   },
  methods: {
     handleResize ({ width, height }) {
