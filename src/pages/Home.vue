@@ -138,6 +138,7 @@ import { SiteDataService } from "../service/siteData_service";
 import { SiteTypeService } from "../service/siteType_service";
 import { SiteSubTypeService } from "../service/siteSubType_service";
 import { SiteAttrService } from "../service/siteAttr_service";
+import { SiteAttrDataService } from "../service/siteAttrData_service";
 import { CityService } from "../service/city_service";
 import { ZoneService } from "../service/zone_service";
 import { Global } from "../global";
@@ -177,10 +178,10 @@ export default {
 		this.changeSpinnerStatus(true)
 		this.$store.dispatch('loadingText', 'Fetching Data...');
 		await this.getData().then()
-		this.$store.dispatch('loadingText', 'Fetching Sites Data...');
-		await this.getSiteData()
 		this.$store.dispatch('loadingText', 'Fetching Zone Data...');
 		await this.getZoneData()
+		this.$store.dispatch('loadingText', 'Fetching Sites Data...');
+		await this.getSiteData()
 		await this.$refs.childFilter.fetchFilterData();
 		this.changeSpinnerStatus()
       } else {
@@ -321,6 +322,7 @@ export default {
 					let siteSubType = response.data.data.site_sub_types
 					let siteAttr = response.data.data.site_attributes
 					let cities = response.data.data.cities
+					let site_attr_data = response.data.data.site_attr_data
 
 					siteTypes.map(function(value) {
 						new SiteTypeService().addSiteType(value)
@@ -338,6 +340,10 @@ export default {
 						new CityService().addCity(value)
 					});
 					
+					site_attr_data.map(function(value){
+						new SiteAttrDataService().addSiteAttrData(value)
+					});
+					
 					//this.changeSpinnerStatus()
 				} else {
 					//this.changeSpinnerStatus()
@@ -345,7 +351,8 @@ export default {
 				
 			})
 			.catch(function (error) {
-				this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
+				console.log(error)
+				//this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
 			});
 	},
 	async getSiteData(){
@@ -361,15 +368,15 @@ export default {
 				if(response.data.status == 200){
 					let sites = response.data.data.sites
 					//console.log(sites)
+					this.$store.dispatch('loadingText', 'Adding Site Data...');
 					sites.map(function(value) {
-						//console.log(value)
-						this.$store.dispatch('loadingText', 'Adding Site Data...');
+
 						var siteData = {
 							'siteid': value.siteid,
 							'cityId': value.cityid,
 							'siteTypeId': value.stypeid,
 							'zoneId': value.zoneid,
-							'site_attr': value.site_attr
+							//'site_attr': value.site_attr
 						}
 						if(value.point != null){
 							siteData.point = JSON.stringify(value.point)

@@ -134,9 +134,6 @@ const getDatabase = () => {
             zoneId: {
                 dataType: DATA_TYPE.Number
             },
-            site_attr: {
-                dataType: DATA_TYPE.Number
-            },
 
         }
     };
@@ -184,6 +181,20 @@ const getDatabase = () => {
                 dataType: DATA_TYPE.String
             },
             status: {
+                dataType: DATA_TYPE.Number
+            }
+        }
+    };
+    const tblSiteAttributeData = {
+        name: 'site_attribute_data',
+        columns: {
+            id: {
+                dataType: DATA_TYPE.Number 
+            },
+            siteid: {
+                dataType: DATA_TYPE.Number
+            },
+            site_attr: {
                 dataType: DATA_TYPE.Number
             }
         }
@@ -238,6 +249,7 @@ const getDatabase = () => {
                     tblSiteTypes, 
                     tblSiteSubTypes,
                     tblSiteAttributes,
+                    tblSiteAttributeData,
                     tblCity,
                     tblSiteZones,
                     tblZones

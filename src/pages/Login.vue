@@ -71,7 +71,7 @@ import { delDbJsStore } from "../service/idb_service";
                         password: this.password
                     })
                     .then(response => {
-                        console.log(response);
+                        //console.log(response);
                         if(response.data.status == 200){
                             localStorage.setItem('user',JSON.stringify(response.data.data))
                             localStorage.setItem('jwt',response.data.token)

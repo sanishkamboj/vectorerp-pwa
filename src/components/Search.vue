@@ -12,7 +12,7 @@
 				<form>
 					<div class="form-group">
 						<label for="formGroupExampleInput">Site ID</label>
-						<input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Site ID">
+						<input type="text" class="form-control" v-model="siteId" id="formGroupExampleInput" placeholder="Enter Site ID">
 					</div>
 					<div class="form-group">
 						<label for="formGroupExampleInput2">Site Name</label>
@@ -30,7 +30,7 @@
 				</div>
 				<div class="row pt-4">
 				<div class="col">
-					<button type="submit" class="btn btn-blue w-100">Submit</button>
+					<button type="submit" @click="searchSite" class="btn btn-blue w-100">Submit</button>
 				</div>
 				<div class="col">
 					<button type="submit" class="btn btn-red w-100">Clear</button>
@@ -42,17 +42,45 @@
 		</div>
 </template>
 <script>
+import { SiteDataService } from "../service/siteData_service";
+
 export default {
-    name: "Search", 
-    data(){
-       return {
-        siteId: null, 
-       }
-   },
-   computed: {
-	searchSidebar(){
-		return this.$store.state.searchSidebar
+	name: "Search", 
+	data(){
+		return {
+			siteId: null, 
+		}
+	},
+	computed: {
+		searchSidebar(){
+			return this.$store.state.searchSidebar
+		}
+	},
+	methods: {
+		async searchSite(){
+			try {
+				this.changeSpinnerStatus(true)
+				let country = 'lee'
+				//console.log(this.createSite);
+				if(this.siteId != null){
+					var siteID = parseInt(this.siteId)
+					await new SiteDataService().getSiteById(siteID).then(res => {
+						console.log(res)
+						
+						//this.paths = this.center
+						//this.edited = this.paths;
+						this.changeSpinnerStatus()
+					});
+				}
+			} catch(error){
+				this.changeSpinnerStatus()
+				this.$notify({ group: 'app', type: 'warn', text: error })
+			}
+		},
+		changeSpinnerStatus(status = false) {
+			this.$store.dispatch('changeSpinnerStatus', status)
+		},
 	}
-  },
+
 }
 </script>

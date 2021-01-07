@@ -24,7 +24,7 @@ export class SiteDataService {
         return connection.select({
             from: this.tableName,
             where: {
-                id: id
+                siteid: id
             }
         })
     }
