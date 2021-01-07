@@ -16,7 +16,7 @@
 					</div>
 					<div class="form-group">
 						<label for="formGroupExampleInput2">Site Name</label>
-						<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter Site Name">
+						<input type="text" class="form-control" v-model="siteName" id="formGroupExampleInput2" placeholder="Enter Site Name">
 					</div>
 					<div class="form-group">
 						<label for="formGroupExampleInput2">Address</label>
@@ -49,6 +49,10 @@ export default {
 	data(){
 		return {
 			siteId: null, 
+			siteName: null,
+			pointPath: [],
+			polygonPath: [],
+			poly_line: []
 		}
 	},
 	computed: {
@@ -65,8 +69,76 @@ export default {
 				if(this.siteId != null){
 					var siteID = parseInt(this.siteId)
 					await new SiteDataService().getSiteById(siteID).then(res => {
+						console.log(res[0])
+						if(res[0].point !== undefined){
+							let cordinates = JSON.parse(res[0].point)
+							this.pointPath = {
+										position: {
+											lat: cordinates[0].lat,
+											lng: cordinates[0].lng
+										}
+									}
+							console.log(this.pointPath)
+							this.$emit('showSite', this.pointPath)
+						}
+						if(res[0].polygon !== undefined){
+							let cordinates = JSON.parse(res[0].polygon)
+							let polyCenter = JSON.parse(res[0].polyCenter)
+							var centPath = {
+										position: {
+											lat: polyCenter.lat,
+											lng: polyCenter.lng
+										}
+									}
+							this.polygonPath = cordinates
+							this.$emit('showSite', centPath)
+							this.$emit('changePolygon', this.polygonPath)
+						}
+						if(res[0].poly_line !== undefined){
+							let cordinates = JSON.parse(res[0].poly_line)
+							this.poly_line = cordinates
+							console.log(cordinates)
+							this.$emit('changeLines', this.poly_line)
+						}
+						//this.paths = this.center
+						//this.edited = this.paths;
+						this.changeSpinnerStatus()
+					});
+				} else
+				if(this.siteName != null){
+					var siteID = parseInt(this.siteId)
+					await new SiteDataService().getSiteByName(this.siteName).then(res => {
 						console.log(res)
-						
+						if(res[0].point !== undefined){
+							let cordinates = JSON.parse(res[0].point)
+							this.pointPath = {
+										position: {
+											lat: cordinates[0].lat,
+											lng: cordinates[0].lng
+										}
+									}
+							console.log(this.pointPath)
+							this.$emit('showSite', this.pointPath)
+						}
+						if(res[0].polygon !== undefined){
+							let cordinates = JSON.parse(res[0].polygon)
+							let polyCenter = JSON.parse(res[0].polyCenter)
+							var centPath = {
+										position: {
+											lat: polyCenter.lat,
+											lng: polyCenter.lng
+										}
+									}
+							this.polygonPath = cordinates
+							this.$emit('showSite', centPath)
+							this.$emit('changePolygon', this.polygonPath)
+						}
+						if(res[0].poly_line !== undefined){
+							let cordinates = JSON.parse(res[0].poly_line)
+							this.poly_line = cordinates
+							console.log(cordinates)
+							this.$emit('changeLines', this.poly_line)
+						}
 						//this.paths = this.center
 						//this.edited = this.paths;
 						this.changeSpinnerStatus()

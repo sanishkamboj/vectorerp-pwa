@@ -1,7 +1,7 @@
 <template>
 	<div class="map">
 		
-		<gmap-map ref="map" :center="center" map-type-id="roadmap" :zoom="7" style="width: 100%; height: 100%">
+		<gmap-map ref="map" :center="center" map-type-id="roadmap" :zoom="10" style="width: 100%; height: 100%">
 			<gmap-polygon :paths="paths" :editable="polygonEditable" ref="polygon" @paths_changed="updatePolygone($event)">
 			</gmap-polygon>
 			<gmap-polyline v-if="lines" :path="lines" v-bind:options="{ strokeColor:'#008000'}" :editable="lineEditable" ref="polyline" @path_changed="updatePolyline($event)">
@@ -126,7 +126,7 @@
 		
 		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt"/>
 		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter"/>
-		<Search />
+		<Search @showSite="showSite" @changePolygon="changePolygon" @changeLines="changeLines" />
 	</div>
   
 </template>
@@ -278,7 +278,10 @@ export default {
 	
   },
   methods: {
-
+	showSite(newMarkers){
+		this.markers = newMarkers;
+  		this.center = newMarkers.position;
+	},
   	changeMarkers(newMarkers) {
   		this.markers = newMarkers;
   		if(newMarkers && newMarkers.length) {
@@ -286,7 +289,6 @@ export default {
   		}
   	},
   	changeLines(newLines) {
-		console.log(newLines)
   		this.lines = newLines;
   		/*if(newLines && newLines.length) {
   			this.center = newLines[0][0];

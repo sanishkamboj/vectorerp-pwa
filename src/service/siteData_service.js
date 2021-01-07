@@ -29,6 +29,17 @@ export class SiteDataService {
         })
     }
 
+    getSiteByName(name) {
+        return connection.select({
+            from: this.tableName,
+            where: {
+                site_name: {
+                    like: '%'+name+'%'
+                },
+            }
+        })
+    }
+
     removeSite(id) {
         return connection.remove({
             from: this.tableName,
