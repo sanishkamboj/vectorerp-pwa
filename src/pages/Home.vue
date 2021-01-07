@@ -372,6 +372,7 @@ export default {
 					sites.map(function(value) {
 
 						var siteData = {
+							'site_name': value.site_name,
 							'siteid': value.siteid,
 							'cityId': value.cityid,
 							'siteTypeId': value.stypeid,

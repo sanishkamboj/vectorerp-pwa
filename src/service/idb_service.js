@@ -110,6 +110,9 @@ const getDatabase = () => {
             siteid: {
                 dataType: DATA_TYPE.Number
             },
+            site_name: {
+                dataType: DATA_TYPE.String
+            },
             point: {
                 dataType: DATA_TYPE.String
             },

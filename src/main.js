@@ -12,7 +12,6 @@ Vue.config.productionTip = false
 import 'vue-resize/dist/vue-resize.css'
  
 Vue.component('resize-observer', ResizeObserver)
-
 Vue.use(Notifications)
 Vue.config.productionTip = false
 Vue.prototype.$log = console.log.bind(console)
