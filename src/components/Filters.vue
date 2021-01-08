@@ -135,11 +135,11 @@ export default {
 	  })
 	  new SiteAttrService().getSiteAttrs().then(res => {
           this.siteAttr = res
-          console.log(res)
+          //console.log(res)
 	  })
 	  new ZoneService().getZoneData().then(res => {
           this.zones = res
-          console.log(res)
+          //console.log(res)
 	  })
 	  
   },
@@ -173,12 +173,14 @@ export default {
 				if(sitesIds.indexOf(obj.siteid) == -1)
 					sitesIds.push(obj.siteid)
 			})
+			//console.log(sitesIds)
 		}
 	  	new SiteDataService().getSitesByIds( this.checkedSiteTypes, sitesIds, this.checkedCities, this.checkedZones ).then(res => {
           if(res && res.length) {
           	let siteMarker = [];
           	let siteLines = [];
-          	let sitePolygon = [];
+			  let sitePolygon = [];
+			  //console.log(res)
           	res.map((obj, idx) => {
           		if(obj.point !== undefined) {
           			let point = JSON.parse(obj.point);

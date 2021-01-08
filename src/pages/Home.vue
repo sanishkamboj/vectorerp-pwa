@@ -125,7 +125,7 @@
 			</div>
 		</div>
 		
-		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt" v-bind:circleRadius="circleRadius" v-bind:circleArea="circleArea" />
+		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt" v-bind:circleRadius="circleRadius" v-bind:circleArea="circleArea" v-bind:polyAreaFt="polyAreaFt" v-bind:polyAreaMile="polyAreaMile" />
 		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter"/>
 		<Search @showSite="showSite" @changePolygon="changePolygon" @changeLines="changeLines" />
 	</div>
@@ -148,7 +148,7 @@ import Filters  from "../components/Filters";
 import Search  from "../components/Search";
 import _ from 'lodash';
 import {gmapApi} from 'vue2-google-maps';
-
+const geoarea = require('geo-area')(/*options*/{x: 'lng', y: 'lat'});
 export default {
   name: "Home",
   components: {
@@ -228,6 +228,8 @@ export default {
 	  polylineDistanceInFt: 0.00,
 	  circleRadius: 0.00,
 	  circleArea: 0.00,
+	  polyAreaFt: 0.00,
+	  polyAreaMile: 0.00,
 	  markers: [{
             position: {
               lat: 10.0,
@@ -598,8 +600,13 @@ export default {
 			paths.push(path);
 		}
 		console.log(paths[0])
-		var polyArea = google.maps.geometry.spherical.computeArea(mvcArray)
-		console.log(polyArea);
+		let polyArea = geoarea(paths[0]);
+		var sqMile = polyArea.toFixed(2) * parseFloat('0.00000039');
+		this.polyAreaMile = sqMile.toFixed(2)
+		var sqFeet = sqMile.toFixed(2) * parseInt('27878400');
+		this.polyAreaFt = sqFeet.toFixed(2)
+		//var polyArea = google.maps.geometry.spherical.computeArea(mvcArray)
+		//console.log(polyArea);
 	},
 	updateCircle: function(mvcArray){
 		this.circleRadius = mvcArray.toFixed(2)

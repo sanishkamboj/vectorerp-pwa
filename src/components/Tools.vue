@@ -18,7 +18,7 @@
 				<div class="card-body pt-1">
 					
 						<div class="form-check">
-							<input type="checkbox" class="form-check-input" @click="drawPolylineShape" id="drawLine">
+							<input type="checkbox" class="form-check-input" v-model="polylineCheckbox" @click="drawPolylineShape" id="drawLine">
 							<label class="form-check-label" for="exampleCheck1">Draw Polyline</label>
 						</div>
 						<input type="text" class="form-control accordion-link" :value="lineDistance || ''" placeholder="Length in ft" />
@@ -37,11 +37,11 @@
 				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
 				<div class="card-body pt-1">
 						<div class="form-check">
-							<input type="checkbox" class="form-check-input" @click="drawPolygonShape" id="drawPolygon">
+							<input type="checkbox" class="form-check-input" v-model="polygonCheckbox" @click="drawPolygonShape" id="drawPolygon">
 							<label class="form-check-label" for="exampleCheck1">Draw polygon</label>
 						</div>
-						<input type="text" class="form-control accordion-link" placeholder="Area in sq. ft" />
-						<input type="text" class="form-control accordion-link" placeholder="Area in sq. mile" />	
+						<input type="text" class="form-control accordion-link" :value="polyAreaFt || ''" placeholder="Area in sq. ft" />
+						<input type="text" class="form-control accordion-link" :value="polyAreaMile || ''" placeholder="Area in sq. mile" />	
 				</div>
 				</div>
 			</div>
@@ -56,7 +56,7 @@
 				<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
 				<div class="card-body pt-1">
 						<div class="form-check">
-							<input type="checkbox" class="form-check-input" @click="drawCircleShape" id="drawCircle">
+							<input type="checkbox" class="form-check-input" v-model="circleCheckbox" @click="drawCircleShape" id="drawCircle">
 							<label class="form-check-label" for="exampleCheck1">Draw Circle</label>
 						</div>
 						<input type="text" class="form-control accordion-link" :value="circleRadius || ''"  placeholder="Radius of circle" />
@@ -75,12 +75,17 @@ export default {
 	   'polylineDistanceInFt',
 	   'circleRadius',
 	   'circleArea',
+	   'polyAreaFt',
+	   'polyAreaMile',
    ],
    data(){
        return {
 		drawPolygon: false,
 		drawCircle: false,
 		drawLine: false,
+		polylineCheckbox: false,
+		polygonCheckbox: false,
+		circleCheckbox: false,
 		polygonPath: [],
 		paths: [],
 		lines: []
@@ -96,6 +101,10 @@ export default {
 	  drawPolygonShape(){
 		  
 		  if(!this.drawPolygon){
+			this.drawCircle = this.drawCircle?false:false;
+			this.drawLine = this.drawLine?false:false;
+			this.polylineCheckbox = false
+			this.circleCheckbox = false
 			this.drawPolygon = true
 			var bounds = this.$store.state.map.$mapObject.getBounds()
             var northEast = bounds.getNorthEast()
@@ -109,10 +118,12 @@ export default {
               { lng: (1-f) * center.lng() + (f) * northEast.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
             ]
 
-			this.paths.push(path)
-			this.$emit('changePolygon', this.paths)
+			//this.paths.push(path)
+			this.$emit('changeLines', [])
+			this.$emit('changeCircle', { lng: 0, lat: 0 })
+			this.$emit('changePolygon', path)
 			this.$store.dispatch('changePolygonEditable', true)
-			console.log(this.paths)
+			//console.log(this.paths)
 		  } else{
 			   this.drawPolygon = false
 			   this.paths = []
@@ -122,6 +133,10 @@ export default {
 	  },
 	  drawCircleShape(){
 		  if(!this.drawCircle){
+			this.drawPolygon = this.drawPolygon?false:false;
+			this.drawLine = this.drawLine?false:false;
+			this.polylineCheckbox = false
+			this.polygonCheckbox = false
 			this.drawCircle = true
 			var bounds = this.$store.state.map.$mapObject.getBounds()
             var northEast = bounds.getNorthEast()
@@ -131,6 +146,8 @@ export default {
             var f = Math.pow(0.66, degree)
             var path = { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() }
 			//this.paths.push(path)
+			this.$emit('changePolygon', [])
+			this.$emit('changeLines', [])
 			this.$emit('changeCircle', path)
 		  } else{
 			   this.drawCircle = false
@@ -140,6 +157,10 @@ export default {
 	  },
 	  drawPolylineShape(){
 		   if(!this.drawLine){
+			this.drawCircle = this.drawCircle?false:false;
+			this.drawPolygon = this.drawPolygon?false:false;
+			this.circleCheckbox = false
+			this.polygonCheckbox = false
 			this.drawLine = true
 			var bounds = this.$store.state.map.$mapObject.getBounds()
             var northEast = bounds.getNorthEast()
@@ -153,7 +174,9 @@ export default {
             
 			]
 			console.log(path)
-			this.paths.push(path)
+			
+			this.$emit('changePolygon', [])
+			this.$emit('changeCircle', { lng: 0, lat: 0 })
 			this.$emit('changeLines', path)
 			this.$store.dispatch('changeLineEditable', true)
 		  } else{
