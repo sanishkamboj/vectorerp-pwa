@@ -58,7 +58,7 @@ export class SiteDataService {
             query.where.push({siteTypeId: {in: siteTypes}})
         }
         if(siteAttr && siteAttr.length) {
-            query.where.push({site_attr: {in: siteAttr}})
+            query.where.push({siteid: {in: siteAttr}})
         }
         if(siteCities && siteCities.length) {
             query.where.push({cityId: {in: siteCities}})
