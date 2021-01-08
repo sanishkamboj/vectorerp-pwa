@@ -12,6 +12,7 @@ const state = {
   toolsSideBar: 'd-none',
   filterSideBar: 'd-none',
   searchSidebar: 'd-none',
+  saveSiteModal: 'd-none',
   polygonEditable: false,
   lineEditable: false,
   markerEditable: false,
@@ -68,6 +69,15 @@ const mutations = {
         state.searchSidebar = 'show-sidebar'
     } else {
         state.searchSidebar = 'd-none'
+    }
+  },
+  toggleSaveSiteModal(state){
+    const currState = state.saveSiteModal
+    console.log(currState)
+    if(currState == 'd-none'){
+        state.saveSiteModal = 'show-modal'
+    } else {
+        state.saveSiteModal = 'd-none'
     }
   },
   setCountry(state, country){

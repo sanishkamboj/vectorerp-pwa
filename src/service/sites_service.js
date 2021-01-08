@@ -16,6 +16,7 @@ export class SitesService {
     addSite(data) {
         return connection.insert({
             into: this.tableName,
+            return: true,
             values: [data]
         })
     }
@@ -37,7 +38,17 @@ export class SitesService {
             }
         })
     }
-
+    updateSitePolyLatLngById(site) {
+        return connection.update({
+            in: this.tableName,
+            set: {
+                polygonLatLong: site.path,
+            },
+            where: {
+                id: site.id
+            }
+        })
+    }
     updateStudentById(student) {
         return connection.update({
             in: this.tableName,

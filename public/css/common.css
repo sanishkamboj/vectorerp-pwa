@@ -146,7 +146,38 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .desktop-view{
 	display:block!important;
 }
-
+.topPoup{
+	width:600px;
+	max-width:92%;
+	background:#ffffff;
+	box-shadow:0px 0px 4px #dddddd;
+	-webkit-box-shadow:0px 0px 4px #dddddd;
+	display:flex;
+	padding:10px 20px;
+	margin:20px auto 0px;
+	border-radius:5px;
+	position: absolute;
+	z-index: 10;
+	left: 50%;
+	margin-left: -300px;
+}
+.topPoup p{
+	font-size:13px;
+	color:#585B5C;
+}
+.rightBtns{
+	display:flex;
+	align-items: center;
+}
+.rightBtns > div{
+	margin-left:10px;
+}
+.rightBtns button{
+	width:auto;
+}
+@media(max-width:630px){
+	.topPoup{width:92%;left:0px;margin-left:4%;}
+}
 .filter-icon.filter{top:20px;left:20px;position:absolute;display:flex!important;}
 .filter-icon.logout{top:20px;right:20px;position:absolute;display:flex!important;}
 .filter-icon.add{bottom:20px;right:20px;position:absolute;display:flex!important;}

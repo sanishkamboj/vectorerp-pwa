@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <notifications group="login" position="top center" />
-    <notifications group="app" />
+    <notifications group="app" position="top center" />
 	  <loading :active.sync="showSpinner" 
         :can-cancel="false" 
 		    :opacity="0.7"

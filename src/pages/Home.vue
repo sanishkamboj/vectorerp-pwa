@@ -128,8 +128,15 @@
 		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt" v-bind:circleRadius="circleRadius" v-bind:circleArea="circleArea" v-bind:polyAreaFt="polyAreaFt" v-bind:polyAreaMile="polyAreaMile" />
 		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter"/>
 		<Search @showSite="showSite" @changePolygon="changePolygon" @changeLines="changeLines" />
+		<div class="topPoup" :class="saveSiteModal">
+			<p>Note: The classList property is not supported in Internet Explorer 9. The following example uses a cross-browser solution/fallback code for IE9:</p>
+			<div class="rightBtns">
+				<div><button type="submit" @click="saveSitePath()" class="btn btn-blue w-100">Save</button></div>
+				<div><button type="submit" @click="cancelSiteSave()" class="btn btn-red w-100">Cancel</button></div>
+			</div>
+		</div>
 	</div>
-  
+	
 </template>
 
 <script>
@@ -214,6 +221,7 @@ export default {
             lat: 0, lng: 0
           },
 	  API_URL: this.$store.state.API_URL,
+	  newSiteID: null,
 	  siteModalClass: 'd-none',
 	  siteTypeOpt: '',
 	  siteSubTypeOpt: '',
@@ -221,6 +229,12 @@ export default {
 	  circleCenter: '',
 	  mvcPath: null,
 	  polylineGeojson: '',
+	  newSitePolygonPath:[
+
+	  ],
+	  newSitePolylinePath: [
+
+	  ],
 	  marker1: [
 
 	  ],
@@ -275,6 +289,9 @@ export default {
 	},
 	markerEditable(){
 		return this.$store.state.markerEditable
+	},
+	saveSiteModal(){
+		return this.$store.state.saveSiteModal
 	},
 	polylinePath () {
 		
@@ -504,6 +521,7 @@ export default {
 			}
 			//console.log(data)
 			await new SitesService().addSite(data).then(res => {
+				this.newSiteID = res[0].id
 				this.center = {lat: this.createSite.address.geometry.location.lat(), lng: this.createSite.address.geometry.location.lng() }
 				this.$store.commit('set',['map', this.$refs.map])
 				var self = this;
@@ -511,11 +529,13 @@ export default {
 					setTimeout(function() {
 						self.drawGeometryPolygon()
 						self.changeSpinnerStatus()
+						self.$store.commit('toggleSaveSiteModal')
 					}, 2000);
 				} else if(geometry == 3){
 					setTimeout(function() {
 						self.drawGeometryPolyline()
 						self.changeSpinnerStatus()
+						self.$store.commit('toggleSaveSiteModal')
 					}, 2000);
 				}
 				//this.paths = this.center
@@ -543,8 +563,9 @@ export default {
 			{ lng: (1-f) * center.lng() + (f) * northEast.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
 		]
 		this.changePolygon(path)
+		this.newSitePolygonPath = path
 		this.$store.dispatch('changePolygonEditable', true)
-		console.log(this.path)
+		
 	},
 	async drawGeometryPolyline(){
 		var bounds = this.$store.state.map.$mapObject.getBounds()
@@ -605,7 +626,7 @@ export default {
 			let point = this.mvcPath.getAt(j);
 			path.push({lat: point.lat(), lng: point.lng()});
 		}
-		
+		this.newSitePolygonPath = path
 		let marker1 = null
 		let _this = this;
 		if(path.length > 2){
@@ -642,6 +663,7 @@ export default {
 			}
 			paths.push(path);
 		}
+		this.newSitePolygonPath = paths
 		console.log(paths[0])
 		let polyArea = geoarea(paths[0]);
 		var sqMile = polyArea.toFixed(2) * parseFloat('0.00000039');
@@ -671,6 +693,28 @@ export default {
 		
 		//console.log('d = '+d)
 	},
+	cancelSiteSave(){
+		this.$store.commit('toggleSaveSiteModal')
+		this.changePolygon([])
+	},
+	async saveSitePath(){
+		try{
+			this.changeSpinnerStatus(true)
+			let site = []
+			site.id = this.newSiteID
+			site.path = JSON.stringify(this.newSitePolygonPath)
+			await new SitesService().updateSitePolyLatLngById(site).then(response => {
+				console.log(response)
+				this.$notify({ group: 'app', text: 'Site Path Updated Successfully' })
+			});
+			this.changeSpinnerStatus()
+			this.$store.commit('toggleSaveSiteModal')
+			this.changePolygon([])
+		} catch(error){
+			this.changeSpinnerStatus()
+			this.$notify({ group: 'app', type: 'warn', text: error })
+		}
+	}
   }
 };
 </script>
