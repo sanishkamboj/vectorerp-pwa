@@ -490,12 +490,13 @@ export default {
 				this.$notify({ group: 'app', type: 'warn', text: 'Status cannot be null' })
 			}
 			this.changeSpinnerStatus(true)
+			var geometry = this.createSite.geometryType.trim()
 			const data = {
 				name: this.createSite.siteName.trim(),
 				siteTypeId: parseInt(this.createSite.siteType),
 				siteSubTypeId: parseInt(this.createSite.siteSubType),
 				address1: this.createSite.address.formatted_address,	
-				geometryType: this.createSite.geometryType.trim(),
+				geometryType: geometry,
 				latitude: String(this.createSite.address.geometry.location.lat()),
 				longitude: String(this.createSite.address.geometry.location.lat()),
 				created: new Date(),
@@ -504,12 +505,22 @@ export default {
 			//console.log(data)
 			await new SitesService().addSite(data).then(res => {
 				this.center = {lat: this.createSite.address.geometry.location.lat(), lng: this.createSite.address.geometry.location.lng() }
-				this.paths = 
-					[ {lat: 1.380, lng: 103.800}, {lat:1.380, lng: 103.810}, {lat: 1.390, lng: 103.810}, {lat: 1.390, lng: 103.800} ]
-				
+				this.$store.commit('set',['map', this.$refs.map])
+				var self = this;
+				if(geometry == 2){
+					setTimeout(function() {
+						self.drawGeometryPolygon()
+						self.changeSpinnerStatus()
+					}, 2000);
+				} else if(geometry == 3){
+					setTimeout(function() {
+						self.drawGeometryPolyline()
+						self.changeSpinnerStatus()
+					}, 2000);
+				}
 				//this.paths = this.center
 				//this.edited = this.paths;
-				this.changeSpinnerStatus()
+				
 				this.createSiteModel()
 			});
 			this.resetForm()
@@ -518,6 +529,38 @@ export default {
 			this.changeSpinnerStatus()
 			this.$notify({ group: 'app', type: 'warn', text: error })
 		}
+	},
+	async drawGeometryPolygon(){
+		var bounds = this.$store.state.map.$mapObject.getBounds()
+		var northEast = bounds.getNorthEast()
+		var southWest = bounds.getSouthWest()
+		var center = bounds.getCenter()
+		var degree = this.paths.length + 1;
+		var f = Math.pow(0.66, degree)
+		var path = [
+			{ lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() },
+			{ lng: (1-f) * center.lng() + (f) * southWest.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
+			{ lng: (1-f) * center.lng() + (f) * northEast.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
+		]
+		this.changePolygon(path)
+		this.$store.dispatch('changePolygonEditable', true)
+		console.log(this.path)
+	},
+	async drawGeometryPolyline(){
+		var bounds = this.$store.state.map.$mapObject.getBounds()
+		var northEast = bounds.getNorthEast()
+		var southWest = bounds.getSouthWest()
+		var center = bounds.getCenter()
+		var degree = this.paths.length + 1;
+		var f = Math.pow(0.66, degree)
+		var path = [
+            { lng: center.lng(), lat: (1-f) * center.lat() + (f) * northEast.lat() },
+            { lng: (1-f) * center.lng() + (f) * southWest.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
+            
+			]
+		this.changeLines(path)
+		this.$store.dispatch('changeLineEditable', true)
+		console.log(this.path)
 	},
 	logOut(){
 		this.changeSpinnerStatus(true)
