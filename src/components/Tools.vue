@@ -59,8 +59,8 @@
 							<input type="checkbox" class="form-check-input" @click="drawCircleShape" id="drawCircle">
 							<label class="form-check-label" for="exampleCheck1">Draw Circle</label>
 						</div>
-						<input type="text" class="form-control accordion-link" placeholder="Radius of circle" />
-						<input type="text" class="form-control accordion-link" placeholder="Area of circle" />
+						<input type="text" class="form-control accordion-link" :value="circleRadius || ''"  placeholder="Radius of circle" />
+						<input type="text" class="form-control accordion-link"  :value="circleArea || ''" placeholder="Area of circle" />
 				</div>
 				</div>
 			</div>
@@ -73,6 +73,8 @@ export default {
    props: [
 	   'lineDistance',
 	   'polylineDistanceInFt',
+	   'circleRadius',
+	   'circleArea',
    ],
    data(){
        return {

@@ -13,6 +13,7 @@
 				:visible="true"
 				:editable="true"
 				fillColor="red"
+				@radius_changed="updateCircle($event)"
 				fillOpacity="1.0">
         	</gmap-circle>
 	        <gmap-marker v-for="(m, index) in markers"
@@ -124,7 +125,7 @@
 			</div>
 		</div>
 		
-		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt"/>
+		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt" v-bind:circleRadius="circleRadius" v-bind:circleArea="circleArea" />
 		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter"/>
 		<Search @showSite="showSite" @changePolygon="changePolygon" @changeLines="changeLines" />
 	</div>
@@ -225,6 +226,8 @@ export default {
 	  ],
 	  polylineDistance: 0.00,
 	  polylineDistanceInFt: 0.00,
+	  circleRadius: 0.00,
+	  circleArea: 0.00,
 	  markers: [{
             position: {
               lat: 10.0,
@@ -584,6 +587,7 @@ export default {
 		//return path
 	},
 	updatePolygone: function (mvcArray) {
+		console.log(mvcArray)
 		let paths = [];
 		for (let i=0; i<mvcArray.getLength(); i++) {
 			let path = [];
@@ -594,8 +598,14 @@ export default {
 			paths.push(path);
 		}
 		console.log(paths[0])
-		var polyArea = google.maps.geometry.spherical.computeArea(10)
+		var polyArea = google.maps.geometry.spherical.computeArea(mvcArray)
 		console.log(polyArea);
+	},
+	updateCircle: function(mvcArray){
+		this.circleRadius = mvcArray.toFixed(2)
+		let radius = mvcArray.toFixed(2)
+		var area = (parseFloat('3.14') * (radius * radius));
+		this.circleArea = area.toFixed(2)
 	},
 	calDistance(mk1, mk2) {
 		
