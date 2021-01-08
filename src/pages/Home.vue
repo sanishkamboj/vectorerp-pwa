@@ -129,7 +129,7 @@
 		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter"/>
 		<Search @showSite="showSite" @changePolygon="changePolygon" @changeLines="changeLines" />
 		<div class="topPoup" :class="saveSiteModal">
-			<p>Note: The classList property is not supported in Internet Explorer 9. The following example uses a cross-browser solution/fallback code for IE9:</p>
+			<p>Select area for the site by dots on the edges of shape.</p>
 			<div class="rightBtns">
 				<div><button type="submit" @click="saveSitePath()" class="btn btn-blue w-100">Save</button></div>
 				<div><button type="submit" @click="cancelSiteSave()" class="btn btn-red w-100">Cancel</button></div>
