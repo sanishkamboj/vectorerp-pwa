@@ -29,4 +29,13 @@ export class SiteAttrDataService {
             }
         })
     }
+    async getSitesByIds(ids) {
+        let query = {
+            from: this.tableName,
+            where: [],
+        }
+
+        query.where.push({site_attr: {in: ids}})
+        return connection.select(query);
+    }
 }

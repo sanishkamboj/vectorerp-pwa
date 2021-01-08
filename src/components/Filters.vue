@@ -100,6 +100,7 @@
 import { SiteTypeService } from "../service/siteType_service";
 import { CityService } from "../service/city_service";
 import { SiteAttrService } from "../service/siteAttr_service";
+import { SiteAttrDataService } from "../service/siteAttrData_service";
 import { SitesService } from "../service/sites_service";
 import { SiteDataService } from "../service/siteData_service";
 import { ZoneService } from "../service/zone_service";
@@ -161,10 +162,19 @@ export default {
 	          console.log(res)
 		  })
   	  },
-	  processFilter(){
+	  async processFilter(){
 		//console.log(this.checkedSiteTypes)
-		this.changeSpinnerStatus(true)
-	  	new SiteDataService().getSitesByIds( this.checkedSiteTypes, this.checkedSiteAttr, this.checkedCities, this.checkedZones ).then(res => {
+		this.changeSpinnerStatus(true);
+		let sites = []
+		let sitesIds = []
+		if(this.checkedSiteAttr && this.checkedSiteAttr.length) {
+			sites = await new SiteAttrDataService().getSitesByIds(this.checkedSiteAttr);
+			sites.map((obj) => {
+				if(sitesIds.indexOf(obj.siteid) == -1)
+					sitesIds.push(obj.siteid)
+			})
+		}
+	  	new SiteDataService().getSitesByIds( this.checkedSiteTypes, sitesIds, this.checkedCities, this.checkedZones ).then(res => {
           if(res && res.length) {
           	let siteMarker = [];
           	let siteLines = [];
