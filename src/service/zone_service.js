@@ -28,4 +28,15 @@ export class ZoneService {
             }
         })
     }
+
+    async getZonesByIds(ids) {
+        let query = {
+            from: this.tableName,
+            where: [],
+        }
+        if(ids && ids.length) {
+            query.where.push({zoneid: {in: ids}})
+        }
+        return connection.select(query);
+    }
 }

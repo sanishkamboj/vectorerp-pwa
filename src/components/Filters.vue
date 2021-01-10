@@ -165,8 +165,10 @@ export default {
 	  async processFilter(){
 		//console.log(this.checkedSiteTypes)
 		this.changeSpinnerStatus(true);
+		this.$store.commit('toggleFilterSideBar')
 		let sites = []
 		let sitesIds = []
+		let zonesData = []
 		if(this.checkedSiteAttr && this.checkedSiteAttr.length) {
 			sites = await new SiteAttrDataService().getSitesByIds(this.checkedSiteAttr);
 			sites.map((obj) => {
@@ -175,12 +177,23 @@ export default {
 			})
 			//console.log(sitesIds)
 		}
+
+		if(this.checkedZones) {
+			zonesData = await new ZoneService().getZonesByIds(this.checkedZones);
+			if(zonesData.length) {
+				zonesData.map((obj, idx) => {
+					let path = JSON.parse(obj.lat_long);
+					if(path) {
+						this.$emit('changePolygon', path)
+					}
+				})
+			}
+		}
 	  	new SiteDataService().getSitesByIds( this.checkedSiteTypes, sitesIds, this.checkedCities, this.checkedZones ).then(res => {
           if(res && res.length) {
           	let siteMarker = [];
           	let siteLines = [];
 			  let sitePolygon = [];
-			  //console.log(res)
           	res.map((obj, idx) => {
           		if(obj.point !== undefined) {
           			let point = JSON.parse(obj.point);
