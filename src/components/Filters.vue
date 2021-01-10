@@ -116,7 +116,8 @@ export default {
         checkedCities: [],
 		city: [],
 		siteAttr: [],
-		zones: []
+		zones: [],
+		zoneData: []
        }
    },
    computed: {
@@ -180,16 +181,20 @@ export default {
 
 		if(this.checkedZones) {
 			zonesData = await new ZoneService().getZonesByIds(this.checkedZones);
+			console.log(zonesData)
 			if(zonesData.length) {
-				zonesData.map((obj, idx) => {
+				await zonesData.map((obj, idx) => {
 					let path = JSON.parse(obj.lat_long);
 					if(path) {
-						this.$emit('changePolygon', path)
+						this.zoneData.push(path)
 					}
 				})
+				console.log(this.zoneData)
+				this.$emit('displayZones', this.zoneData)
 			}
 		}
 	  	new SiteDataService().getSitesByIds( this.checkedSiteTypes, sitesIds, this.checkedCities, this.checkedZones ).then(res => {
+			  console.log(res)
           if(res && res.length) {
           	let siteMarker = [];
           	let siteLines = [];
@@ -217,6 +222,7 @@ export default {
 			this.$emit('changeMarkers', siteMarker)
 			this.$emit('changeLines', siteLines)
 			this.$emit('changePolygon', sitePolygon)
+			
 			
 			//this.$store.dispatch('changeMarkerEditable', true)
 			this.changeSpinnerStatus()

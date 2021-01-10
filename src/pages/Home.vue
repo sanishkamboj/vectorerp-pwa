@@ -126,7 +126,7 @@
 		</div>
 		
 		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt" v-bind:circleRadius="circleRadius" v-bind:circleArea="circleArea" v-bind:polyAreaFt="polyAreaFt" v-bind:polyAreaMile="polyAreaMile" />
-		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter"/>
+		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter" @displayZones="displayZones"/>
 		<Search @showSite="showSite" @changePolygon="changePolygon" @changeLines="changeLines" />
 		<div class="topPoup" :class="saveSiteModal">
 			<p>Select area for the site by dots on the edges of shape.</p>
@@ -318,6 +318,10 @@ export default {
   	},
   	changePolygon(newPolygon) {
 		this.paths = newPolygon;
+	},
+	displayZones(zoneArr){
+		console.log(zoneArr)
+		this.paths = zoneArr
 	},
 	changeCircle(newCircleCenter){
 		console.log(newCircleCenter)
