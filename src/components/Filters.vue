@@ -215,19 +215,19 @@ export default {
           		}
           		if(obj.polygon !== undefined) {
           			let polygon = JSON.parse(obj.polygon);
-      				sitePolygon.push(polygon)          		
+      				this.zoneData.push(polygon)          		
           		}
           	})
           	//console.log(sitePolygon);
 			this.$emit('changeMarkers', siteMarker)
 			this.$emit('changeLines', siteLines)
-			this.$emit('changePolygon', sitePolygon)
+			this.$emit('changePolygon', this.zoneData)
 			
 			
 			//this.$store.dispatch('changeMarkerEditable', true)
 			this.changeSpinnerStatus()
 		  } else {
-			  this.$notify({ group: 'app', type: 'warn', text: 'No Data Found' })
+			  this.$notify({ group: 'app', type: 'warn', text: 'No sites found please try again with another selection' })
 			  this.changeSpinnerStatus()
 		  }
 		   
