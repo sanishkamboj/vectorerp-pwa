@@ -198,7 +198,7 @@ export default {
           if(res && res.length) {
           	let siteMarker = [];
           	let siteLines = [];
-			  let sitePolygon = [];
+			let sitePolygon = [];
           	res.map((obj, idx) => {
           		if(obj.point !== undefined) {
           			let point = JSON.parse(obj.point);

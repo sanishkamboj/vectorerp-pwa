@@ -302,7 +302,10 @@ export default {
   methods: {
 	showSite(newMarkers){
 		this.markers = newMarkers;
-  		this.center = newMarkers.position;
+		if(newMarkers && newMarkers.length) {
+			  this.center = newMarkers[0].position;
+  		}
+  		
 	},
   	changeMarkers(newMarkers) {
   		this.markers = newMarkers;

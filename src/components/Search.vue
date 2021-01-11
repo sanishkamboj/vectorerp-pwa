@@ -52,7 +52,10 @@ export default {
 			siteName: null,
 			pointPath: [],
 			polygonPath: [],
-			poly_line: []
+			poly_line: [],
+			pointArr: [],
+			lineArr: [],
+			polygonArr: []
 		}
 	},
 	computed: {
@@ -62,6 +65,9 @@ export default {
 	},
 	methods: {
 		async searchSite(){
+			this.$emit('showSite', [])
+			this.$emit('changeLines', [])
+			this.$emit('changePolygon', [])
 			try {
 				this.changeSpinnerStatus(true)
 				let country = 'lee'
@@ -69,75 +75,92 @@ export default {
 				if(this.siteId != null){
 					var siteID = parseInt(this.siteId)
 					await new SiteDataService().getSiteById(siteID).then(res => {
-						console.log(res[0])
-						if(res[0].point !== undefined){
-							let cordinates = JSON.parse(res[0].point)
-							this.pointPath = {
-										position: {
-											lat: cordinates[0].lat,
-											lng: cordinates[0].lng
+						if(res.length){
+							if(res[0].point !== undefined){
+								let cordinates = JSON.parse(res[0].point)
+								this.pointPath = {
+											position: {
+												lat: cordinates[0].lat,
+												lng: cordinates[0].lng
+											}
 										}
-									}
-							console.log(this.pointPath)
-							this.$emit('showSite', this.pointPath)
-						}
-						if(res[0].polygon !== undefined){
-							let cordinates = JSON.parse(res[0].polygon)
-							let polyCenter = JSON.parse(res[0].polyCenter)
-							var centPath = {
-										position: {
-											lat: polyCenter.lat,
-											lng: polyCenter.lng
+								console.log(this.pointPath)
+								this.$emit('showSite', this.pointPath)
+							}
+							if(res[0].polygon !== undefined){
+								let cordinates = JSON.parse(res[0].polygon)
+								let polyCenter = JSON.parse(res[0].polyCenter)
+								var centPath = {
+											position: {
+												lat: polyCenter.lat,
+												lng: polyCenter.lng
+											}
 										}
-									}
-							this.polygonPath = cordinates
-							this.$emit('showSite', centPath)
-							this.$emit('changePolygon', this.polygonPath)
-						}
-						if(res[0].poly_line !== undefined){
-							let cordinates = JSON.parse(res[0].poly_line)
-							this.poly_line = cordinates
-							console.log(cordinates)
-							this.$emit('changeLines', this.poly_line)
+								this.polygonPath = cordinates
+								this.$emit('showSite', centPath)
+								this.$emit('changePolygon', this.polygonPath)
+							}
+							if(res[0].poly_line !== undefined){
+								let cordinates = JSON.parse(res[0].poly_line)
+								this.poly_line = cordinates
+								console.log(cordinates)
+								this.$emit('changeLines', this.poly_line)
+							}
+						} else {
+							this.$notify({ group: 'app', type: 'warn', text: 'No site found please try another site id' })
 						}
 						//this.paths = this.center
 						//this.edited = this.paths;
 						this.changeSpinnerStatus()
 					});
-				} else
-				if(this.siteName != null){
+				} else if(this.siteName != null){
 					var siteID = parseInt(this.siteId)
 					await new SiteDataService().getSiteByName(this.siteName).then(res => {
 						console.log(res)
-						if(res[0].point !== undefined){
-							let cordinates = JSON.parse(res[0].point)
-							this.pointPath = {
-										position: {
-											lat: cordinates[0].lat,
-											lng: cordinates[0].lng
-										}
-									}
-							console.log(this.pointPath)
-							this.$emit('showSite', this.pointPath)
-						}
-						if(res[0].polygon !== undefined){
-							let cordinates = JSON.parse(res[0].polygon)
-							let polyCenter = JSON.parse(res[0].polyCenter)
-							var centPath = {
-										position: {
-											lat: polyCenter.lat,
-											lng: polyCenter.lng
-										}
-									}
-							this.polygonPath = cordinates
-							this.$emit('showSite', centPath)
-							this.$emit('changePolygon', this.polygonPath)
-						}
-						if(res[0].poly_line !== undefined){
-							let cordinates = JSON.parse(res[0].poly_line)
-							this.poly_line = cordinates
-							console.log(cordinates)
-							this.$emit('changeLines', this.poly_line)
+						if(res.length){
+							for(let i=0; i<res.length; i++){
+								console.log(res[i])
+								if(res[i].point !== undefined){
+									let cordinates = JSON.parse(res[i].point)
+									
+									this.pointPath = {
+												position: {
+													lat: cordinates[0].lat,
+													lng: cordinates[0].lng
+												}
+											}
+									this.pointArr.push(this.pointPath)
+									//this.$emit('showSite', this.pointPath)
+								}
+								if(res[i].polygon !== undefined){
+									let cordinates = JSON.parse(res[i].polygon)
+									let polyCenter = JSON.parse(res[i].polyCenter)
+									console.log(cordinates)
+									var centPath = {
+												position: {
+													lat: polyCenter.lat,
+													lng: polyCenter.lng
+												}
+											}
+									this.polygonPath = cordinates
+									this.polygonArr.push(cordinates)
+									//this.$emit('showSite', centPath)
+									//this.$emit('changePolygon', this.polygonPath)
+								}
+								if(res[i].poly_line !== undefined){
+									let cordinates = JSON.parse(res[i].poly_line)
+									this.poly_line = cordinates
+									console.log(cordinates)
+									this.lineArr.push(cordinates)
+									//this.$emit('changeLines', this.poly_line)
+								}
+							}
+							this.$emit('showSite', this.pointArr)
+							this.$emit('changeLines', this.lineArr)
+							this.$emit('changePolygon', this.polygonArr)
+							
+						} else {
+							this.$notify({ group: 'app', type: 'warn', text: 'No matching sites found. Please try with another name' })
 						}
 						//this.paths = this.center
 						//this.edited = this.paths;
