@@ -90,7 +90,7 @@
 					<button type="submit" class="btn btn-blue w-100">Submit</button>
 				</div>
 				<div class="col">
-					<button type="submit" class="btn btn-red w-100">Clear</button>
+					<button type="button" @click="clearFilter" class="btn btn-red w-100">Clear</button>
 				</div>
 			</div>
 		</form>
@@ -164,6 +164,9 @@ export default {
 		  })
   	  },
 	  async processFilter(){
+		this.$emit('changeMarkers', [])
+		this.$emit('changeLines', [])
+		this.$emit('changePolygon', [])
 		//console.log(this.checkedSiteTypes)
 		this.changeSpinnerStatus(true);
 		this.$store.commit('toggleFilterSideBar')
@@ -178,10 +181,11 @@ export default {
 			})
 			//console.log(sitesIds)
 		}
-
-		if(this.checkedZones) {
+		
+		if(this.checkedZones && this.checkedZones.length) {
+			//console.log(this.checkedZones)
 			zonesData = await new ZoneService().getZonesByIds(this.checkedZones);
-			console.log(zonesData)
+			
 			if(zonesData.length) {
 				await zonesData.map((obj, idx) => {
 					let path = JSON.parse(obj.lat_long);
@@ -194,7 +198,7 @@ export default {
 			}
 		}
 	  	new SiteDataService().getSitesByIds( this.checkedSiteTypes, sitesIds, this.checkedCities, this.checkedZones ).then(res => {
-			  console.log(res)
+		//console.log(res)
           if(res && res.length) {
           	let siteMarker = [];
           	let siteLines = [];
@@ -233,6 +237,18 @@ export default {
 		   
 	    })
 
+	  },
+	  clearFilter(){
+		this.changeSpinnerStatus(true)
+		this.$emit('changeMarkers', [])
+		this.$emit('changeLines', [])
+		this.$emit('changePolygon', [])
+		this.checkedZones = []
+		this.checkedSiteTypes = []
+		this.checkedSiteAttr = []
+		this.checkedCities = []
+		this.changeSpinnerStatus()
+		this.$notify({ group: 'app', text: 'Filters Cleared' })
 	  },
 		changeSpinnerStatus(status = false) {
 			this.$store.dispatch('changeSpinnerStatus', status)

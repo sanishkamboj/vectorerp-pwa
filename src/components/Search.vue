@@ -63,7 +63,7 @@ export default {
 			pointArr: [],
 			lineArr: [],
 			polygonArr: [],
-			address: ''
+			address: null
 		}
 	},
 	computed: {
@@ -179,13 +179,11 @@ export default {
 						this.changeSpinnerStatus()
 					});
 				} else if(this.address != null){
-					const country = localStorage.getItem('country')
-					const url = `${this.API_URL}/user/get-site?country=`+country+`&lat=`+this.address.geometry.location.lat()+`&lng=`+this.address.geometry.location.lng()
+					const url = `${this.API_URL}/user/search-site?country=`+country+`&lat=`+this.address.geometry.location.lat()+`&lng=`+this.address.geometry.location.lng()
 					await this.$http.get(url)
 					.then(response => {
 						console.log(response)
 						if(response.data.status == 200){
-							
 							this.changeSpinnerStatus()
 						} else {
 							this.changeSpinnerStatus()
@@ -196,6 +194,9 @@ export default {
 						console.log(error)
 						//this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
 					});
+				} else {
+					this.changeSpinnerStatus()
+					this.$notify({ group: 'app', type: 'warn', text: 'Please enter site detail' })
 				}
 			} catch(error){
 				this.changeSpinnerStatus()

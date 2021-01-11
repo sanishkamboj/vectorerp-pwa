@@ -66,6 +66,8 @@ export class SiteDataService {
         if(siteZones && siteZones.length) {
             query.where.push({zoneId: {in: siteZones}})
         }
-        return connection.select(query);
+       if(query.where.length){
+            return connection.select(query);
+       }
     }
 }
