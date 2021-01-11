@@ -20,7 +20,13 @@
 					</div>
 					<div class="form-group">
 						<label for="formGroupExampleInput2">Address</label>
-						<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter Location">
+						<gmap-autocomplete
+						placeholder="Enter Address"
+						class="form-control"
+						
+						@place_changed="setAddress"
+						>
+						</gmap-autocomplete>
 					</div>
 					<div class="form-group">
 						<label for="formGroupExampleInput2">SR ID</label>
@@ -48,6 +54,7 @@ export default {
 	name: "Search", 
 	data(){
 		return {
+			API_URL: this.$store.state.API_URL,
 			siteId: null, 
 			siteName: null,
 			pointPath: [],
@@ -55,7 +62,8 @@ export default {
 			poly_line: [],
 			pointArr: [],
 			lineArr: [],
-			polygonArr: []
+			polygonArr: [],
+			address: ''
 		}
 	},
 	computed: {
@@ -64,6 +72,10 @@ export default {
 		}
 	},
 	methods: {
+		setAddress(place) {
+			console.log(place)
+			this.address = place
+		},
 		async searchSite(){
 			this.$emit('showSite', [])
 			this.$emit('changeLines', [])
@@ -165,6 +177,24 @@ export default {
 						//this.paths = this.center
 						//this.edited = this.paths;
 						this.changeSpinnerStatus()
+					});
+				} else if(this.address != null){
+					const country = localStorage.getItem('country')
+					const url = `${this.API_URL}/user/get-site?country=`+country+`&lat=`+this.address.geometry.location.lat()+`&lng=`+this.address.geometry.location.lng()
+					await this.$http.get(url)
+					.then(response => {
+						console.log(response)
+						if(response.data.status == 200){
+							
+							this.changeSpinnerStatus()
+						} else {
+							this.changeSpinnerStatus()
+						}
+						
+					})
+					.catch(function (error) {
+						console.log(error)
+						//this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
 					});
 				}
 			} catch(error){

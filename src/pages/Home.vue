@@ -81,7 +81,7 @@
 						v-model="createSite.address"
 						@place_changed="setPlace"
 						>
-						</gmap-autocomplete>
+					</gmap-autocomplete>
 				</div>
 				<div class="form-group">
 					<label for="exampleInputPassword1">Site Sub Type</label>
