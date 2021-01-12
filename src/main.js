@@ -12,13 +12,6 @@ Vue.config.productionTip = false
 import 'vue-resize/dist/vue-resize.css'
 import './registerServiceWorker'
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker
-    .register('/service-worker-cache.js')
-    .then(() => {
-      console.log('Service Worker Registered')
-    })
-}
 
 Vue.component('resize-observer', ResizeObserver)
 Vue.use(Notifications)
