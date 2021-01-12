@@ -12,6 +12,7 @@ const state = {
   toolsSideBar: 'd-none',
   filterSideBar: 'd-none',
   searchSidebar: 'd-none',
+  layerSidebar: 'd-none',
   saveSiteModal: 'd-none',
   polygonEditable: false,
   lineEditable: false,
@@ -69,6 +70,15 @@ const mutations = {
         state.searchSidebar = 'show-sidebar'
     } else {
         state.searchSidebar = 'd-none'
+    }
+  },
+  toggleLayerSideBar(state){
+    const currState = state.layerSidebar
+    console.log(currState)
+    if(currState == 'd-none'){
+        state.layerSidebar = 'show-sidebar'
+    } else {
+        state.layerSidebar = 'd-none'
     }
   },
   toggleSaveSiteModal(state){
