@@ -271,7 +271,7 @@ const getDatabase = () => {
             }
         }
     };
-    const TaskLandingRateSpecies = {
+    const tblTaskLandingRateSpecies = {
         name: 'task_landing_rate_species',
         columns: {
             id: {
@@ -285,7 +285,7 @@ const getDatabase = () => {
             }
         }
     };
-    const taskLarvalSurveillance = {
+    const tblTaskLarvalSurveillance = {
         name: 'task_larval_surveillance',
         columns: {
             id: {
@@ -377,8 +377,8 @@ const getDatabase = () => {
             }
         }
     };
-    const taskTreatment = {
-        name : 'task_treatment',
+    const tblTaskTreatment = {
+        name = 'task_treatment',
         columns: {
             id: {
                 dataType: DATA_TYPE.Number
@@ -433,15 +433,142 @@ const getDatabase = () => {
             }
         }
     };
-    const tastTrap = {
-        name: 'tast_trap',
+    const tblTaskTrap = {
+        name: 'task_trap',
         columns: {
             id: {
                 dataType: DATA_TYPE.Number
             },
+            siteid: {
+                dataType: DATA_TYPE.Number
+            },
+            srid: {
+                dataType: DATA_TYPE.Number
+            },
+            trap_placed: {
+                dataType: DATA_TYPE.String
+            },
+            trap_collected: {
+                dataType: DATA_TYPE.String
+            },
+            trap_type_id: {
+                dataType: DATA_TYPE.Number
+            },
+            malfunction: {
+                dataType: DATA_TYPE.Boolean
+            },
+            note: {
+                dataType: DATA_TYPE.String
+            },
+            date_added: {
+                dataType: DATA_TYPE.String
+            },
+            date_modified: {
+                dataType: DATA_TYPE.String
+            },
+            userid: {
+                dataType: DATA_TYPE.Number
+            },
+            lab_work_complete: {
+                dataType: DATA_TYPE.Boolean
+            }
+            
+        }
+    };
+    const tblTaskOther = {
+        name: 'task_other',
+        columns: {
+            id: {
+                dataType: DATA_TYPE.Number
+            },
+            siteid: {
+                dataType: DATA_TYPE.Number
+            },
+            srd: {
+                dataType: DATA_TYPE.Number
+            },
+            due_date: {
+                dataType: DATA_TYPE.String
+            },
+            start_date: {
+                dataType: DATA_TYPE.String
+            },
+            end_date: {
+                dataType: DATA_TYPE.String
+            },
+            task_type_id: {
+                dataType: DATA_TYPE.Number
+            },
+            note: {
+                dataType: DATA_TYPE.String
+            },
+            date_added: {
+                dataType: DATA_TYPE.String
+            },
+            date_modified: {
+                dataType: DATA_TYPE.String
+            },
+            userid: {
+                dataType: DATA_TYPE.Number
+            },
 
         }
-    }
+    };
+    const tblSpecies = {
+        name: 'species',
+        columns: {
+            id: { dataType: DATA_TYPE.Number },
+            description: { dataType: DATA_TYPE.String },
+            status: { dataType: DATA_TYPE.Number }
+        }
+    };
+    const tblUnitMas = {
+        name: 'unit_mas',
+        columns: {
+            id: { dataType: DATA_TYPE.Number },
+            parentid: { dataType: DATA_TYPE.Number },
+            unit: {dataType: DATA_TYPE.String},
+            description: {dataType: DATA_TYPE.String},
+            std_unit_factor: {dataType: DATA_TYPE.String}
+        }
+    };
+    const tblTreatmentProduct = {
+        name: 'treatment_product',
+        columns: {
+            id: {dataType: DATA_TYPE.Number},
+            name: {dataType: DATA_TYPE.String},
+            category: {dataType: DATA_TYPE.String},
+            pesticide: {dataType: DATA_TYPE.String},
+            active_ingredient: {dataType: DATA_TYPE.String},
+            active_ingredient2: {dataType: DATA_TYPE.String},
+            uid: {dataType: DATA_TYPE.Number},
+            app_rate: {dataType: DATA_TYPE.String},
+            class: {dataType: DATA_TYPE.String},
+            epa_reg_no: {dataType: DATA_TYPE.String},
+            al: {dataType: DATA_TYPE.String},
+            al2: {dataType: DATA_TYPE.String},
+            target_app_rate: {dataType: DATA_TYPE.String},
+            min_app_rate: {dataType: DATA_TYPE.String},
+            max_app_rate: {dataType: DATA_TYPE.String},
+            status: {dataType: DATA_TYPE.Number}
+        }
+    };
+    const tblTrapTypeMas = {
+        name: 'trap_type_mas',
+        columns: {
+            id: {dataType: DATA_TYPE.Number},
+            name: {dataType: DATA_TYPE.String},
+            status: {dataType: DATA_TYPE.Number}
+        }
+    };
+    const tblTaskTypeMas = {
+        name: 'task_type_mas',
+        columns: {
+            id: {dataType: DATA_TYPE.Number},
+            name: {dataType: DATA_TYPE.String},
+            status: {dataType: DATA_TYPE.Number}
+        }
+    };
     const dataBase = {
         name: "pwa_vectorerp",
         tables: [
@@ -453,7 +580,18 @@ const getDatabase = () => {
                     tblSiteAttributeData,
                     tblCity,
                     tblSiteZones,
-                    tblZones
+                    tblZones,
+                    tblTaskLandingRate,
+                    tblTaskLandingRateSpecies,
+                    tblTaskLarvalSurveillance,
+                    tblTaskOther,
+                    tblTaskTrap,
+                    tblTaskTreatment,
+                    tblTaskTypeMas,
+                    tblTrapTypeMas,
+                    tblTreatmentProduct,
+                    tblUnitMas,
+                    tblSpecies
                 ]
     };
     return dataBase;
