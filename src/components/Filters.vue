@@ -205,9 +205,9 @@ export default {
 			let sitePolygon = [];
           	res.map((obj, idx) => {
           		if(obj.point !== undefined) {
-          			let point = JSON.parse(obj);
+          			let point = JSON.parse(obj.point);
           			point.map((pts) => {
-          				siteMarker.push({ position: pts.point, icon: pts.icon})
+          				siteMarker.push({ position: pts, icon:obj.icon, content: obj.site_name})
           			})
           		}
           		if(obj.poly_line !== undefined) {

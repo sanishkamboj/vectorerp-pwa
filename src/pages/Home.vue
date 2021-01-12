@@ -16,12 +16,14 @@
 				@radius_changed="updateCircle($event)"
 				fillOpacity="1.0">
         	</gmap-circle>
+			<gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
+			</gmap-info-window>
 	        <gmap-marker v-for="(m, index) in markers"
 	          :position="m.position"
-	          :clickable="markerEditable" :draggable="markerEditable"
-	          @click="center=m.position"
+	          :clickable="true" :draggable="markerEditable"
 			  :icon="m.icon"
 	          :key="index"
+			  @click="toggleInfoWindow(m,index)"
 	          ></gmap-marker>
 		</gmap-map>
 		<div class="right-bar" :class="sidebarClass" >
@@ -128,7 +130,7 @@
 		
 		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt" v-bind:circleRadius="circleRadius" v-bind:circleArea="circleArea" v-bind:polyAreaFt="polyAreaFt" v-bind:polyAreaMile="polyAreaMile" />
 		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter" @displayZones="displayZones"/>
-		<Search @showSite="showSite" @changePolygon="changePolygon" @changeLines="changeLines" />
+		<Search @showSite="showSite" @changeMarkers="changeMarkers" @changePolygon="changePolygon" @changeLines="changeLines" />
 		<div class="topPoup" :class="saveSiteModal">
 			<p>Select area for the site by dots on the edges of shape.</p>
 			<div class="rightBtns">
@@ -217,55 +219,67 @@ export default {
   },
   data() {
     return {
-	  sites: [],
-	  center: {
-            lat: 0, lng: 0
-          },
-	  API_URL: this.$store.state.API_URL,
-	  newSiteID: null,
-	  siteModalClass: 'd-none',
-	  siteTypeOpt: '',
-	  siteSubTypeOpt: '',
-	  siteAttributeOpt: '',
-	  circleCenter: '',
-	  mvcPath: null,
-	  polylineGeojson: '',
-	  newSitePolygonPath:[
+		sites: [],
+		center: {
+			lat: 41.634819, lng: -72.994825
+			},
+		API_URL: this.$store.state.API_URL,
+		newSiteID: null,
+		siteModalClass: 'd-none',
+		siteTypeOpt: '',
+		siteSubTypeOpt: '',
+		siteAttributeOpt: '',
+		circleCenter: '',
+		mvcPath: null,
+		polylineGeojson: '',
+		newSitePolygonPath:[
 
-	  ],
-	  newSitePolylinePath: [
+		],
+		newSitePolylinePath: [
 
-	  ],
-	  marker1: [
+		],
+		marker1: [
 
-	  ],
-	  polylineDistance: 0.00,
-	  polylineDistanceInFt: 0.00,
-	  circleRadius: 0.00,
-	  circleArea: 0.00,
-	  polyAreaFt: 0.00,
-	  polyAreaMile: 0.00,
-	  markers: [{
-            position: {
-              lat: 10.0,
-              lng: 10.0
-            }
-          }, {
-            position: {
-              lat: 11.0,
-              lng: 11.0
-            }
-          }],
-	  edited: null,
-	  paths: [
-           
-          ],
-	  lines: [
-          ],
-	  shape: {
-            coords: [10, 10, 10, 15, 15, 15, 15, 10],
-            type: 'poly'
-          },
+		],
+		polylineDistance: 0.00,
+		polylineDistanceInFt: 0.00,
+		circleRadius: 0.00,
+		circleArea: 0.00,
+		polyAreaFt: 0.00,
+		polyAreaMile: 0.00,
+		markers: [{
+			position: {
+				lat: 10.0,
+				lng: 10.0
+			}
+			}, {
+			position: {
+				lat: 11.0,
+				lng: 11.0
+			}
+			}],
+		edited: null,
+		paths: [
+			
+			],
+		lines: [
+			],
+		shape: {
+			coords: [10, 10, 10, 15, 15, 15, 15, 10],
+			type: 'poly'
+			},
+		infoWindowPos: null,
+		infoWinOpen: false,
+		currentMidx: null,
+
+		infoOptions: {
+			content: '',
+			//optional: offset infowindow so it visually sits nicely on top of our marker
+			pixelOffset: {
+				width: 0,
+				height: -35
+			}
+		},
     };
   },
   computed: {
@@ -409,7 +423,7 @@ export default {
 							'cityId': value.cityid,
 							'siteTypeId': value.stypeid,
 							'zoneId': value.zoneid,
-							//'site_attr': value.site_attr
+							'icon': value.icon
 						}
 						if(value.point != null){
 							siteData.point = JSON.stringify(value.point)
@@ -721,6 +735,21 @@ export default {
 		} catch(error){
 			this.changeSpinnerStatus()
 			this.$notify({ group: 'app', type: 'warn', text: error })
+		}
+	},
+	toggleInfoWindow: function(marker, idx) {
+		this.infoWindowPos = marker.position;
+		this.infoOptions.content = marker.content;
+
+		//check if its the same marker that was selected if yes toggle
+		if (this.currentMidx == idx) {
+			this.infoWinOpen = !this.infoWinOpen;
+		}
+		//if different marker set infowindow to open and reset current marker index
+		else {
+			this.infoWinOpen = true;
+			this.currentMidx = idx;
+
 		}
 	}
   }

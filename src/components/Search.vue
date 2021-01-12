@@ -30,7 +30,7 @@
 					</div>
 					<div class="form-group">
 						<label for="formGroupExampleInput2">SR ID</label>
-						<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter sr id">
+						<input type="text" class="form-control" v-model="srid" id="formGroupExampleInput2" placeholder="Enter sr id">
 					</div>
 				</form>
 				</div>
@@ -39,7 +39,7 @@
 					<button type="submit" @click="searchSite" class="btn btn-blue w-100">Submit</button>
 				</div>
 				<div class="col">
-					<button type="submit" class="btn btn-red w-100">Clear</button>
+					<button type="submit" @click="clearFields" class="btn btn-red w-100">Clear</button>
 				</div>
 			</div>
 			
@@ -57,13 +57,15 @@ export default {
 			API_URL: this.$store.state.API_URL,
 			siteId: null, 
 			siteName: null,
+			siteAddr: null,
 			pointPath: [],
 			polygonPath: [],
 			poly_line: [],
 			pointArr: [],
 			lineArr: [],
 			polygonArr: [],
-			address: null
+			address: null,
+			srid: ''
 		}
 	},
 	computed: {
@@ -85,6 +87,11 @@ export default {
 				let country = 'lee'
 				//console.log(this.createSite);
 				if(this.siteId != null){
+					if(this.siteName != null || this.address != null || this.srid != null){
+						this.changeSpinnerStatus()
+						this.$notify({ group: 'app', type: 'warn', text: 'Only one textbox used at a time' })
+						return
+					}
 					var siteID = parseInt(this.siteId)
 					await new SiteDataService().getSiteById(siteID).then(res => {
 						if(res.length){
@@ -94,7 +101,8 @@ export default {
 											position: {
 												lat: cordinates[0].lat,
 												lng: cordinates[0].lng
-											}
+											},
+											icon: res[0].icon
 										}
 								console.log(this.pointPath)
 								this.$emit('showSite', this.pointPath)
@@ -139,7 +147,8 @@ export default {
 												position: {
 													lat: cordinates[0].lat,
 													lng: cordinates[0].lng
-												}
+												},
+												 icon: res[i].icon
 											}
 									this.pointArr.push(this.pointPath)
 									//this.$emit('showSite', this.pointPath)
@@ -179,14 +188,63 @@ export default {
 						this.changeSpinnerStatus()
 					});
 				} else if(this.address != null){
-					const url = `${this.API_URL}/user/search-site?country=`+country+`&lat=`+this.address.geometry.location.lat()+`&lng=`+this.address.geometry.location.lng()
+					const url = `${this.API_URL}/user/search-site?country=`+country
+					await this.$http.post(url, {
+						lat: '41.634819',
+						lng: '-72.994825'
+					})
+					.then(response => {
+						console.log(response)
+						let siteMarker = [];
+						let siteLines = [];
+						let sitePolygon = [];
+						if(response.data.status == 200){
+							this.changeSpinnerStatus()
+							let sites = response.data.data.sites
+							sites.map((obj, idx) => {
+								if(obj.point !== undefined) {
+								
+								 siteMarker.push({ position: obj.point[0], icon: obj.icon})
+									
+								}
+							})
+							console.log(siteMarker)
+							this.$emit('changeMarkers', siteMarker)
+							this.$emit('changeLines', siteLines)
+							this.$emit('changePolygon', this.zoneData)
+						} else {
+							this.changeSpinnerStatus()
+						}
+						
+					})
+					.catch(function (error) {
+						console.log(error)
+						//this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
+					});
+				} else if(this.srid != null){ 
+					const url = `${this.API_URL}/user/get-sr/`+this.srid+`?country=`+country
 					await this.$http.get(url)
 					.then(response => {
 						console.log(response)
+						let siteMarker = [];
+						let siteLines = [];
+						let sitePolygon = [];
 						if(response.data.status == 200){
 							this.changeSpinnerStatus()
+							let site = response.data.data[0]
+
+								siteMarker.push({ position: site.point[0], 
+								icon: site.icon,
+								content: site.infowindow
+								})
+							
+							
+							console.log(siteMarker)
+							this.$emit('changeMarkers', siteMarker)
+							
 						} else {
 							this.changeSpinnerStatus()
+							this.$notify({ group: 'app', type: 'warn', text: 'No data found please try another' })
 						}
 						
 					})
@@ -206,6 +264,19 @@ export default {
 		changeSpinnerStatus(status = false) {
 			this.$store.dispatch('changeSpinnerStatus', status)
 		},
+		clearFields(){
+		this.changeSpinnerStatus(true)
+		this.$emit('changeMarkers', [])
+		this.$emit('changeLines', [])
+		this.$emit('changePolygon', [])
+		this.siteName = null
+		this.siteId = null
+		this.address = null
+		this.siteAddr = null
+		this.srid = null
+		this.changeSpinnerStatus()
+		this.$notify({ group: 'app', text: 'Fields Cleared' })
+	  },
 	}
 
 }

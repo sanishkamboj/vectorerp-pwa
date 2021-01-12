@@ -137,6 +137,9 @@ const getDatabase = () => {
             zoneId: {
                 dataType: DATA_TYPE.Number
             },
+            icon: {
+                dataType: DATA_TYPE.String
+            }
 
         }
     };
