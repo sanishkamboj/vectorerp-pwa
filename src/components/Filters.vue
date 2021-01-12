@@ -117,8 +117,7 @@ export default {
 		city: [],
 		siteAttr: [],
 		zones: [],
-		zoneData: [],
-		infoWindowHtml: ''
+		zoneData: []
        }
    },
    computed: {
@@ -205,44 +204,10 @@ export default {
           	let siteLines = [];
 			let sitePolygon = [];
           	res.map((obj, idx) => {
-				this.infoWindowHtml = `
-					<div>
-					<div cellpadding="5" cellspacing="5" class="info_box" id="info_box">
-					<h5 class="border-bottom pb-2 mb-3">Site Id ${obj.siteid} ${obj.site_name}</h5>
-					<h6>Mosquito Source Ditch (2018 Pool Survey,WOTUS)</h6>
-					<strong>37 Shepard Road ,West Hartford ,Connecticut</strong>
-					<div class="button mt-3">
-					<button class="btn btn-primary  mr-2 text-white btn-sm" title="Landing Rate" v-on:click=="showLandingRate">Landing Rate</button>
-					<a class="btn btn-primary  mr-2 text-white btn-sm" title="Larval Surveillance" >Larval Surveillance</a>
-					<a class="btn btn-primary  mr-2 text-white btn-sm" title="Treatment Task">Treatment</a>
-					<a class="btn btn-primary  mr-2 text-white btn-sm" title="Trap" >Trap Place</a>
-					<a class="btn btn-primary  mr-2 text-white btn-sm" title="Other Task" >Other</a>
-					<a class="btn btn-primary  mr-2 text-white btn-sm" href="https://lee.vectorcontrolsystem.com/site/edit&amp;mode=Update&amp;iSiteId=1" target="_blank">Edit site</a>
-					<a class="btn btn-primary  mr-2 text-white btn-sm" title="Landing Rate">Insta Treat</a>
-					</div>
-					<h5 class="border-bottom pb-2 mb-3 mt-3">History</h5>
-					<span class="w-100 d-block  pb-2">
-					<a href="javascript:void(0);" onclick="addEditDataTaskTreatment(44,&quot;edit&quot;,0)">2021-01-12 Treated 1 acre With 1 lb Anvil</a>
-					</span>
-					<span class="w-100 d-block  pb-2">
-					<a href="javascript:void(0);" onclick="addEditDataTaskOther(5,&quot;edit&quot;,0)">2020-06-29 Home Visit</a>
-					</span>
-					
-					<span class="w-100 d-block  pb-2">
-					<a href="javascript:void(0);" onclick="addEditDataTaskTreatment(12,&quot;edit&quot;,0)">2020-06-12 Treated 100 acre With 0.05 fl. oz Aqua-Reslin</a>
-					</span>
-					<span class="w-100 d-block  pb-2">
-					<a href="javascript:void(0);" onclick="addEditDataTaskTrap(6,&quot;edit&quot;,0)">2020-06-02 BG Placed</a>
-					</span><span class="w-100 d-block  pb-2">
-					<a href="javascript:void(0);" onclick="addEditDataTaskOther(9,&quot;edit&quot;,0)">2020-06-02 Handing out Training Materials</a>
-					</span>
-					</div>
-					</div>
-				`
           		if(obj.point !== undefined) {
           			let point = JSON.parse(obj.point);
           			point.map((pts) => {
-          				siteMarker.push({ position: pts, icon:obj.icon, content: this.infoWindowHtml})
+          				siteMarker.push({ position: pts, icon:obj.icon, siteid: obj})
           			})
           		}
           		if(obj.poly_line !== undefined) {
@@ -284,9 +249,6 @@ export default {
 		this.checkedCities = []
 		this.changeSpinnerStatus()
 		this.$notify({ group: 'app', text: 'Filters Cleared' })
-	  },
-	  showLandingRate: function(event){
-		 console.log('here clicked2')
 	  },
 		changeSpinnerStatus(status = false) {
 			this.$store.dispatch('changeSpinnerStatus', status)

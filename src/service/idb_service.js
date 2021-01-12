@@ -378,7 +378,7 @@ const getDatabase = () => {
         }
     };
     const tblTaskTreatment = {
-        name = 'task_treatment',
+        name : 'task_treatment',
         columns: {
             id: {
                 dataType: DATA_TYPE.Number

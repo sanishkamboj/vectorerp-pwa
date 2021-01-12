@@ -17,7 +17,7 @@
 				fillOpacity="1.0">
         	</gmap-circle>
 			<gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
-				<div v-html="infoWindowHtml"></div>
+				<InfoWindow v-bind:site="this.siteid" @landingRateModal="landingRateModal" />
 			</gmap-info-window>
 	        <gmap-marker v-for="(m, index) in markers"
 	          :position="m.position"
@@ -128,7 +128,7 @@
 				
 			</div>
 		</div>
-		
+		<LandingRate />
 		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt" v-bind:circleRadius="circleRadius" v-bind:circleArea="circleArea" v-bind:polyAreaFt="polyAreaFt" v-bind:polyAreaMile="polyAreaMile" />
 		<Filters @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter" @displayZones="displayZones"/>
 		<Search @showSite="showSite" @changeMarkers="changeMarkers" @changePolygon="changePolygon" @changeLines="changeLines" />
@@ -158,6 +158,8 @@ import Tools  from "../components/Tools";
 import Filters  from "../components/Filters";
 import Search  from "../components/Search";
 import Layers  from "../components/Layers";
+import InfoWindow  from "../components/InfoWindow";
+import LandingRate  from "../components/LandingRate";
 import _ from 'lodash';
 import {gmapApi} from 'vue2-google-maps';
 const geoarea = require('geo-area')(/*options*/{x: 'lng', y: 'lat'});
@@ -168,6 +170,8 @@ export default {
 	Filters,
 	Layers,
 	Search,
+	InfoWindow,
+	LandingRate,
   },
   data: {
 	markers: [],
@@ -227,6 +231,7 @@ export default {
 			lat: 41.634819, lng: -72.994825
 			},
 		API_URL: this.$store.state.API_URL,
+		siteid: null,
 		newSiteID: null,
 		siteModalClass: 'd-none',
 		siteTypeOpt: '',
@@ -744,8 +749,8 @@ export default {
 	},
 	toggleInfoWindow: function(marker, idx) {
 		this.infoWindowPos = marker.position;
-		this.infoWindowHtml = marker.content;
-
+		this.siteid = marker.siteid;
+		console.log(this.siteid)
 		//check if its the same marker that was selected if yes toggle
 		if (this.currentMidx == idx) {
 			this.infoWinOpen = !this.infoWinOpen;
@@ -757,8 +762,8 @@ export default {
 
 		}
 	},
-	showLandingRate: function(event){
-		console.log('here clicked')
+	landingRateModal: function(site){
+		
 	}
   }
 };
