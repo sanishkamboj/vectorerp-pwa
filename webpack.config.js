@@ -67,11 +67,11 @@ module.exports = (env, argv) => ({
     new CleanWebpackPlugin(),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'static', 'index.html'),
+      template: path.resolve(__dirname, 'public', 'index.html'),
       inject: true
     }),
     new CopyWebpackPlugin([{
-      from: path.resolve(__dirname, 'static'),
+      from: path.resolve(__dirname, 'public'),
       to: path.resolve(__dirname, 'dist'),
       toType: 'dir'
     }]),
