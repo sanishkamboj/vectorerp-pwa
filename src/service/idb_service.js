@@ -139,6 +139,15 @@ const getDatabase = () => {
             },
             icon: {
                 dataType: DATA_TYPE.String
+            },
+            site_attr_name: {
+                dataType: DATA_TYPE.String
+            },
+            site_type_name: {
+                dataType: DATA_TYPE.String
+            },
+            address: {
+                dataType: DATA_TYPE.String  
             }
 
         }

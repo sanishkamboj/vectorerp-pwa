@@ -117,7 +117,8 @@ export default {
 		city: [],
 		siteAttr: [],
 		zones: [],
-		zoneData: []
+		zoneData: [],
+		infoWindowHtml: ''
        }
    },
    computed: {

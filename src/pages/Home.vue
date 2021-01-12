@@ -425,7 +425,10 @@ export default {
 							'cityId': value.cityid,
 							'siteTypeId': value.stypeid,
 							'zoneId': value.zoneid,
-							'icon': value.icon
+							'icon': value.icon,
+							'site_attr_name': value.site_attr_name,
+							'site_type_name': value.site_type_name,
+							'address': value.address
 						}
 						if(value.point != null){
 							siteData.point = JSON.stringify(value.point)
