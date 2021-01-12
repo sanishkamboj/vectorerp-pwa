@@ -20,6 +20,7 @@
 	          :position="m.position"
 	          :clickable="markerEditable" :draggable="markerEditable"
 	          @click="center=m.position"
+			  :icon="m.icon"
 	          :key="index"
 	          ></gmap-marker>
 		</gmap-map>
