@@ -17,6 +17,7 @@
 				fillOpacity="1.0">
         	</gmap-circle>
 			<gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
+				<div v-html="infoWindowHtml"></div>
 			</gmap-info-window>
 	        <gmap-marker v-for="(m, index) in markers"
 	          :position="m.position"
@@ -129,7 +130,7 @@
 		</div>
 		
 		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt" v-bind:circleRadius="circleRadius" v-bind:circleArea="circleArea" v-bind:polyAreaFt="polyAreaFt" v-bind:polyAreaMile="polyAreaMile" />
-		<Filters  @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter" @displayZones="displayZones"/>
+		<Filters @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter" @displayZones="displayZones"/>
 		<Search @showSite="showSite" @changeMarkers="changeMarkers" @changePolygon="changePolygon" @changeLines="changeLines" />
 		<div class="topPoup" :class="saveSiteModal">
 			<p>Select area for the site by dots on the edges of shape.</p>
@@ -273,9 +274,8 @@ export default {
 		infoWindowPos: null,
 		infoWinOpen: false,
 		currentMidx: null,
-
+		infoWindowHtml: '',
 		infoOptions: {
-			content: '',
 			//optional: offset infowindow so it visually sits nicely on top of our marker
 			pixelOffset: {
 				width: 0,
@@ -744,7 +744,7 @@ export default {
 	},
 	toggleInfoWindow: function(marker, idx) {
 		this.infoWindowPos = marker.position;
-		this.infoOptions.content = marker.content;
+		this.infoWindowHtml = marker.content;
 
 		//check if its the same marker that was selected if yes toggle
 		if (this.currentMidx == idx) {
@@ -756,6 +756,9 @@ export default {
 			this.currentMidx = idx;
 
 		}
+	},
+	showLandingRate: function(event){
+		console.log('here clicked')
 	}
   }
 };
