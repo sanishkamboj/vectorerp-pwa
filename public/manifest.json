@@ -1,0 +1,22 @@
+
+{
+    "short_name": "Vector Erp",
+    "name": "Web Application for the Vector Erp Map",
+    "icons": [
+      {
+        "src": "images/192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "images/512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": "/?utm_source=a2hs",
+    "background_color": "#FFFFFF",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#FFFFFF"
+  }
