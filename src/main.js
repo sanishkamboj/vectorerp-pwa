@@ -10,6 +10,7 @@ import Notifications from 'vue-notification'
 Vue.prototype.$http = Axios;
 Vue.config.productionTip = false
 import 'vue-resize/dist/vue-resize.css'
+import './registerServiceWorker'
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
