@@ -33,7 +33,7 @@
 			
 			<div @click="$store.commit('toggleToolsSideBar')"><span><a><i class="uil uil-cog desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i> </a> Tools</span></div>
 			<div @click="$store.commit('toggleFilterSideBar')"><span><a><i class="uil uil-filter desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Filters</span></div>
-			<div><span><a><i class="uil uil-layer-group desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Layers</span></div>
+			<div @click="$store.commit('toggleLayerSideBar')"><span><a><i class="uil uil-layer-group desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Layers</span></div>
 			<div @click="$store.commit('toggleSearchSideBar')"><span><a><i class="uil uil-search-alt desktop-view"></i><i class="uil uil-arrow-right mobile-view"></i></a> Search</span></div>
 		</div>
 		
@@ -156,6 +156,7 @@ import { Global } from "../global";
 import Tools  from "../components/Tools";
 import Filters  from "../components/Filters";
 import Search  from "../components/Search";
+import Layers  from "../components/Layers";
 import _ from 'lodash';
 import {gmapApi} from 'vue2-google-maps';
 const geoarea = require('geo-area')(/*options*/{x: 'lng', y: 'lat'});
@@ -164,6 +165,7 @@ export default {
   components: {
 	Tools,
 	Filters,
+	Layers,
 	Search,
   },
   data: {
