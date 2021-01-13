@@ -5,12 +5,12 @@
         <h6>{{site_type_name}} ({{site_attr_name}})</h6>
         <strong>{{address}}</strong>
         <div class="button mt-3">
-        <a class="btn btn-primary  mr-2 text-white btn-sm" title="Landing Rate" @click="showLandingRate()">Landing Rate</a>
-        <a class="btn btn-primary  mr-2 text-white btn-sm" title="Larval Surveillance" @click="toggleLarval()" >Larval Surveillance</a>
-        <a class="btn btn-primary  mr-2 text-white btn-sm" title="Treatment Task" @click="toggleTreatment()">Treatment</a>
-        <a class="btn btn-primary  mr-2 text-white btn-sm" title="Trap" @click="toggleTrap()">Trap Place</a>
-        <a class="btn btn-primary  mr-2 text-white btn-sm" title="Other Task" @click="toggleOther()">Other</a>
-        <a class="btn btn-primary  mr-2 text-white btn-sm" href="https://lee.vectorcontrolsystem.com/site/edit&amp;mode=Update&amp;iSiteId=1" target="_blank">Edit site</a>
+        <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" title="Landing Rate" @click="showLandingRate()">Landing Rate</a>
+        <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" title="Larval Surveillance" @click="toggleLarval()" >Larval Surveillance</a>
+        <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" title="Treatment Task" @click="toggleTreatment()">Treatment</a>
+        <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" title="Trap" @click="toggleTrap()">Trap Place</a>
+        <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" title="Other Task" @click="toggleOther()">Other</a>
+        <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" href="https://lee.vectorcontrolsystem.com/site/edit&amp;mode=Update&amp;iSiteId=1" target="_blank">Edit site</a>
         <a class="btn btn-primary  mr-2 text-white btn-sm" title="Landing Rate">Insta Treat</a>
         </div>
         <h5 class="border-bottom pb-2 mb-3 mt-3">History</h5>
