@@ -170,7 +170,9 @@ export default {
 		//console.log(this.checkedSiteTypes)
 		this.changeSpinnerStatus(true);
 		this.$store.commit('toggleFilterSideBar')
-		this.$store.commit('toggleSidebarMobile')
+		if(this.$store.state.isMobile){
+			this.$store.commit('toggleSidebarMobile')
+		}
 		let sites = []
 		let sitesIds = []
 		let zonesData = []

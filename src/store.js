@@ -6,6 +6,7 @@ const state = {
   // for remote
   API_URL: 'https://pwa.sanish.info/api',  
   sidebarClass: 'd-none',
+  isMobile: false,
   showSpinner: false,
   loadingText: 'Loading...',
   country: '',

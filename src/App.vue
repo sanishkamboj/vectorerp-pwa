@@ -39,7 +39,8 @@ export default {
  methods: {
     handleResize ({ width, height }) {
       if(width < 767){
-		  this.$store.commit('set', ['sidebarClass', 'd-none'])
+      this.$store.commit('set', ['sidebarClass', 'd-none'])
+      this.$store.commit('set', ['isMobile', true])
 	  } else {
 		  this.$store.commit('set', ['sidebarClass', 'show-sidebar'])
 	  }
