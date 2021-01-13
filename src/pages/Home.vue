@@ -17,7 +17,7 @@
 				fillOpacity="1.0">
         	</gmap-circle>
 			<gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
-				<InfoWindow v-bind:site="this.siteid" @landingRateModal="landingRateModal" />
+				<InfoWindow v-bind="this.siteid" @landingRateModal="landingRateModal" @larvalModal="larvalModal"  @treatmentModal="treatmentModal" @trapModal="trapModal" @otherModal="otherModal" />
 			</gmap-info-window>
 	        <gmap-marker v-for="(m, index) in markers"
 	          :position="m.position"
@@ -128,7 +128,13 @@
 				
 			</div>
 		</div>
-		<LandingRate />
+		
+		<LandingRate ref="landingRate"/>
+		<Larval ref="larval" />
+		<Treatment ref="treatment" />
+		<Trap ref="trap" />
+		<Other ref="other" />
+
 		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt" v-bind:circleRadius="circleRadius" v-bind:circleArea="circleArea" v-bind:polyAreaFt="polyAreaFt" v-bind:polyAreaMile="polyAreaMile" />
 		<Filters @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter" @displayZones="displayZones"/>
 		<Search @showSite="showSite" @changeMarkers="changeMarkers" @changePolygon="changePolygon" @changeLines="changeLines" />
@@ -160,6 +166,10 @@ import Search  from "../components/Search";
 import Layers  from "../components/Layers";
 import InfoWindow  from "../components/InfoWindow";
 import LandingRate  from "../components/LandingRate";
+import Larval  from "../components/Larval";
+import Treatment  from "../components/Treatment";
+import Trap  from "../components/Trap";
+import Other  from "../components/Other";
 import _ from 'lodash';
 import {gmapApi} from 'vue2-google-maps';
 const geoarea = require('geo-area')(/*options*/{x: 'lng', y: 'lat'});
@@ -172,6 +182,10 @@ export default {
 	Search,
 	InfoWindow,
 	LandingRate,
+	Larval,
+	Treatment,
+	Trap,
+	Other
   },
   data: {
 	markers: [],
@@ -763,7 +777,19 @@ export default {
 		}
 	},
 	landingRateModal: function(site){
-		
+		this.$refs.landingRate.toggleLandingRateModal(site)
+	},
+	larvalModal: function(site){
+		this.$refs.larval.toggleLarvalModal(site)
+	},
+	treatmentModal: function(site){
+		this.$refs.treatment.toggleTreatmentModal(site)
+	},
+	trapModal: function(site){
+		this.$refs.trap.toggleTrapModal(site)
+	},
+	otherModal: function(site){
+		this.$refs.other.toggleOtherModal(site)
 	}
   }
 };

@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div class="popup-overlay" :class="landingRateModal">
+        <div class="popup-overlay" :class="trapModal">
 			<div class="popup-wrapper map-popup">
-				<h3 class="popup-title desktop-view">Add Landing Rate <a @click="toggleLandingRateModal()" class="float-right"><i class="uil uil-times"></i></a></h3>
+				<h3 class="popup-title desktop-view">Add Task Treatment <a @click="toggleTrapModal()" class="float-right"><i class="uil uil-times"></i></a></h3>
 				<h5 class="mobile-view">
-					<div class="mobile-title mb-3"><i class="fa fa-arrow-left"></i> Add Landing Rate</div>
+					<div class="mobile-title mb-3"><i class="fa fa-arrow-left"></i> Add Task Treatment</div>
 				</h5>
 				
 				<form >
@@ -24,6 +24,10 @@
 				</div>
                 <div class="form-row">
                      <div class="col">
+                        <label for="exampleInputEmail1">Type</label>
+                        <input type="text" class="form-control" id="site_name" v-model="due_date" placeholder="Enter Date">
+                    </div>
+                     <div class="col">
                         <label for="exampleInputEmail1">Start Time</label>
                         <input type="time" class="form-control" id="site_name" v-model="start_date" placeholder="Enter Start time">
                     </div>
@@ -35,18 +39,37 @@
                 </div>
                 <div class="form-row">
                     <div class="col">
-                        <label for="exampleInputEmail1">Max Landing rate</label>
+                        <label for="exampleInputEmail1">Treatment Product</label>
                         <input type="text" class="form-control" id="site_name" v-model="max_landing_rate" aria-describedby="ste_name" placeholder="Enter max Landing Rate">
                     </div>
                     <div class="col">
-                        <label for="exampleInputEmail1">Species</label>
+                        <label for="exampleInputEmail1">Application Rate</label>
                         <input type="text" class="form-control" id="site_name" v-model="species_id" placeholder="Enter Species">
                     </div>
                 </div>
 				<div class="form-row">
                     <div class="col">
-                        <label for="exampleInputEmail1">Note</label>
-                        <textarea class="form-control" id="site_name" v-model="note" placeholder="Enter Note"></textarea>
+                        <label for="exampleInputEmail1">Area Treated</label>
+                        <input type="text" class="form-control" id="site_name" v-model="max_landing_rate" aria-describedby="ste_name" placeholder="Enter max Landing Rate"> 
+                    </div>
+                    <div class="col">
+                         <label for="exampleInputEmail1"> </label>
+                        <select class="form-control">
+                            <option>acre</option>
+                            </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label for="exampleInputEmail1">Amount Applied</label>
+                        <input type="text" class="form-control" id="site_name" v-model="species_id" placeholder="Enter Species">
+                        
+                    </div>
+                    <div class="col">
+                        <label for="exampleInputEmail1"> </label>
+                        <select class="form-control">
+                            <option>acre</option>
+                            </select>
                     </div>
                 </div>
 				<div class="row pt-2">
@@ -54,7 +77,7 @@
 						<button class="btn btn-blue w-100">Submit</button>
 					</div>
 					<div class="col">
-						<button type="button" @click="toggleLandingRateModal()" class="btn btn-red w-100">Cancel</button>
+						<button type="button" @click="toggleTrapModal()" class="btn btn-red w-100">Cancel</button>
 					</div>
 				</div>
 				</form>
@@ -65,10 +88,10 @@
 </template>
 <script>
 export default {
-    name: "LandingRate",
+    name: "Treatment",
     data(){
        return {
-        landingRateModal: 'd-none',
+        trapModal: 'd-none',
         siteid: null,
         srid: null,
         due_date: null,
@@ -83,15 +106,15 @@ export default {
         changeSpinnerStatus(status = false) {
             this.$store.dispatch('changeSpinnerStatus', status)
         },
-        toggleLandingRateModal(siteid){
+        toggleTrapModal(siteid){
             this.changeSpinnerStatus(true)
-            const currState = this.landingRateModal
+            const currState = this.trapModal
             if(currState == 'd-none'){
-                this.landingRateModal = 'new-site-modal'
+                this.trapModal = 'new-site-modal'
                 this.siteid = siteid
                 this.changeSpinnerStatus()
             } else {
-                this.landingRateModal = 'd-none'
+                this.trapModal = 'd-none'
                 this.changeSpinnerStatus()
             }
         }
