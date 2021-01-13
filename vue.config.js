@@ -13,6 +13,6 @@ module.exports = {
     pwa: {
       themeColor: '#4DBA87',
       msTileColor: '#000000',
-    }
+    },
     transpileDependencies: ['@coreui/utils']
   }
