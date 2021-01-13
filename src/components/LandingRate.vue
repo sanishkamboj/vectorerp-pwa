@@ -2,51 +2,60 @@
     <div>
         <div class="popup-overlay" :class="landingRateModal">
 			<div class="popup-wrapper map-popup">
-				<h3 class="popup-title desktop-view">Add Landing Rate <a @click="toggleLandingRateModal()" class="float-right"><i class="uil uil-times"></i></a></h3>
+				<h3 class="popup-title desktop-view">Add Task Landing Rate <a @click="toggleLandingRateModal()" class="float-right"><i class="uil uil-times"></i></a></h3>
 				<h5 class="mobile-view">
-					<div class="mobile-title mb-3"><i class="fa fa-arrow-left"></i> Add Landing Rate</div>
+					<div class="mobile-title mb-3"><i class="fa fa-arrow-left"></i> Add Task Landing Rate</div>
 				</h5>
 				
-				<form >
+				<form @submit.prevent="processForm">
 				<div class="form-row">
                     <div class="col">
                         <label for="exampleInputEmail1">Site</label>
-                        <input type="text" class="form-control" id="site_name" v-model="siteid" placeholder="Enter site Id" required />
+                        <input type="text" class="form-control" v-model="siteid" placeholder="Enter site Id" readonly />
                     </div>
                     <div class="col">
                         <label for="exampleInputEmail1">SR ID</label>
-                        <input type="text" class="form-control" id="site_name" v-model="srid"  placeholder="Enter SR ID">
+                        <input type="text" class="form-control"  v-model="srid"  placeholder="Enter SR ID">
                     </div>
                     <div class="col">
                         <label for="exampleInputEmail1">Date</label>
-                        <input type="date" class="form-control" id="site_name" v-model="due_date" placeholder="Enter Date">
+                        <input type="date" class="form-control" v-model="due_date" placeholder="Enter Date" required />
                     </div>
 				</div>
                 <div class="form-row">
                      <div class="col">
                         <label for="exampleInputEmail1">Start Time</label>
-                        <input type="time" class="form-control" id="site_name" v-model="start_date" placeholder="Enter Start time">
+                        <input type="time" class="form-control"  v-model="start_date" placeholder="Enter Start time">
                     </div>
                     <div class="col">
                         <label for="exampleInputEmail1">End Time</label>
-                        <input type="time" class="form-control" id="site_name" v-model="end_date" placeholder="Enter End Time">
+                        <input type="time" class="form-control"  v-model="end_date" placeholder="Enter End Time">
                     </div>
                    
                 </div>
                 <div class="form-row">
                     <div class="col">
                         <label for="exampleInputEmail1">Max Landing rate</label>
-                        <input type="text" class="form-control" id="site_name" v-model="max_landing_rate" aria-describedby="ste_name" placeholder="Enter max Landing Rate">
+                        <select class="form-control" v-model="max_landing_rate">
+                            <option value="">Select Landing Rate</option>
+                            <option value="0-Found">0-Found</option>
+                            <option value="1-5">1-5</option>
+                            <option value="6-10">6-10</option>
+                            <option value="11-20">11-20</option>
+                            <option value="21-50">21-50</option>
+                            <option value="51-100">51-100</option>
+                            <option value="100+">100+</option>
+                        </select>
                     </div>
                     <div class="col">
                         <label for="exampleInputEmail1">Species</label>
-                        <input type="text" class="form-control" id="site_name" v-model="species_id" placeholder="Enter Species">
+                        <input type="text" class="form-control" v-model="species_id" placeholder="Enter Species">
                     </div>
                 </div>
 				<div class="form-row">
                     <div class="col">
                         <label for="exampleInputEmail1">Note</label>
-                        <textarea class="form-control" id="site_name" v-model="note" placeholder="Enter Note"></textarea>
+                        <textarea class="form-control" v-model="note" placeholder="Enter Note"></textarea>
                     </div>
                 </div>
 				<div class="row pt-2">
@@ -64,6 +73,7 @@
     </div>
 </template>
 <script>
+import { MapService } from "../service/map_service";
 export default {
     name: "LandingRate",
     data(){
@@ -94,6 +104,62 @@ export default {
                 this.landingRateModal = 'd-none'
                 this.changeSpinnerStatus()
             }
+        },
+        async processForm(){
+            this.changeSpinnerStatus(true)
+            try{
+                if(this.due_date == null){
+                    this.$notify({ group: 'app', type: 'warn', text: 'Select Due Date' })
+                    this.changeSpinnerStatus()
+                    return;
+                }
+                if(this.start_date == null){
+                    this.$notify({ group: 'app', type: 'warn', text: 'Select Start Time' })
+                    this.changeSpinnerStatus()
+                    return;
+                }
+                if(this.end_date == null){
+                    this.$notify({ group: 'app', type: 'warn', text: 'Select End Time' })
+                    this.changeSpinnerStatus()
+                    return;
+                }
+                const data = []
+                data.siteid = this.siteid
+                data.srid = parseInt(this.srid)
+                data.due_date = this.due_date
+                data.start_date = this.start_date
+                data.end_date = this.end_date
+                if(this.max_landing_rate != ''){
+                    data.max_landing_rate = this.max_landing_rate
+                }
+                if(this.species_id != ''){
+                    data.species_id = this.species_id
+                }
+                if(this.note != ''){
+                    data.note = this.note
+                }
+                await new MapService().addTaskLandingRate(data).then(result => {
+                    console.log(result)
+                    this.$notify({ group: 'app', text: 'Task Created Successfully' })
+                    this.changeSpinnerStatus()
+                    this.clearForm()
+                    this.toggleLandingRateModal()
+                });
+                
+            } catch(error){
+                    this.$notify({ group: 'app', text: error})
+                    this.changeSpinnerStatus()
+            }
+        },
+        clearForm(){
+            this.siteid = null
+            this.srid = null
+            this.due_date = null
+            this.start_date = null
+            this.end_date = null
+            this.max_landing_rate = null
+            this.species_id = null
+            this.note = null
         }
     }
 }
