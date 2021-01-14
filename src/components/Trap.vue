@@ -2,9 +2,9 @@
     <div>
         <div class="popup-overlay" :class="trapModal">
 			<div class="popup-wrapper map-popup">
-				<h3 class="popup-title desktop-view">Add Task Treatment <a @click="toggleTrapModal()" class="float-right"><i class="uil uil-times"></i></a></h3>
+				<h3 class="popup-title desktop-view">Add Task Trap <a @click="toggleTrapModal()" class="float-right"><i class="uil uil-times"></i></a></h3>
 				<h5 class="mobile-view">
-					<div class="mobile-title mb-3"><i class="fa fa-arrow-left"></i> Add Task Treatment</div>
+					<div @click="toggleTrapModal()" class="mobile-title mb-3"><i class="fa fa-arrow-left"></i> Add Task Trap</div>
 				</h5>
 				
 				<form @submit.prevent="processForm">
@@ -22,7 +22,7 @@
                 <div class="form-row">
                      <div class="col">
                         <label for="exampleInputEmail1">Date Set</label>
-                        <input type="date" class="form-control" id="site_name" v-model="trap_placed" placeholder="Enter Date">
+                        <input type="date" class="form-control" id="site_name" v-model="trap_placed" placeholder="Enter Date" required>
                     </div>
                      <div class="col">
                         <label for="exampleInputEmail1">Date Collected</label>
@@ -34,7 +34,10 @@
                 <div class="form-row">
                     <div class="col">
                         <label for="exampleInputEmail1">Trap Type</label>
-                        <input type="text" class="form-control" id="site_name" v-model="trap_type_id" aria-describedby="ste_name" placeholder="Enter max Landing Rate">
+                        <select v-model="trap_type_id" class="form-control">
+                            <option v-for="p in types" :key=p.iTrapTypeId :value="p.iTrapTypeId">{{p.vTrapName}}</option>
+                        </select>
+                        
                     </div>
                     <div class="col pt-10">
                         <label class="form-check-label" for="exampleInputEmail1">Did The Trap malfunction?</label>
@@ -66,11 +69,13 @@
 </template>
 <script>
 import { MapService } from "../service/map_service";
+import { TrapTypeService } from "../service/trapType_service";
 
 export default {
     name: "Treatment",
     data(){
        return {
+        types: {},
         trapModal: 'd-none',
         siteid: null,
         srid: null,
@@ -81,6 +86,13 @@ export default {
         note: null
        }
    },
+   created(){
+      new TrapTypeService().getTrapTypes().then(res => {
+          this.types = res
+          console.log(res)
+	  })
+	  
+  },
     methods: {
         changeSpinnerStatus(status = false) {
             this.$store.dispatch('changeSpinnerStatus', status)

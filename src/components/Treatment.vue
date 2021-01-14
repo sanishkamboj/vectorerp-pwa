@@ -25,7 +25,20 @@
                 <div class="form-row">
                      <div class="col">
                         <label for="exampleInputEmail1">Type</label>
-                        <input type="text" class="form-control" v-model="type" placeholder="Enter Type" required>
+                        <select class="form-control" v-model="type" required>
+                            <option value="">Select</option>
+                            <option value="Spot Treatment">Spot Treatment</option>
+                            <option value="Aerial Larviciding">Aerial Larviciding</option>
+                            <option value="Aerial Adulticiding">Aerial Adulticiding</option>
+                            <option value="Ground Larviciding">Ground Larviciding</option>
+                            <option value="Ground Adulticiding">Ground Adulticiding</option>
+                            <option value="ATV/UTV Mounted ULV">ATV/UTV Mounted ULV</option>
+                            <option value="Backpack ULV">Backpack ULV</option>
+                            <option value="Handheld ULV">Handheld ULV</option>
+                            <option value="Hand Application">Hand Application</option>
+                            <option value="Hand Thermal">Hand Thermal</option>
+                            <option value="Truck Mounted ULV">Truck Mounted ULV</option>
+                        </select>
                     </div>
                      <div class="col">
                         <label for="exampleInputEmail1">Start Time</label>
@@ -40,7 +53,10 @@
                 <div class="form-row">
                     <div class="col">
                         <label for="exampleInputEmail1">Treatment Product</label>
-                        <input type="text" class="form-control" v-model="product" placeholder="Enter Product">
+                        <select v-model="product" class="form-control">
+                            <option v-for="p in products" :key=p.iTPId :value="p.iTPId">{{p.vName}}</option>
+                        </select>
+                       
                     </div>
                     <div class="col">
                         <label for="exampleInputEmail1">Application Rate</label>
@@ -93,11 +109,13 @@
 </template>
 <script>
 import { MapService } from "../service/map_service";
+import { ProductService } from "../service/product_service";
 
 export default {
     name: "Treatment",
     data(){
        return {
+        products: {},
         treatmentModal: 'd-none',
         siteid: null,
         srid: null,
@@ -113,6 +131,13 @@ export default {
         amount_applied_unit: null
        }
    },
+   created(){
+      new ProductService().getProducts().then(res => {
+          this.products = res
+          console.log(res)
+	  })
+	  
+  },
     methods: {
         changeSpinnerStatus(status = false) {
             this.$store.dispatch('changeSpinnerStatus', status)

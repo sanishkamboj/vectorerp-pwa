@@ -7,7 +7,7 @@
 					<div class="mobile-title mb-3"><i class="fa fa-arrow-left"></i> Add Task Other</div>
 				</h5>
 				
-				<form >
+				<form @submit.prevent="processForm">
 				<div class="form-row">
                     <div class="col">
                         <label for="exampleInputEmail1">Site</label>
@@ -24,10 +24,6 @@
 				</div>
                 <div class="form-row">
                      <div class="col">
-                        <label for="exampleInputEmail1">Type</label>
-                        <input type="text" class="form-control" id="site_name" v-model="due_date" placeholder="Enter Date">
-                    </div>
-                     <div class="col">
                         <label for="exampleInputEmail1">Start Time</label>
                         <input type="time" class="form-control" id="site_name" v-model="start_date" placeholder="Enter Start time">
                     </div>
@@ -35,43 +31,22 @@
                         <label for="exampleInputEmail1">End Time</label>
                         <input type="time" class="form-control" id="site_name" v-model="end_date" placeholder="Enter End Time">
                     </div>
+                    <div class="col">
+                        <label for="exampleInputEmail1">Task Type</label>
+                        <select v-model="task_type_id" class="form-control">
+                            <option v-for="p in types" :key=p.iTaskTypeId :value="p.iTaskTypeId">{{p.vTypeName}}</option>
+                        </select>
+                    </div>
                    
                 </div>
                 <div class="form-row">
                     <div class="col">
-                        <label for="exampleInputEmail1">Treatment Product</label>
-                        <input type="text" class="form-control" id="site_name" v-model="max_landing_rate" aria-describedby="ste_name" placeholder="Enter max Landing Rate">
-                    </div>
-                    <div class="col">
-                        <label for="exampleInputEmail1">Application Rate</label>
-                        <input type="text" class="form-control" id="site_name" v-model="species_id" placeholder="Enter Species">
+                        <label for="exampleInputEmail1">Note</label>
+                        <textarea class="form-control" v-model="note" placeholder="Enter Note"></textarea>
                     </div>
                 </div>
-				<div class="form-row">
-                    <div class="col">
-                        <label for="exampleInputEmail1">Area Treated</label>
-                        <input type="text" class="form-control" id="site_name" v-model="max_landing_rate" aria-describedby="ste_name" placeholder="Enter max Landing Rate"> 
-                    </div>
-                    <div class="col">
-                         <label for="exampleInputEmail1"> </label>
-                        <select class="form-control">
-                            <option>acre</option>
-                            </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col">
-                        <label for="exampleInputEmail1">Amount Applied</label>
-                        <input type="text" class="form-control" id="site_name" v-model="species_id" placeholder="Enter Species">
-                        
-                    </div>
-                    <div class="col">
-                        <label for="exampleInputEmail1"> </label>
-                        <select class="form-control">
-                            <option>acre</option>
-                            </select>
-                    </div>
-                </div>
+
+
 				<div class="row pt-2">
 					<div class="col">
 						<button class="btn btn-blue w-100">Submit</button>
@@ -87,21 +62,30 @@
     </div>
 </template>
 <script>
+import { MapService } from "../service/map_service";
+import { TaskTypeService } from "../service/taskType_service";
 export default {
     name: "Other",
     data(){
        return {
+        type: {},
         otherModal: 'd-none',
         siteid: null,
         srid: null,
         due_date: null,
         start_date: null,
         end_date: null,
-        max_landing_rate: null,
-        species_id: null,
+        task_type_id: null,
         note: null
        }
    },
+   created(){
+      new TaskTypeService().getTaskTypes().then(res => {
+          this.types = res
+          console.log(res)
+	  })
+	  
+  },
     methods: {
         changeSpinnerStatus(status = false) {
             this.$store.dispatch('changeSpinnerStatus', status)
@@ -117,6 +101,40 @@ export default {
                 this.otherModal = 'd-none'
                 this.changeSpinnerStatus()
             }
+        },
+        async processForm(){
+            this.changeSpinnerStatus(true)
+            try{
+                const data = []
+                data.siteid = this.siteid
+                data.srid = parseInt(this.srid)
+                data.due_date = this.due_date
+                data.start_date = this.start_date
+                data.end_date = this.end_date
+                data.task_type_id = this.task_type_id
+                data.note = this.note
+        
+                await new MapService().addTaskOther(data).then(result => {
+                    console.log(result)
+                    this.$notify({ group: 'app', text: 'Task Created Successfully' })
+                    this.changeSpinnerStatus()
+                    this.clearForm()
+                    this.toggleOtherModal()
+                });
+                
+            } catch(error){
+                    this.$notify({ group: 'app', text: error})
+                    this.changeSpinnerStatus()
+            }
+        },
+        clearForm(){
+            this.siteid = null
+            this.srid = null
+            this.due_date = null
+            this.start_date = null
+            this.end_date = null
+            this.task_type_id = null
+            this.note = null
         }
     }
 }

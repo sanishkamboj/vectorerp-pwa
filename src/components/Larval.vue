@@ -40,7 +40,13 @@
                 <div class="form-row">
                     <div class="col">
                         <label for="exampleInputEmail1">Genus 1</label>
-                        <input type="text" class="form-control" v-model="genus1" aria-describedby="ste_name" placeholder="Enter max Landing Rate">
+                            <select v-model="genus1" class="form-control">
+								<option value="0">N/A</option>
+								<option value="1">Ae.</option>
+								<option value="2">An.</option>
+								<option value="3">Cs.</option>
+								<option value="4">Cx.</option>
+							</select>
                     </div>
                     <div class="col">
                         <label for="exampleInputEmail1">Count 1</label>
@@ -84,7 +90,13 @@
                 <div class="form-row">
                     <div class="col">
                         <label for="exampleInputEmail1">Genus 2</label>
-                        <input type="text" class="form-control" v-model="genus2" placeholder="Enter Genus">
+                            <select v-model="genus2" class="form-control">
+								<option value="0">N/A</option>
+								<option value="1">Ae.</option>
+								<option value="2">An.</option>
+								<option value="3">Cs.</option>
+								<option value="4">Cx.</option>
+							</select>
                     </div>
                     <div class="col">
                         <label for="exampleInputEmail1">Count 2</label>

@@ -8,6 +8,7 @@ export class MapService {
         this.taskLarval = "task_larval_surveillance";
         this.taskTreatment = "task_treatment";
         this.taskTrap = "task_trap";
+        this.taskOther = "task_other";
     }
 
     async getCities() {
@@ -40,6 +41,13 @@ export class MapService {
     addTaskTrap(data){
         return connection.insert({
             into: this.taskTrap,
+            values: [data],
+            //skipDataCheck: true
+        })
+    }
+    addTaskOther(data){
+        return connection.insert({
+            into: this.taskOther,
             values: [data],
             //skipDataCheck: true
         })

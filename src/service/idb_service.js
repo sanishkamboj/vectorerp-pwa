@@ -517,9 +517,9 @@ const getDatabase = () => {
     const tblSpecies = {
         name: 'species',
         columns: {
-            id: { dataType: DATA_TYPE.Number },
-            description: { dataType: DATA_TYPE.String },
-            status: { dataType: DATA_TYPE.Number }
+            iMSpeciesId: { dataType: DATA_TYPE.Number },
+            tDescription: { dataType: DATA_TYPE.String },
+            iStatus: { dataType: DATA_TYPE.Number }
         }
     };
     const tblUnitMas = {
@@ -535,38 +535,38 @@ const getDatabase = () => {
     const tblTreatmentProduct = {
         name: 'treatment_product',
         columns: {
-            id: {dataType: DATA_TYPE.Number},
-            name: {dataType: DATA_TYPE.String},
-            category: {dataType: DATA_TYPE.String},
-            pesticide: {dataType: DATA_TYPE.String},
-            active_ingredient: {dataType: DATA_TYPE.String},
-            active_ingredient2: {dataType: DATA_TYPE.String},
-            uid: {dataType: DATA_TYPE.Number},
-            app_rate: {dataType: DATA_TYPE.String},
-            class: {dataType: DATA_TYPE.String},
-            epa_reg_no: {dataType: DATA_TYPE.String},
-            al: {dataType: DATA_TYPE.String},
-            al2: {dataType: DATA_TYPE.String},
-            target_app_rate: {dataType: DATA_TYPE.String},
-            min_app_rate: {dataType: DATA_TYPE.String},
-            max_app_rate: {dataType: DATA_TYPE.String},
-            status: {dataType: DATA_TYPE.Number}
+            iTPId: {dataType: DATA_TYPE.Number},
+            vName: {dataType: DATA_TYPE.String},
+            vCategory: {dataType: DATA_TYPE.String},
+            iPesticide: {dataType: DATA_TYPE.String},
+            vActiveIngredient: {dataType: DATA_TYPE.String},
+            vActiveIngredient2: {dataType: DATA_TYPE.String},
+            iUId: {dataType: DATA_TYPE.Number},
+            vAppRate: {dataType: DATA_TYPE.String},
+            vClass: {dataType: DATA_TYPE.String},
+            vEPARegNo: {dataType: DATA_TYPE.String},
+            vAI: {dataType: DATA_TYPE.String},
+            vAI2: {dataType: DATA_TYPE.String},
+            vTragetAppRate: {dataType: DATA_TYPE.String},
+            vMinAppRate: {dataType: DATA_TYPE.String},
+            vMaxAppRate: {dataType: DATA_TYPE.String},
+            iStatus: {dataType: DATA_TYPE.Number}
         }
     };
     const tblTrapTypeMas = {
         name: 'trap_type_mas',
         columns: {
-            id: {dataType: DATA_TYPE.Number},
-            name: {dataType: DATA_TYPE.String},
-            status: {dataType: DATA_TYPE.Number}
+            iTrapTypeId: {dataType: DATA_TYPE.Number},
+            vTrapName: {dataType: DATA_TYPE.String},
+            iStatus: {dataType: DATA_TYPE.Number}
         }
     };
     const tblTaskTypeMas = {
         name: 'task_type_mas',
         columns: {
-            id: {dataType: DATA_TYPE.Number},
-            name: {dataType: DATA_TYPE.String},
-            status: {dataType: DATA_TYPE.Number}
+            iTaskTypeId: {dataType: DATA_TYPE.Number},
+            vTypeName: {dataType: DATA_TYPE.String},
+            iStatus: {dataType: DATA_TYPE.Number}
         }
     };
     const dataBase = {

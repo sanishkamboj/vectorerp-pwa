@@ -10,8 +10,8 @@
         <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" title="Treatment Task" @click="toggleTreatment()">Treatment</a>
         <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" title="Trap" @click="toggleTrap()">Trap Place</a>
         <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" title="Other Task" @click="toggleOther()">Other</a>
-        <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" href="https://lee.vectorcontrolsystem.com/site/edit&amp;mode=Update&amp;iSiteId=1" target="_blank">Edit site</a>
-        <a class="btn btn-primary  mr-2 mt-2 text-white btn-sm" title="Landing Rate">Insta Treat</a>
+        <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" :href="editUrl" target="_blank">Edit site</a>
+        <!--a class="btn btn-primary  mr-2 mt-2 text-white btn-sm" title="Landing Rate">Insta Treat</a-->
         </div>
         <h5 class="border-bottom pb-2 mb-3 mt-3">History</h5>
         <span class="w-100 d-block  pb-2">
@@ -38,6 +38,7 @@ export default {
     name: "InfoWindow", 
     data(){
         return {
+            editUrl: ''
         }
     },
     props: [
@@ -48,8 +49,8 @@ export default {
         'address'
 
     ],
-    mounted: function () {
-        
+    created: function () {
+        this.editUrl = "https://lee.vectorcontrolsystem.com/site/edit&amp;mode=Update&amp;iSiteId="+this.siteid
     },
     methods:{
         showLandingRate(){

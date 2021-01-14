@@ -160,6 +160,10 @@ import { SiteAttrService } from "../service/siteAttr_service";
 import { SiteAttrDataService } from "../service/siteAttrData_service";
 import { CityService } from "../service/city_service";
 import { ZoneService } from "../service/zone_service";
+import { ProductService } from "../service/product_service";
+import { SpeciesService } from "../service/species_service";
+import { TaskTypeService } from "../service/taskType_service";
+import { TrapTypeService } from "../service/trapType_service";
 import { Global } from "../global";
 import Tools  from "../components/Tools";
 import Filters  from "../components/Filters";
@@ -391,6 +395,10 @@ export default {
 					let siteAttr = response.data.data.site_attributes
 					let cities = response.data.data.cities
 					let site_attr_data = response.data.data.site_attr_data
+					let species = response.data.data.species
+					let products = response.data.data.products
+					let trapType = response.data.data.trap_type
+					let taskType = response.data.data.task_type
 
 					siteTypes.map(function(value) {
 						new SiteTypeService().addSiteType(value)
@@ -412,6 +420,21 @@ export default {
 						new SiteAttrDataService().addSiteAttrData(value)
 					});
 					
+					species.map(function(value){
+						new SpeciesService().addSpecies(value)
+					})
+					
+					products.map(function(value){
+						new ProductService().addProducts(value)
+					})
+
+					trapType.map(function(value){
+						new TrapTypeService().addTrapType(value)
+					})
+
+					taskType.map(function(value){
+						new TaskTypeService().addTaskType(value)
+					})
 					//this.changeSpinnerStatus()
 				} else {
 					//this.changeSpinnerStatus()

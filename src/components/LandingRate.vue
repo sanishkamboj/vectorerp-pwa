@@ -49,7 +49,10 @@
                     </div>
                     <div class="col">
                         <label for="exampleInputEmail1">Species</label>
-                        <input type="text" class="form-control" v-model="species_id" placeholder="Enter Species">
+                        <select v-model="species_id" class="form-control">
+                            <option v-for="r in species" :key=r.iMSpeciesId :value="r.iMSpeciesId">{{r.tDescription}}</option>
+                        </select>
+                        
                     </div>
                 </div>
 				<div class="form-row">
@@ -74,10 +77,12 @@
 </template>
 <script>
 import { MapService } from "../service/map_service";
+import { SpeciesService } from "../service/species_service";
 export default {
     name: "LandingRate",
     data(){
        return {
+        species: [],
         landingRateModal: 'd-none',
         siteid: null,
         srid: null,
@@ -89,7 +94,15 @@ export default {
         note: null
        }
    },
+    created(){
+      new SpeciesService().getSpecies().then(res => {
+          this.species = res
+          console.log(res)
+	  })
+	  
+  },
     methods: {
+
         changeSpinnerStatus(status = false) {
             this.$store.dispatch('changeSpinnerStatus', status)
         },
