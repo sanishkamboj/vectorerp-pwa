@@ -578,7 +578,7 @@ const getDatabase = () => {
             vAddress2: {dataType: DATA_TYPE.String},
             vStreet: {dataType: DATA_TYPE.String},
             vCrossStreet: {dataType: DATA_TYPE.String},
-            iZipcode: {dataType: DATA_TYPE.String},
+            iZipcode: {dataType: DATA_TYPE.Number},
             iStateId: {dataType: DATA_TYPE.Number},
             iCountyId: {dataType: DATA_TYPE.Number},
             iCityId: {dataType: DATA_TYPE.Number},

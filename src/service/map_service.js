@@ -9,6 +9,7 @@ export class MapService {
         this.taskTreatment = "task_treatment";
         this.taskTrap = "task_trap";
         this.taskOther = "task_other";
+        this.siteData = "sites_data";
     }
 
     async getCities() {
@@ -59,5 +60,51 @@ export class MapService {
                 id: id
             }
         })
+    }
+    async getTaskLandingRate(){
+        let sites = []
+        let records = []
+        
+        records = await connection.select({
+            from: this.taskLandingRate,
+        })
+        records.map(function(_r){
+            sites.push(_r.siteid)
+        })
+        console.log(sites)
+        //console.log(records)
+        
+        return connection.select({
+            from: this.siteData,
+            where:{
+                siteid: {
+                    in: sites
+                }
+            }
+        })
+        
+    }
+    async getTaskLarval(){
+        let sites = []
+        let records = []
+        
+        records = await connection.select({
+            from: this.taskLarval,
+        })
+        records.map(function(_r){
+            sites.push(_r.siteid)
+        })
+        console.log(sites)
+        //console.log(records)
+        
+        return connection.select({
+            from: this.siteData,
+            where:{
+                siteid: {
+                    in: sites
+                }
+            }
+        })
+        
     }
 }

@@ -170,6 +170,7 @@ export default {
 		//console.log(this.checkedSiteTypes)
 		this.changeSpinnerStatus(true);
 		this.$store.commit('toggleFilterSideBar')
+		this.$store.dispatch('loadingText', 'Fetching Data...');
 		if(this.$store.state.isMobile){
 			this.$store.commit('toggleSidebarMobile')
 		}
@@ -216,16 +217,23 @@ export default {
           		if(obj.poly_line !== undefined) {
           			let poly_line = JSON.parse(obj.poly_line);
           			poly_line.map((pts) => {
-          				siteLines.push(pts)
+						  siteLines.push(pts)
+						  
           			})
       				//siteLines.push(poly_line)          		
           		}
           		if(obj.polygon !== undefined) {
           			let polygon = JSON.parse(obj.polygon);
-      				this.zoneData.push(polygon)          		
+					  this.zoneData.push(polygon) 
+					  if(obj.polyCenter != undefined){
+						let polyCenter = JSON.parse(obj.polyCenter)
+						console.log(polyCenter)  
+						siteMarker.push({ position: polyCenter, icon:obj.icon, siteid: obj})
+						
+					  }         		
           		}
           	})
-          	//console.log(sitePolygon);
+          	console.log(siteMarker);
 			this.$emit('changeMarkers', siteMarker)
 			this.$emit('changeLines', siteLines)
 			this.$emit('changePolygon', this.zoneData)

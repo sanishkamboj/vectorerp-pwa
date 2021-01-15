@@ -17,7 +17,7 @@
 				fillOpacity="1.0">
         	</gmap-circle>
 			<gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
-				<InfoWindow v-bind="this.siteid" @landingRateModal="landingRateModal" @larvalModal="larvalModal"  @treatmentModal="treatmentModal" @trapModal="trapModal" @otherModal="otherModal" />
+				<InfoWindow v-bind:shouldRender="this.shouldRender" v-bind:infoWindowSearch="this.infoWindowSearch" v-bind="this.siteid" @landingRateModal="landingRateModal" @larvalModal="larvalModal"  @treatmentModal="treatmentModal" @trapModal="trapModal" @otherModal="otherModal" />
 			</gmap-info-window>
 	        <gmap-marker v-for="(m, index) in markers"
 	          :position="m.position"
@@ -137,7 +137,7 @@
 
 		<Tools @changeCircle="changeCircle" @changeLines="changeLines" @changePolygon="changePolygon" v-bind:lineDistance="polylineDistance" v-bind:polylineDistanceInFt="polylineDistanceInFt" v-bind:circleRadius="circleRadius" v-bind:circleArea="circleArea" v-bind:polyAreaFt="polyAreaFt" v-bind:polyAreaMile="polyAreaMile" />
 		<Filters @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" ref="childFilter" @displayZones="displayZones"/>
-		<Layers />
+		<Layers @changeMarkers="changeMarkers" @changeLines="changeLines" @changePolygon="changePolygon" />
 		<Search @showSite="showSite" @changeMarkers="changeMarkers" @changePolygon="changePolygon" @changeLines="changeLines" />
 		<div class="topPoup" :class="saveSiteModal">
 			<p>Select area for the site by dots on the edges of shape.</p>
@@ -164,6 +164,7 @@ import { ProductService } from "../service/product_service";
 import { SpeciesService } from "../service/species_service";
 import { TaskTypeService } from "../service/taskType_service";
 import { TrapTypeService } from "../service/trapType_service";
+import { SrDetailService } from "../service/srDetail_service";
 import { Global } from "../global";
 import Tools  from "../components/Tools";
 import Filters  from "../components/Filters";
@@ -295,11 +296,14 @@ export default {
 			coords: [10, 10, 10, 15, 15, 15, 15, 10],
 			type: 'poly'
 			},
+		shouldRender: true,
+		infoWindowSearch: '',
 		infoWindowPos: null,
 		infoWinOpen: false,
 		currentMidx: null,
 		infoWindowHtml: '',
 		infoOptions: {
+			
 			//optional: offset infowindow so it visually sits nicely on top of our marker
 			pixelOffset: {
 				width: 0,
@@ -399,7 +403,7 @@ export default {
 					let products = response.data.data.products
 					let trapType = response.data.data.trap_type
 					let taskType = response.data.data.task_type
-
+					let srDetails = response.data.data.sr_details
 					siteTypes.map(function(value) {
 						new SiteTypeService().addSiteType(value)
 					});
@@ -434,6 +438,10 @@ export default {
 
 					taskType.map(function(value){
 						new TaskTypeService().addTaskType(value)
+					})
+
+					srDetails.map(function(value){
+						new SrDetailService().addSrDetail(value)
 					})
 					//this.changeSpinnerStatus()
 				} else {
@@ -789,6 +797,13 @@ export default {
 		this.infoWindowPos = marker.position;
 		this.siteid = marker.siteid;
 		console.log(this.siteid)
+		if(this.siteid != undefined){
+			this.shouldRender = true
+		} else
+		if(marker.content != undefined){
+			 this.shouldRender = false
+			 this.infoWindowSearch = marker.content
+		}
 		//check if its the same marker that was selected if yes toggle
 		if (this.currentMidx == idx) {
 			this.infoWinOpen = !this.infoWinOpen;

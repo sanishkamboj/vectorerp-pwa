@@ -146,7 +146,7 @@ export default {
                     data.max_landing_rate = this.max_landing_rate
                 }
                 if(this.species_id != ''){
-                    data.species_id = this.species_id
+                    data.species_id = this.species_id.toString()
                 }
                 if(this.note != ''){
                     data.note = this.note

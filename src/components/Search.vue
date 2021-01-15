@@ -148,7 +148,8 @@ export default {
 													lat: cordinates[0].lat,
 													lng: cordinates[0].lng
 												},
-												 icon: res[i].icon
+												icon: res[i].icon,
+												siteid: res[i]
 											}
 									this.pointArr.push(this.pointPath)
 									//this.$emit('showSite', this.pointPath)

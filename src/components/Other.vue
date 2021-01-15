@@ -68,7 +68,7 @@ export default {
     name: "Other",
     data(){
        return {
-        type: {},
+        types: {},
         otherModal: 'd-none',
         siteid: null,
         srid: null,
@@ -82,7 +82,6 @@ export default {
    created(){
       new TaskTypeService().getTaskTypes().then(res => {
           this.types = res
-          console.log(res)
 	  })
 	  
   },

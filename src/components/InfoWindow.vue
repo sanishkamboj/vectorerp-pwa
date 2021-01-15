@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="shouldRender">
         <div cellpadding="5" cellspacing="5" class="info_box" id="info_box">
         <h5 class="border-bottom pb-2 mb-3">Site Id {{siteid}} {{site_name}}</h5>
         <h6>{{site_type_name}} ({{site_attr_name}})</h6>
@@ -31,14 +31,16 @@
         </span>
         </div>
     </div>
-    
+    <div v-else>
+        <div v-html="infoWindowSearch"></div>
+    </div>
 </template>
 <script>
 export default {
     name: "InfoWindow", 
     data(){
         return {
-            editUrl: ''
+            editUrl: '',
         }
     },
     props: [
@@ -46,7 +48,9 @@ export default {
         'site_name',
         'site_type_name',
         'site_attr_name',
-        'address'
+        'address',
+        'shouldRender',
+        'infoWindowSearch'
 
     ],
     created: function () {
