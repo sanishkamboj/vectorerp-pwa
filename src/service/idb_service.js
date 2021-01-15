@@ -569,6 +569,36 @@ const getDatabase = () => {
             iStatus: {dataType: DATA_TYPE.Number}
         }
     };
+    const tblSrDetails = {
+        name: 'sr_details',
+        columns: {
+            iSRId: {dataType: DATA_TYPE.Number},
+            iCId: {dataType: DATA_TYPE.Number},
+            vAddress1: {dataType: DATA_TYPE.String},
+            vAddress2: {dataType: DATA_TYPE.String},
+            vStreet: {dataType: DATA_TYPE.String},
+            vCrossStreet: {dataType: DATA_TYPE.String},
+            iZipcode: {dataType: DATA_TYPE.String},
+            iStateId: {dataType: DATA_TYPE.Number},
+            iCountyId: {dataType: DATA_TYPE.Number},
+            iCityId: {dataType: DATA_TYPE.Number},
+            iZoneId: {dataType: DATA_TYPE.Number},
+            vLatitude: {dataType: DATA_TYPE.String},
+            vLongitude: {dataType: DATA_TYPE.String},
+            bMosquitoService: {dataType: DATA_TYPE.Boolean},
+            bCarcassService: {dataType: DATA_TYPE.Boolean},
+            iUserId: {dataType: DATA_TYPE.Number},
+            bInspectPermission: {dataType: DATA_TYPE.Boolean},
+            bAccessPermission: {dataType: DATA_TYPE.Boolean},
+            bPets: {dataType: DATA_TYPE.Boolean},
+            tProblems: {dataType: DATA_TYPE.String},
+            tInternalNotes: {dataType: DATA_TYPE.String},
+            tRequestorNotes: {dataType: DATA_TYPE.String},
+            iStatus: {dataType: DATA_TYPE.Number},
+            dAddedDate: {dataType: DATA_TYPE.String},
+            dModifiedDate: {dataType: DATA_TYPE.String},
+        }
+    }
     const dataBase = {
         name: "pwa_vectorerp",
         tables: [
@@ -591,7 +621,8 @@ const getDatabase = () => {
                     tblTrapTypeMas,
                     tblTreatmentProduct,
                     tblUnitMas,
-                    tblSpecies
+                    tblSpecies,
+                    tblSrDetails
                 ]
     };
     return dataBase;
