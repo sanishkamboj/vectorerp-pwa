@@ -107,4 +107,31 @@ export class MapService {
         })
         
     }
+    async getTaskTrap(){
+        let sites = []
+        let records = []
+        
+        records = await connection.select({
+            from: this.taskTrap,
+            where:{
+                malfunction: 'true',
+                lab_work_complete: 'true'
+            }
+        })
+        records.map(function(_r){
+            sites.push(_r.siteid)
+        })
+        console.log(sites)
+        //console.log(records)
+        
+        return connection.select({
+            from: this.siteData,
+            where:{
+                siteid: {
+                    in: sites
+                }
+            }
+        })
+        
+    }
 }

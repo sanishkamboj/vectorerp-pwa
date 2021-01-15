@@ -198,6 +198,49 @@ export default {
 					this.$emit('changePolygon', this.zoneData)
 					this.changeSpinnerStatus()
 				}
+				if(this.positive){
+					let siteMarker = [];
+					let siteLines = [];
+					let sitePolygon = [];
+					await new MapService().getTaskTrap().then(result => {
+						if(result.length){
+							let _this = this
+							result.map(function(_r){
+								if(_r.point !== undefined) {
+									let point = JSON.parse(_r.point);
+									point.map((pts) => {
+										siteMarker.push({ position: pts, icon:_r.icon})
+									})
+								}
+								if(_r.poly_line !== undefined) {
+									let poly_line = JSON.parse(_r.poly_line);
+									poly_line.map((pts) => {
+										siteLines.push(pts)
+									})
+									//siteLines.push(poly_line)          		
+								}
+								if(_r.polygon !== undefined) {
+									let polygon = JSON.parse(_r.polygon);
+									_this.zoneData.push(polygon)         
+									if(_r.polyCenter != undefined){
+										let polyCenter = JSON.parse(_r.polyCenter)
+										console.log(polyCenter)  
+										siteMarker.push({ position: polyCenter, icon:_r.icon, siteid: _r})
+										
+									}     		
+								}
+							})
+							
+						} else {
+							this.$notify({ group: 'app', type: 'warn', text: 'No Records Found' })
+							this.changeSpinnerStatus()
+						}
+					})
+					this.$emit('changeMarkers', siteMarker)
+					this.$emit('changeLines', siteLines)
+					this.$emit('changePolygon', this.zoneData)
+					this.changeSpinnerStatus()
+				}
 			}catch(error){
 				this.$notify({ group: 'app', type: 'warn', text: error })
 				this.changeSpinnerStatus()
