@@ -86,7 +86,7 @@ export default {
 				this.changeSpinnerStatus(true)
 				let country = 'lee'
 				//console.log(this.createSite);
-				if(this.siteId != null){
+				if(this.siteId){
 					if(this.siteName != null || this.address != null || this.srid != null){
 						this.changeSpinnerStatus()
 						this.$notify({ group: 'app', type: 'warn', text: 'Only one textbox used at a time' })
@@ -133,7 +133,7 @@ export default {
 						//this.edited = this.paths;
 						this.changeSpinnerStatus()
 					});
-				} else if(this.siteName != null){
+				} else if(this.siteName){
 					var siteID = parseInt(this.siteId)
 					await new SiteDataService().getSiteByName(this.siteName).then(res => {
 						console.log(res)
@@ -188,7 +188,7 @@ export default {
 						//this.edited = this.paths;
 						this.changeSpinnerStatus()
 					});
-				} else if(this.address != null){
+				} else if(this.address){
 					const url = `${this.API_URL}/user/search-site?country=`+country
 					await this.$http.post(url, {
 						lat: '41.634819',
@@ -222,7 +222,7 @@ export default {
 						console.log(error)
 						//this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
 					});
-				} else if(this.srid != null){ 
+				} else if(this.srid){ 
 					const url = `${this.API_URL}/user/get-sr/`+this.srid+`?country=`+country
 					await this.$http.get(url)
 					.then(response => {

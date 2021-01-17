@@ -241,6 +241,11 @@ export default {
 					this.$emit('changePolygon', this.zoneData)
 					this.changeSpinnerStatus()
 				}
+
+				if(!this.sr && !this.rate && !this.ldata && !this.positive){
+					this.$notify({ group: 'app', type: 'warn', text: 'Please select any one option' })
+					this.changeSpinnerStatus()
+				}
 			}catch(error){
 				this.$notify({ group: 'app', type: 'warn', text: error })
 				this.changeSpinnerStatus()
