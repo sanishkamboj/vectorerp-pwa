@@ -77,7 +77,7 @@ import { delDbJsStore } from "../service/idb_service";
                             localStorage.setItem('user',JSON.stringify(response.data.data))
                             localStorage.setItem('jwt',response.data.token)
                             localStorage.setItem('country', this.country)
-                            localStorage.setItem('sync_timestamp', syncTimestamp)
+                            localStorage.setItem('sync_timestamp', syncTimestamp.toISOString())
                             if (localStorage.getItem('jwt') != null){
                                 this.$emit('loggedIn')
                                 if(this.$route.params.nextUrl != null){

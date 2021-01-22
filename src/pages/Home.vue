@@ -216,7 +216,7 @@ export default {
 		// prefill database
 		this.changeSpinnerStatus(true)
 		this.$store.dispatch('loadingText', 'Fetching Data...');
-		await this.getData().then()
+		await this.getData()
 		this.$store.dispatch('loadingText', 'Fetching Zone Data...');
 		await this.getZoneData()
 		this.$store.dispatch('loadingText', 'Fetching Sites Data...');
@@ -248,6 +248,7 @@ export default {
 	//UPLOAD LOCAL DATA TO SERVER
 	window.setInterval(() => {
 		this.uploadData()
+		this.downloadData()
 	}, 40000)
   },
   data() {
@@ -876,10 +877,10 @@ export default {
 		console.log('Downloading Local Data...')
 		const country = localStorage.getItem('country')
 		let lastSync = localStorage.getItem('sync_timestamp')
-		const url = `${this.API_URL}/user/download-data?country=`+country
+		const url = `${this.API_URL}/user/download-data?country=`+country+`&date=`+lastSync
 		let response = await this.$http.get(url)
 		if(response.data.status == 200){
-
+			console.log(response.data.data)
 		}
 	}
   }
