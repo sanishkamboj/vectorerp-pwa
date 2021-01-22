@@ -49,6 +49,17 @@ export class SitesService {
             }
         })
     }
+    updateSiteLineLatLngById(site) {
+        return connection.update({
+            in: this.tableName,
+            set: {
+                polylineLatLong: site.path,
+            },
+            where: {
+                id: site.id
+            }
+        })
+    }
     updateStudentById(student) {
         return connection.update({
             in: this.tableName,
@@ -72,6 +83,30 @@ export class SitesService {
                 siteTypeId: {
                     in : siteTypes
                 }
+            }
+        })
+    }
+    async getSitesBySync(){
+        let sites = []
+        let records = []
+        sites = await connection.select({
+            from: this.tableName,
+        })
+
+        sites.map(function(value){
+			if(!value.synced){
+				records.push(value)
+			}
+        })
+        
+        return records
+    }
+
+    updateSiteSync(){
+        return connection.update({
+            in: this.tableName,
+            set: {
+                synced: true,
             }
         })
     }

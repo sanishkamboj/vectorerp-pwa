@@ -39,13 +39,13 @@
 		</div>
 		
 		<div class="map-icon-outer desktop-view">
-			<a class="filter-icon" id="add-desktop" @click="createSiteModel()"><i class="uil uil-plus"></i></a>
+			<a class="filter-icon" @click="createSiteModel()"><i class="uil uil-plus"></i></a>
 			<a class="filter-icon" @click="logOut()"><i class="uil uil-exit"></i></a>
 		</div>
 		
 		<a class="filter-icon filter mobile-view" @click="$store.commit('toggleSidebarMobile')"><i class="uil uil-filter"></i></a>
 		<a class="filter-icon logout mobile-view" @click="logOut()"><i class="uil uil-exit"></i></a>
-		<a class="filter-icon add mobile-view" id="add-desktop" @click="createSiteModel()"><i class="uil uil-plus"></i></a>
+		<a class="filter-icon add mobile-view" @click="createSiteModel()"><i class="uil uil-plus"></i></a>
 		
 		<div class="popup-overlay" :class="siteModalClass">
 			<div class="popup-wrapper">
@@ -178,6 +178,7 @@ import Trap  from "../components/Trap";
 import Other  from "../components/Other";
 import _ from 'lodash';
 import {gmapApi} from 'vue2-google-maps';
+import { MapService } from '../service/map_service';
 const geoarea = require('geo-area')(/*options*/{x: 'lng', y: 'lat'});
 export default {
   name: "Home",
@@ -243,6 +244,11 @@ export default {
 	}
 	this.geolocation();
 	this.$store.commit('set',['map', this.$refs.map])
+	
+	//UPLOAD LOCAL DATA TO SERVER
+	window.setInterval(() => {
+		this.uploadData()
+	}, 40000)
   },
   data() {
     return {
@@ -593,7 +599,7 @@ export default {
 				address1: this.createSite.address.formatted_address,	
 				geometryType: geometry,
 				latitude: String(this.createSite.address.geometry.location.lat()),
-				longitude: String(this.createSite.address.geometry.location.lat()),
+				longitude: String(this.createSite.address.geometry.location.lng()),
 				created: new Date(),
 				status: parseInt(this.createSite.status)
 			}
@@ -658,6 +664,7 @@ export default {
             
 			]
 		this.changeLines(path)
+		this.newSitePolylinePath = path
 		this.$store.dispatch('changeLineEditable', true)
 		console.log(this.path)
 	},
@@ -779,15 +786,29 @@ export default {
 		try{
 			this.changeSpinnerStatus(true)
 			let site = []
-			site.id = this.newSiteID
-			site.path = JSON.stringify(this.newSitePolygonPath)
-			await new SitesService().updateSitePolyLatLngById(site).then(response => {
-				console.log(response)
-				this.$notify({ group: 'app', text: 'Site Path Updated Successfully' })
-			});
+			if(this.newSitePolylinePath.length){
+				site.id = this.newSiteID
+				site.path = JSON.stringify(this.newSitePolylinePath)
+				await new SitesService().updateSiteLineLatLngById(site).then(response => {
+					console.log(response)
+					this.$notify({ group: 'app', text: 'Site Path Updated Successfully' })
+				});
+				this.changeLines([])
+				this.newSitePolylinePath = []
+			} else if(this.newSitePolygonPath.length) {
+				site.id = this.newSiteID
+				site.path = JSON.stringify(this.newSitePolygonPath)
+				await new SitesService().updateSitePolyLatLngById(site).then(response => {
+					console.log(response)
+					this.$notify({ group: 'app', text: 'Site Path Updated Successfully' })
+				});
+				this.changePolygon([])
+				this.newSitePolygonPath = []
+			}
 			this.changeSpinnerStatus()
 			this.$store.commit('toggleSaveSiteModal')
-			this.changePolygon([])
+			
+			
 		} catch(error){
 			this.changeSpinnerStatus()
 			this.$notify({ group: 'app', type: 'warn', text: error })
@@ -829,6 +850,37 @@ export default {
 	},
 	otherModal: function(site){
 		this.$refs.other.toggleOtherModal(site)
+	},
+	async uploadData(){
+		console.log('Uploading Local Data...')
+		let lastSync = localStorage.getItem('sync_timestamp')
+		let sites = []
+		
+		let data = {}
+		const country = localStorage.getItem('country')
+		const url = `${this.API_URL}/user/upload-data?country=`+country
+		data.sites = await new SitesService().getSitesBySync()
+		data.taskLandingRate = await new MapService().getTaskLandingRates()
+		data.taskLarval = await new MapService().getTaskLarval()
+		data.taskTrap = await new MapService().getTaskTrap()
+		data.taskTreatment = await new MapService().getTaskTreatment()
+		data.taskOther = await new MapService().getTaskOther()
+		
+		let response = await this.$http.post(url, data)
+		if(response){
+			console.log(response)
+			//new SitesService().updateSiteSync()
+		}
+	},
+	async downloadData(){
+		console.log('Downloading Local Data...')
+		const country = localStorage.getItem('country')
+		let lastSync = localStorage.getItem('sync_timestamp')
+		const url = `${this.API_URL}/user/download-data?country=`+country
+		let response = await this.$http.get(url)
+		if(response.data.status == 200){
+
+		}
 	}
   }
 };

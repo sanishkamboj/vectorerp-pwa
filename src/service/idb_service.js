@@ -70,6 +70,10 @@ const getDatabase = () => {
             },
             polylineLatLong: {
                 dataType: DATA_TYPE.String
+            },
+            synced: {
+                dataType: DATA_TYPE.Boolean,
+                default: false
             }
         }
     };
@@ -234,7 +238,8 @@ const getDatabase = () => {
         name: 'task_landing_rate',
         columns: {
             id: {
-                dataType: DATA_TYPE.Number
+                primaryKey: true,
+                autoIncrement: true
             },
             siteid: {
                 dataType: DATA_TYPE.Number 
@@ -268,6 +273,10 @@ const getDatabase = () => {
             },
             userid: {
                 dataType: DATA_TYPE.String
+            },
+            synced: {
+                dataType: DATA_TYPE.Boolean,
+                default: false
             }
         }
     };
@@ -275,7 +284,8 @@ const getDatabase = () => {
         name: 'task_landing_rate_species',
         columns: {
             id: {
-                dataType: DATA_TYPE.Number
+                primaryKey: true,
+                autoIncrement: true
             },
             task_landing_rate_id: {
                 dataType: DATA_TYPE.Number
@@ -289,7 +299,8 @@ const getDatabase = () => {
         name: 'task_larval_surveillance',
         columns: {
             id: {
-                dataType: DATA_TYPE.Number
+                primaryKey: true,
+                autoIncrement: true
             },
             siteid: {
                 dataType: DATA_TYPE.Number
@@ -374,6 +385,10 @@ const getDatabase = () => {
             },
             date_modified: {
                 dataType: DATA_TYPE.String
+            },
+            synced: {
+                dataType: DATA_TYPE.Boolean,
+                default: false
             }
         }
     };
@@ -381,7 +396,8 @@ const getDatabase = () => {
         name : 'task_treatment',
         columns: {
             id: {
-                dataType: DATA_TYPE.Number
+                primaryKey: true,
+                autoIncrement: true
             },
             siteid: {
                 dataType: DATA_TYPE.Number
@@ -430,6 +446,10 @@ const getDatabase = () => {
             },
             comments: {
                 dataType: DATA_TYPE.String
+            },
+            synced: {
+                dataType: DATA_TYPE.Boolean,
+                default: false
             }
         }
     };
@@ -437,7 +457,8 @@ const getDatabase = () => {
         name: 'task_trap',
         columns: {
             id: {
-                dataType: DATA_TYPE.Number
+                primaryKey: true,
+                autoIncrement: true
             },
             siteid: {
                 dataType: DATA_TYPE.Number
@@ -471,6 +492,10 @@ const getDatabase = () => {
             },
             lab_work_complete: {
                 dataType: DATA_TYPE.Boolean
+            },
+            synced: {
+                dataType: DATA_TYPE.Boolean,
+                default: false
             }
             
         }
@@ -479,7 +504,8 @@ const getDatabase = () => {
         name: 'task_other',
         columns: {
             id: {
-                dataType: DATA_TYPE.Number
+                primaryKey: true,
+                autoIncrement: true
             },
             siteid: {
                 dataType: DATA_TYPE.Number
@@ -511,7 +537,10 @@ const getDatabase = () => {
             userid: {
                 dataType: DATA_TYPE.Number
             },
-
+            synced: {
+                dataType: DATA_TYPE.Boolean,
+                default: false
+            }
         }
     };
     const tblSpecies = {
@@ -535,6 +564,10 @@ const getDatabase = () => {
     const tblTreatmentProduct = {
         name: 'treatment_product',
         columns: {
+            id: {
+                primaryKey: true,
+                autoIncrement: true
+            },
             iTPId: {dataType: DATA_TYPE.Number},
             vName: {dataType: DATA_TYPE.String},
             vCategory: {dataType: DATA_TYPE.String},
@@ -556,6 +589,10 @@ const getDatabase = () => {
     const tblTrapTypeMas = {
         name: 'trap_type_mas',
         columns: {
+            id: {
+                primaryKey: true,
+                autoIncrement: true
+            },
             iTrapTypeId: {dataType: DATA_TYPE.Number},
             vTrapName: {dataType: DATA_TYPE.String},
             iStatus: {dataType: DATA_TYPE.Number}
@@ -564,6 +601,10 @@ const getDatabase = () => {
     const tblTaskTypeMas = {
         name: 'task_type_mas',
         columns: {
+            id: {
+                primaryKey: true,
+                autoIncrement: true
+            },
             iTaskTypeId: {dataType: DATA_TYPE.Number},
             vTypeName: {dataType: DATA_TYPE.String},
             iStatus: {dataType: DATA_TYPE.Number}
@@ -572,6 +613,10 @@ const getDatabase = () => {
     const tblSrDetails = {
         name: 'sr_details',
         columns: {
+            id: {
+                primaryKey: true,
+                autoIncrement: true
+            },
             iSRId: {dataType: DATA_TYPE.Number},
             iCId: {dataType: DATA_TYPE.Number},
             vAddress1: {dataType: DATA_TYPE.String},

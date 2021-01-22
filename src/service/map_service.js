@@ -71,7 +71,7 @@ export class MapService {
         records.map(function(_r){
             sites.push(_r.siteid)
         })
-        console.log(sites)
+        //console.log(sites)
         //console.log(records)
         
         return connection.select({
@@ -94,7 +94,7 @@ export class MapService {
         records.map(function(_r){
             sites.push(_r.siteid)
         })
-        console.log(sites)
+        //console.log(sites)
         //console.log(records)
         
         return connection.select({
@@ -121,7 +121,7 @@ export class MapService {
         records.map(function(_r){
             sites.push(_r.siteid)
         })
-        console.log(sites)
+        //console.log(sites)
         //console.log(records)
         
         return connection.select({
@@ -133,5 +133,79 @@ export class MapService {
             }
         })
         
+    }
+
+    async getTaskLandingRates(){
+        let records = []
+        let syncData = []
+        syncData = await connection.select({
+            from: this.taskLandingRate,
+        })
+        syncData.map(function(value){
+            if(!value.synced){
+                records.push(value)
+            }
+        })
+        console.log(records)
+        return records
+    }
+    async getTaskLarval(){
+        let records = []
+        let syncData = []
+        syncData = await connection.select({
+            from: this.taskLarval,
+        })
+        syncData.map(function(_r){
+            if(!_r.synced){
+                records.push(_r)
+            }
+        })
+
+        return records
+    }
+
+    async getTaskTrap(){
+        let records = []
+        let syncData = []
+        syncData = await connection.select({
+            from: this.taskTrap,
+        })
+        syncData.map(function(_r){
+            if(!_r.synced){
+                records.push(_r)
+            }
+        })
+
+        return records
+    }
+
+    async getTaskTreatment(){
+        let records = []
+        let syncData = []
+        syncData = await connection.select({
+            from: this.taskTreatment,
+        })
+        syncData.map(function(_r){
+            if(!_r.synced){
+                records.push(_r)
+            }
+        })
+
+        return records
+    }
+
+    async getTaskOther(){
+        let records = []
+        let syncData = []
+        syncData = await connection.select({
+            from: this.taskOther,
+        })
+        syncData.map(function(_r){
+            if(!_r.synced){
+                records.push(_r)
+            }
+        })
+
+        return records
     }
 }
