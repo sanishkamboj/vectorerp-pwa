@@ -233,13 +233,13 @@ export default {
 					  }         		
           		}
           	})
-          	console.log(siteMarker);
+          	//console.log(siteMarker);
 			this.$emit('changeMarkers', siteMarker)
 			this.$emit('changeLines', siteLines)
 			this.$emit('changePolygon', this.zoneData)
 			
 			
-			//this.$store.dispatch('changeMarkerEditable', true)
+			this.$store.dispatch('changeMarkerEditable', true)
 			this.changeSpinnerStatus()
 		  } else {
 			  this.$notify({ group: 'app', type: 'warn', text: 'No sites found please try again with another selection' })

@@ -798,6 +798,7 @@ export default {
 				this.newSitePolylinePath = []
 			} else if(this.newSitePolygonPath.length) {
 				site.id = this.newSiteID
+				
 				site.path = JSON.stringify(this.newSitePolygonPath)
 				await new SitesService().updateSitePolyLatLngById(site).then(response => {
 					console.log(response)
@@ -862,11 +863,11 @@ export default {
 		const url = `${this.API_URL}/user/upload-data?country=`+country
 		data.sites = await new SitesService().getSitesBySync()
 		data.taskLandingRate = await new MapService().getTaskLandingRates()
-		data.taskLarval = await new MapService().getTaskLarval()
-		data.taskTrap = await new MapService().getTaskTrap()
-		data.taskTreatment = await new MapService().getTaskTreatment()
-		data.taskOther = await new MapService().getTaskOther()
-		
+		data.taskLarval = await new MapService().getTaskLarvals()
+		data.taskTrap = await new MapService().getTaskTraps()
+		data.taskTreatment = await new MapService().getTaskTreatments()
+		data.taskOther = await new MapService().getTaskOthers()
+		console.log(data)
 		let response = await this.$http.post(url, data)
 		if(response){
 			console.log(response)

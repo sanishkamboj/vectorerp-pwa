@@ -138,74 +138,66 @@ export class MapService {
     async getTaskLandingRates(){
         let records = []
         let syncData = []
-        syncData = await connection.select({
+        records = await connection.select({
             from: this.taskLandingRate,
-        })
-        syncData.map(function(value){
-            if(!value.synced){
-                records.push(value)
+            where: {
+                synced: 0
             }
         })
+       
         console.log(records)
         return records
     }
-    async getTaskLarval(){
+    async getTaskLarvals(){
         let records = []
         let syncData = []
-        syncData = await connection.select({
+        records = await connection.select({
             from: this.taskLarval,
-        })
-        syncData.map(function(_r){
-            if(!_r.synced){
-                records.push(_r)
+            where: {
+                synced: 0
             }
         })
+        
 
         return records
     }
 
-    async getTaskTrap(){
+    async getTaskTraps(){
         let records = []
         let syncData = []
-        syncData = await connection.select({
+        records = await connection.select({
             from: this.taskTrap,
-        })
-        syncData.map(function(_r){
-            if(!_r.synced){
-                records.push(_r)
+            where: {
+                synced: 0
             }
         })
 
         return records
     }
 
-    async getTaskTreatment(){
+    async getTaskTreatments(){
         let records = []
         let syncData = []
-        syncData = await connection.select({
+        records = await connection.select({
             from: this.taskTreatment,
-        })
-        syncData.map(function(_r){
-            if(!_r.synced){
-                records.push(_r)
+            where: {
+                synced: 0
             }
         })
 
         return records
     }
 
-    async getTaskOther(){
+    async getTaskOthers(){
         let records = []
         let syncData = []
-        syncData = await connection.select({
+        records = await connection.select({
             from: this.taskOther,
-        })
-        syncData.map(function(_r){
-            if(!_r.synced){
-                records.push(_r)
+            where: {
+                synced: 0
             }
         })
-
+        
         return records
     }
 }

@@ -91,15 +91,18 @@ export class SitesService {
         let records = []
         sites = await connection.select({
             from: this.tableName,
+            where: {
+                synced: 0
+            }
         })
-
+        /*
         sites.map(function(value){
 			if(!value.synced){
 				records.push(value)
 			}
         })
-        
-        return records
+        */
+        return sites
     }
 
     updateSiteSync(){

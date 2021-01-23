@@ -72,8 +72,8 @@ const getDatabase = () => {
                 dataType: DATA_TYPE.String
             },
             synced: {
-                dataType: DATA_TYPE.Boolean,
-                default: false
+                dataType: DATA_TYPE.Number,
+                default: 0
             }
         }
     };
@@ -275,8 +275,8 @@ const getDatabase = () => {
                 dataType: DATA_TYPE.String
             },
             synced: {
-                dataType: DATA_TYPE.Boolean,
-                default: false
+                dataType: DATA_TYPE.Number,
+                default: 0
             }
         }
     };
@@ -387,8 +387,8 @@ const getDatabase = () => {
                 dataType: DATA_TYPE.String
             },
             synced: {
-                dataType: DATA_TYPE.Boolean,
-                default: false
+                dataType: DATA_TYPE.Number,
+                default: 0
             }
         }
     };
@@ -448,8 +448,8 @@ const getDatabase = () => {
                 dataType: DATA_TYPE.String
             },
             synced: {
-                dataType: DATA_TYPE.Boolean,
-                default: false
+                dataType: DATA_TYPE.Number,
+                default: 0
             }
         }
     };
@@ -494,8 +494,8 @@ const getDatabase = () => {
                 dataType: DATA_TYPE.Boolean
             },
             synced: {
-                dataType: DATA_TYPE.Boolean,
-                default: false
+                dataType: DATA_TYPE.Number,
+                default: 0
             }
             
         }
@@ -538,8 +538,8 @@ const getDatabase = () => {
                 dataType: DATA_TYPE.Number
             },
             synced: {
-                dataType: DATA_TYPE.Boolean,
-                default: false
+                dataType: DATA_TYPE.Number,
+                default: 0
             }
         }
     };
