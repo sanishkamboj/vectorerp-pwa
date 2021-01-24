@@ -172,7 +172,7 @@ export default {
                     this.changeSpinnerStatus()
                     return;
                 }
-                const data = []
+                const data = {}
                 data.siteid = this.siteid
                 data.srid = parseInt(this.srid)
                 data.due_date = this.due_date

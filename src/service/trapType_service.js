@@ -29,4 +29,7 @@ export class TrapTypeService {
             }
         })
     }
+    async clearRecords(){
+        await connection.clear(this.tableName);
+    }
 }

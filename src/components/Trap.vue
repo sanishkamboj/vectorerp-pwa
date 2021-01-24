@@ -118,7 +118,7 @@ export default {
                     return;
                 }
                 
-                const data = []
+                const data = {}
                 data.siteid = this.siteid
                 data.srid = parseInt(this.srid)
                 data.trap_placed = this.trap_placed

@@ -136,7 +136,7 @@ export default {
                     this.changeSpinnerStatus()
                     return;
                 }
-                const data = []
+                const data = {}
                 data.siteid = this.siteid
                 data.srid = parseInt(this.srid)
                 data.due_date = this.due_date
@@ -146,7 +146,7 @@ export default {
                     data.max_landing_rate = this.max_landing_rate
                 }
                 if(this.species_id != ''){
-                    data.species_id = this.species_id.toString()
+                    data.species_id = parseInt(this.species_id)
                 }
                 if(this.note != ''){
                     data.note = this.note

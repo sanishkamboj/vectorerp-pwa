@@ -135,7 +135,7 @@ export class MapService {
         
     }
 
-    async getTaskLandingRates(){
+    async getSyncLandingRate(){
         let records = []
         let syncData = []
         records = await connection.select({
@@ -199,5 +199,27 @@ export class MapService {
         })
         
         return records
+    }
+    getLandingHistory(siteid){
+        return connection.select({
+            from: this.taskLandingRate,
+            where: {
+                siteid: siteid
+            },
+            join: {
+                with: 'species',
+                on: "task_landing_rate.species_id = species.iMSpeciesId",
+                type: "left"
+
+            }
+        })
+    }
+    getLarvalHistory(siteid){
+        return connection.select({
+            from: this.taskLarval,
+            where: {
+                siteid: siteid
+            }
+        })
     }
 }

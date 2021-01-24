@@ -17,7 +17,8 @@ export class SitesService {
         return connection.insert({
             into: this.tableName,
             return: true,
-            values: [data]
+            values: [data],
+            upsert:true,
         })
     }
 
@@ -109,7 +110,7 @@ export class SitesService {
         return connection.update({
             in: this.tableName,
             set: {
-                synced: true,
+                synced: 1,
             }
         })
     }

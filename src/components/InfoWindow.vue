@@ -13,21 +13,11 @@
         <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" :href="editUrl" target="_blank">Edit site</a>
         <!--a class="btn btn-primary  mr-2 mt-2 text-white btn-sm" title="Landing Rate">Insta Treat</a-->
         </div>
-        <h5 class="border-bottom pb-2 mb-3 mt-3">History</h5>
-        <span class="w-100 d-block  pb-2">
-        <a href="javascript:void(0);" onclick="addEditDataTaskTreatment(44,&quot;edit&quot;,0)">2021-01-12 Treated 1 acre With 1 lb Anvil</a>
-        </span>
-        <span class="w-100 d-block  pb-2">
-        <a href="javascript:void(0);" onclick="addEditDataTaskOther(5,&quot;edit&quot;,0)">2020-06-29 Home Visit</a>
-        </span>
         
-        <span class="w-100 d-block  pb-2">
-        <a href="javascript:void(0);" onclick="addEditDataTaskTreatment(12,&quot;edit&quot;,0)">2020-06-12 Treated 100 acre With 0.05 fl. oz Aqua-Reslin</a>
-        </span>
-        <span class="w-100 d-block  pb-2">
-        <a href="javascript:void(0);" onclick="addEditDataTaskTrap(6,&quot;edit&quot;,0)">2020-06-02 BG Placed</a>
-        </span><span class="w-100 d-block  pb-2">
-        <a href="javascript:void(0);" onclick="addEditDataTaskOther(9,&quot;edit&quot;,0)">2020-06-02 Handing out Training Materials</a>
+        <h5 v-if="history" class="border-bottom pb-2 mb-3 mt-3">History</h5>
+        <span class="w-100 d-block  pb-2" v-for="(m, index) in history" :key="index">
+        <a v-if="index== 'taskLandingRate'" href="javascript:void(0);">{{m[0].due_date}} Found {{m[0].tDescription}}</a>
+        <a v-else-if="index== 'taskLarval'" href="javascript:void(0);">{{m[0].due_date}} {{m[0].note}}</a>
         </span>
         </div>
     </div>
@@ -36,11 +26,13 @@
     </div>
 </template>
 <script>
+import { MapService } from '../service/map_service';
 export default {
     name: "InfoWindow", 
     data(){
         return {
             editUrl: '',
+            history: []
         }
     },
     props: [
@@ -55,6 +47,7 @@ export default {
     ],
     created: function () {
         this.editUrl = "https://lee.vectorcontrolsystem.com/site/edit&amp;mode=Update&amp;iSiteId="+this.siteid
+        //this.getHistory()
     },
     methods:{
         showLandingRate(){
@@ -71,7 +64,17 @@ export default {
         },
         toggleOther(){
             this.$emit('otherModal', this.siteid)
+        },
+        getHistory: async function(siteid) {
+            let id = parseInt(siteid)
+            let records = {}
+            records.taskLandingRate = await new MapService().getLandingHistory(id)
+            records.taskLarval = await new MapService().getLarvalHistory(id)
+            this.history = records
+            console.log(this.history)
         }
+    },
+    computed:{
     }
 }
 </script>

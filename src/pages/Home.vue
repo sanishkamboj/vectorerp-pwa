@@ -17,7 +17,7 @@
 				fillOpacity="1.0">
         	</gmap-circle>
 			<gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
-				<InfoWindow v-bind:shouldRender="this.shouldRender" v-bind:infoWindowSearch="this.infoWindowSearch" v-bind="this.siteid" @landingRateModal="landingRateModal" @larvalModal="larvalModal"  @treatmentModal="treatmentModal" @trapModal="trapModal" @otherModal="otherModal" />
+				<InfoWindow v-bind:shouldRender="this.shouldRender" v-bind:infoWindowSearch="this.infoWindowSearch" v-bind="this.siteid" @landingRateModal="landingRateModal" @larvalModal="larvalModal"  @treatmentModal="treatmentModal" @trapModal="trapModal" @otherModal="otherModal" ref="history" />
 			</gmap-info-window>
 	        <gmap-marker v-for="(m, index) in markers"
 	          :position="m.position"
@@ -248,8 +248,8 @@ export default {
 	//UPLOAD LOCAL DATA TO SERVER
 	window.setInterval(() => {
 		this.uploadData()
-		this.downloadData()
-	}, 40000)
+		//this.downloadData()
+	}, 4000000)
   },
   data() {
     return {
@@ -819,7 +819,9 @@ export default {
 	toggleInfoWindow: function(marker, idx) {
 		this.infoWindowPos = marker.position;
 		this.siteid = marker.siteid;
-		console.log(this.siteid)
+		//console.log(this.siteid)
+		this.$refs.history.getHistory(this.siteid.siteid);
+		
 		if(this.siteid != undefined){
 			this.shouldRender = true
 		} else
@@ -862,16 +864,17 @@ export default {
 		const country = localStorage.getItem('country')
 		const url = `${this.API_URL}/user/upload-data?country=`+country
 		data.sites = await new SitesService().getSitesBySync()
-		data.taskLandingRate = await new MapService().getTaskLandingRates()
+		data.taskLandingRate = await new MapService().getSyncLandingRate()
 		data.taskLarval = await new MapService().getTaskLarvals()
 		data.taskTrap = await new MapService().getTaskTraps()
 		data.taskTreatment = await new MapService().getTaskTreatments()
 		data.taskOther = await new MapService().getTaskOthers()
 		console.log(data)
 		let response = await this.$http.post(url, data)
-		if(response){
-			console.log(response)
-			//new SitesService().updateSiteSync()
+		if(response){ 
+			var syncTimestamp = new Date();
+			new SitesService().updateSiteSync()
+			localStorage.setItem('sync_timestamp', syncTimestamp.toISOString())
 		}
 	},
 	async downloadData(){
@@ -882,6 +885,102 @@ export default {
 		let response = await this.$http.get(url)
 		if(response.data.status == 200){
 			console.log(response.data.data)
+			let sites = response.data.data.sites.sites
+			let site_types = response.data.data.site_types
+			let site_sub_types = response.data.data.site_sub_types
+			let site_attrs = response.data.data.site_attributes
+			let site_attr_data = response.data.data.site_attr_data
+			let products = response.data.data.products
+			let species = response.data.data.species
+			let sr_details = response.data.data.sr_details
+			let taskLandingRate = response.data.taskLandingRate
+			let taskLarval = response.data.data.taskLarval
+			let taskOther = response.data.data.taskOther
+			let taskTrap = response.data.data.taskTrap
+			let taskTreatment = response.data.data.taskTreatment
+			let task_type = response.data.data.task_type
+			let trap_type = response.data.data.trap_type
+			if(sites.length){
+				sites.map(function(value) {
+					var siteData = {
+						'site_name': value.site_name,
+						'siteid': value.siteid,
+						'cityId': value.cityid,
+						'siteTypeId': value.stypeid,
+						'zoneId': value.zoneid,
+						'icon': value.icon,
+						'site_attr_name': value.site_attr_name,
+						'site_type_name': value.site_type_name,
+						'address': value.address
+					}
+					if(value.point != null){
+						siteData.point = JSON.stringify(value.point)
+					}
+					if(value.poly_line != null){
+						siteData.poly_line = JSON.stringify(value.poly_line)
+					}
+					if(value.polygon != null){
+						siteData.polygon = JSON.stringify(value.polygon)
+						siteData.polyCenter = JSON.stringify(value.polyCenter)
+					}
+
+					//console.log(siteData)
+					new SiteDataService().addSiteData(siteData)
+				});
+			}
+			if(site_types.length){
+				await new SiteTypeService().clearRecords()
+				site_types.map(function(value) {
+					new SiteTypeService().addSiteType(value)
+				});
+			}
+			if(site_sub_types.length){
+				await new SiteSubTypeService().clearRecords()
+				site_sub_types.map(function(value) {
+					new SiteSubTypeService().addSiteSubType(value)
+				});
+			}
+			if(site_attr_data.length){
+				await new SiteAttrDataService().clearRecords()
+				site_attr_data.map(function(value){
+					new SiteAttrDataService().addSiteAttrData(value)
+				});
+			}
+			if(species.length){
+				await new SpeciesService().clearRecords()
+				species.map(function(value){
+					new SpeciesService().addSpecies(value)
+				})
+			}
+			if(products.length){
+				await new ProductService().clearRecords()
+				products.map(function(value){
+					new ProductService().addProducts(value)
+				})
+			}
+			if(trap_type.length){
+				await new TrapTypeService().clearRecords()
+				trap_type.map(function(value){
+					new TrapTypeService().addTrapType(value)
+				})
+			}
+			if(task_type.length){
+				await new TaskTypeService().clearRecords()
+				task_type.map(function(value){
+					new TaskTypeService().addTaskType(value)
+				})
+			}
+			if(sr_details.length){
+				sr_details.map(function(value){
+					new SrDetailService().addSrDetail(value)
+				})
+			}
+			if(site_attrs.length){
+				await new SiteAttrService().clearRecords()
+				site_attrs.map(function(value) {
+					new SiteAttrService().addSiteAttr(value)
+				});
+			}
 		}
 	}
   }

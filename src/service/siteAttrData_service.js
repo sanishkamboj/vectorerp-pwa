@@ -38,4 +38,7 @@ export class SiteAttrDataService {
         query.where.push({site_attr: {in: ids}})
         return connection.select(query);
     }
+    async clearRecords(){
+        await connection.clear(this.tableName);
+    }
 }

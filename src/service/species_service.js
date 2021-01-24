@@ -29,4 +29,7 @@ export class SpeciesService {
             }
         })
     }
+    async clearRecords(){
+        await connection.clear(this.tableName);
+    }
 }

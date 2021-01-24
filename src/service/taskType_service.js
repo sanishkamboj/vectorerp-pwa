@@ -29,4 +29,7 @@ export class TaskTypeService {
             }
         })
     }
+    async clearRecords(){
+        await connection.clear(this.tableName);
+    }
 }

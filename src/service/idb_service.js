@@ -269,7 +269,7 @@ const getDatabase = () => {
                 dataType: DATA_TYPE.String
             },
             species_id: {
-                dataType: DATA_TYPE.String
+                dataType: DATA_TYPE.Number
             },
             userid: {
                 dataType: DATA_TYPE.String

@@ -29,4 +29,7 @@ export class ProductService {
             }
         })
     }
+    async clearRecords(){
+        await connection.clear(this.tableName);
+    }
 }

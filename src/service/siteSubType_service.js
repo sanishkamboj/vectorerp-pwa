@@ -29,4 +29,7 @@ export class SiteSubTypeService {
             }
         })
     }
+    async clearRecords(){
+        await connection.clear(this.tableName);
+    }
 }

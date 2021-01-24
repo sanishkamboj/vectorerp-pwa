@@ -104,7 +104,7 @@ export default {
         async processForm(){
             this.changeSpinnerStatus(true)
             try{
-                const data = []
+                const data = {}
                 data.siteid = this.siteid
                 data.srid = parseInt(this.srid)
                 data.due_date = this.due_date
