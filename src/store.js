@@ -4,7 +4,7 @@ Vue.use(Vuex)
 
 const state = {
   // for remote
-  API_URL: 'https://pwa.sanish.info/api',  
+  API_URL: 'http://54.175.151.90/api',  
   sidebarClass: 'd-none',
   isMobile: false,
   showSpinner: false,

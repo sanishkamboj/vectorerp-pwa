@@ -199,6 +199,7 @@ export default {
 				})
 				console.log(this.zoneData)
 				this.$emit('displayZones', this.zoneData)
+				
 			}
 		}
 	  	new SiteDataService().getSitesByIds( this.checkedSiteTypes, sitesIds, this.checkedCities, this.checkedZones ).then(res => {
@@ -224,10 +225,9 @@ export default {
           		}
           		if(obj.polygon !== undefined) {
           			let polygon = JSON.parse(obj.polygon);
-					  this.zoneData.push(polygon) 
+					  //this.zoneData.push(polygon) 
 					  if(obj.polyCenter != undefined){
 						let polyCenter = JSON.parse(obj.polyCenter)
-						console.log(polyCenter)  
 						siteMarker.push({ position: polyCenter, icon:obj.icon, siteid: obj})
 						
 					  }         		
@@ -236,9 +236,7 @@ export default {
           	//console.log(siteMarker);
 			this.$emit('changeMarkers', siteMarker)
 			this.$emit('changeLines', siteLines)
-			this.$emit('changePolygon', this.zoneData)
-			
-			
+			//this.$emit('changePolygon', this.zoneData)
 			this.$store.dispatch('changeMarkerEditable', true)
 			this.changeSpinnerStatus()
 		  } else {
@@ -254,6 +252,7 @@ export default {
 		this.$emit('changeMarkers', [])
 		this.$emit('changeLines', [])
 		this.$emit('changePolygon', [])
+		this.$emit('displayZones', [])
 		this.checkedZones = []
 		this.checkedSiteTypes = []
 		this.checkedSiteAttr = []

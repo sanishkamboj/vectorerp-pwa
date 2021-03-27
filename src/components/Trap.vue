@@ -89,7 +89,6 @@ export default {
    created(){
       new TrapTypeService().getTrapTypes().then(res => {
           this.types = res
-          console.log(res)
 	  })
 	  
   },
@@ -117,7 +116,7 @@ export default {
                     this.changeSpinnerStatus()
                     return;
                 }
-                
+                let user = localStorage.getItem('user')
                 const data = {}
                 data.siteid = this.siteid
                 data.srid = parseInt(this.srid)
@@ -126,7 +125,7 @@ export default {
                 data.trap_type_id = parseInt(this.trap_type_id)
                 data.malfunction = Boolean(this.malfunction_trap)
                 data.note = this.note
-        
+                data.userid = user.iUserId
                 await new MapService().addTaskTrap(data).then(result => {
                     console.log(result)
                     this.$notify({ group: 'app', text: 'Task Created Successfully' })
@@ -153,6 +152,16 @@ export default {
             this.area_treated_unit = null
             this.amount_applied = null
             this.amount_applied_unit = null
+        },
+        GetHours(d) {
+            var h = parseInt(d.split(':')[0]);
+            if (d.split(':')[1].split(' ')[1] == "PM") {
+                h = h + 12;
+            }
+            return h;
+        },
+        GetMinutes(d) {
+            return parseInt(d.split(':')[1].split(' ')[0]);
         }
     }
 }

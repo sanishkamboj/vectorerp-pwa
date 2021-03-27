@@ -2,7 +2,7 @@
     <div v-if="shouldRender">
         <div cellpadding="5" cellspacing="5" class="info_box" id="info_box">
         <h5 class="border-bottom pb-2 mb-3">Site Id {{siteid}} {{site_name}}</h5>
-        <h6>{{site_type_name}} ({{site_attr_name}})</h6>
+        <h6>{{site_type_name}}</h6>
         <strong>{{address}}</strong>
         <div class="button mt-3">
         <a class="btn btn-primary  mr-2 mt-2  text-white btn-sm" title="Landing Rate" @click="showLandingRate()">Landing Rate</a>
@@ -15,9 +15,12 @@
         </div>
         
         <h5 v-if="history" class="border-bottom pb-2 mb-3 mt-3">History</h5>
-        <span class="w-100 d-block  pb-2" v-for="(m, index) in history" :key="index">
-        <a v-if="index== 'taskLandingRate'" href="javascript:void(0);">{{m[0].due_date}} Found {{m[0].tDescription}}</a>
-        <a v-else-if="index== 'taskLarval'" href="javascript:void(0);">{{m[0].due_date}} {{m[0].note}}</a>
+        <span class="w-100 d-block  pb-2">
+        <a style="display: block;" v-for="(m, index) in taskLandingRate" :key="index" href="javascript:void(0);">{{m.due_date}} Found {{m.tDescription}}</a>
+        <a style="display: block;" v-for="(m, index) in taskLarval" :key="index" href="javascript:void(0);">{{m.due_date}} {{m.note}}</a>
+        <a style="display: block;" v-for="(m, index) in taskTrap" :key="index" href="javascript:void(0);">{{m.trap_placed}} {{m.trap_type}} Placed</a>
+        <a style="display: block;" v-for="(m, index) in taskTreatment" :key="index" href="javascript:void(0);">{{m.date}} Treated {{m.area_treated}} {{m.area}} With {{m.amount_applied}} {{m.amount_unit}} {{m.product}}</a>
+        <a style="display: block;" v-for="(m, index) in taskOther" :key="index" href="javascript:void(0);">{{m.date}} {{m.task}}</a>
         </span>
         </div>
     </div>
@@ -32,7 +35,12 @@ export default {
     data(){
         return {
             editUrl: '',
-            history: []
+            history: [],
+            taskLandingRate: [],
+            taskLarval: [],
+            taskTrap: [],
+            taskTreatment: [],
+            taskOther:[]
         }
     },
     props: [
@@ -68,10 +76,13 @@ export default {
         getHistory: async function(siteid) {
             let id = parseInt(siteid)
             let records = {}
-            records.taskLandingRate = await new MapService().getLandingHistory(id)
-            records.taskLarval = await new MapService().getLarvalHistory(id)
+            this.taskLandingRate = await new MapService().getLandingHistory(id)
+            this.taskLarval = await new MapService().getLarvalHistory(id)
+            this.taskTrap = await new MapService().getTrapHistory(id)
+            this.taskTreatment = await new MapService().getTreatmentHistory(id)
+            this.taskOther = await new MapService().getOtherHistory(id)
             this.history = records
-            console.log(this.history)
+            console.log(this.taskTrap)
         }
     },
     computed:{

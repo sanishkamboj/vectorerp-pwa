@@ -71,6 +71,9 @@ const getDatabase = () => {
             polylineLatLong: {
                 dataType: DATA_TYPE.String
             },
+            loginUserName: {
+                dataType: DATA_TYPE.String
+            },
             synced: {
                 dataType: DATA_TYPE.Number,
                 default: 0
@@ -272,7 +275,7 @@ const getDatabase = () => {
                 dataType: DATA_TYPE.Number
             },
             userid: {
-                dataType: DATA_TYPE.String
+                dataType: DATA_TYPE.Number
             },
             synced: {
                 dataType: DATA_TYPE.Number,
@@ -321,7 +324,7 @@ const getDatabase = () => {
                 dataType: DATA_TYPE.String
             },
             genus: {
-                dataType: DATA_TYPE.String
+                dataType: DATA_TYPE.Number
             },
             count: {
                 dataType: DATA_TYPE.Number
@@ -348,7 +351,7 @@ const getDatabase = () => {
                 dataType: DATA_TYPE.Boolean
             },
             genus2: {
-                dataType: DATA_TYPE.String
+                dataType: DATA_TYPE.Number
             },
             count2: {
                 dataType: DATA_TYPE.Number
@@ -385,6 +388,9 @@ const getDatabase = () => {
             },
             date_modified: {
                 dataType: DATA_TYPE.String
+            },
+            userid: {
+                dataType: DATA_TYPE.Number
             },
             synced: {
                 dataType: DATA_TYPE.Number,
@@ -429,8 +435,8 @@ const getDatabase = () => {
             amount_applied: {
                 dataType: DATA_TYPE.String
             },
-            uid: {
-                dataType: DATA_TYPE.Number
+            amount_unit: {
+                dataType: DATA_TYPE.String
             },
             date_added: {
                 dataType: DATA_TYPE.String

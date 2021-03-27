@@ -58,7 +58,7 @@ export default {
 			siteId: null, 
 			siteName: null,
 			siteAddr: null,
-			pointPath: [],
+			
 			polygonPath: [],
 			poly_line: [],
 			pointArr: [],
@@ -82,43 +82,40 @@ export default {
 			this.$emit('showSite', [])
 			this.$emit('changeLines', [])
 			this.$emit('changePolygon', [])
+			this.$store.commit('toggleSearchSideBar')
 			try {
 				this.changeSpinnerStatus(true)
 				let country = 'lee'
 				//console.log(this.createSite);
 				if(this.siteId){
-					if(this.siteName != null || this.address != null || this.srid != null){
-						this.changeSpinnerStatus()
-						this.$notify({ group: 'app', type: 'warn', text: 'Only one textbox used at a time' })
-						return
-					}
+					
 					var siteID = parseInt(this.siteId)
 					await new SiteDataService().getSiteById(siteID).then(res => {
+						
 						if(res.length){
 							if(res[0].point !== undefined){
 								let cordinates = JSON.parse(res[0].point)
-								this.pointPath = {
-											position: {
-												lat: cordinates[0].lat,
-												lng: cordinates[0].lng
-											},
-											icon: res[0].icon
-										}
-								console.log(this.pointPath)
-								this.$emit('showSite', this.pointPath)
+								let pointPath = []
+								pointPath.push( {
+											position: cordinates[0],
+											icon: res[0].icon,
+											siteid: res
+										})
+								console.log(pointPath)
+								this.$emit('changeMarkers', pointPath)
 							}
 							if(res[0].polygon !== undefined){
 								let cordinates = JSON.parse(res[0].polygon)
 								let polyCenter = JSON.parse(res[0].polyCenter)
-								var centPath = {
-											position: {
-												lat: polyCenter.lat,
-												lng: polyCenter.lng
-											}
-										}
-								this.polygonPath = cordinates
-								this.$emit('showSite', centPath)
-								this.$emit('changePolygon', this.polygonPath)
+								let pointPath = []
+								pointPath.push( {
+											position: polyCenter,
+											icon: res[0].icon,
+											siteid: res
+										})
+								
+								this.$emit('showSite', pointPath)
+								
 							}
 							if(res[0].poly_line !== undefined){
 								let cordinates = JSON.parse(res[0].poly_line)

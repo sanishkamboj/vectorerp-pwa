@@ -10,6 +10,10 @@ export class ZoneService {
     async getZoneData() {
         return connection.select({
             from: this.tableName,
+            order: {
+                by: 'name',
+                type: 'asc' //supprted sort type is - asc,desc
+            }
         })
     }
 

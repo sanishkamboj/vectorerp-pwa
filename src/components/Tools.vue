@@ -99,8 +99,9 @@ export default {
   },
   methods: {
 	  drawPolygonShape(){
-		  
+		 
 		  if(!this.drawPolygon){
+			this.$store.commit('toggleToolsSideBar')
 			this.drawCircle = this.drawCircle?false:false;
 			this.drawLine = this.drawLine?false:false;
 			this.polylineCheckbox = false
@@ -132,7 +133,9 @@ export default {
 		  }
 	  },
 	  drawCircleShape(){
+		  
 		  if(!this.drawCircle){
+			this.$store.commit('toggleToolsSideBar')
 			this.drawPolygon = this.drawPolygon?false:false;
 			this.drawLine = this.drawLine?false:false;
 			this.polylineCheckbox = false
@@ -157,6 +160,7 @@ export default {
 	  },
 	  drawPolylineShape(){
 		   if(!this.drawLine){
+			this.$store.commit('toggleToolsSideBar')
 			this.drawCircle = this.drawCircle?false:false;
 			this.drawPolygon = this.drawPolygon?false:false;
 			this.circleCheckbox = false

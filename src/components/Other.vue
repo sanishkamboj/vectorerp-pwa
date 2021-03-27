@@ -4,7 +4,7 @@
 			<div class="popup-wrapper map-popup">
 				<h3 class="popup-title desktop-view">Add Task Other <a @click="toggleOtherModal()" class="float-right"><i class="uil uil-times"></i></a></h3>
 				<h5 class="mobile-view">
-					<div class="mobile-title mb-3"><i class="fa fa-arrow-left"></i> Add Task Other</div>
+					<div class="mobile-title mb-3" @click="toggleOtherModal()"><i class="fa fa-arrow-left"></i> Add Task Other</div>
 				</h5>
 				
 				<form @submit.prevent="processForm">
@@ -17,7 +17,9 @@
                         <label for="exampleInputEmail1">SR ID</label>
                         <input type="text" class="form-control" id="site_name" v-model="srid"  placeholder="Enter SR ID">
                     </div>
-                    <div class="col">
+				</div>
+                <div class="form-row">
+                     <div class="col">
                         <label for="exampleInputEmail1">Date</label>
                         <input type="date" class="form-control" id="site_name" v-model="due_date" placeholder="Enter Date">
                     </div>
@@ -104,6 +106,16 @@ export default {
         async processForm(){
             this.changeSpinnerStatus(true)
             try{
+                let user = localStorage.getItem('user')
+                var startTime = new Date().setHours(this.GetHours(this.start_date), this.GetMinutes(this.start_date), 0);
+                var endTime = new Date(startTime)
+                endTime = endTime.setHours(this.GetHours(this.end_date), this.GetMinutes(this.end_date), 0);
+                if (startTime > endTime) {
+                    
+                    this.$notify({ group: 'app', type: 'warn', text: 'Start Time is greater than end time' })
+                    this.changeSpinnerStatus()
+                    return;
+                }
                 const data = {}
                 data.siteid = this.siteid
                 data.srid = parseInt(this.srid)
@@ -112,7 +124,7 @@ export default {
                 data.end_date = this.end_date
                 data.task_type_id = this.task_type_id
                 data.note = this.note
-        
+                data.userid = user.iUserId
                 await new MapService().addTaskOther(data).then(result => {
                     console.log(result)
                     this.$notify({ group: 'app', text: 'Task Created Successfully' })
@@ -134,6 +146,16 @@ export default {
             this.end_date = null
             this.task_type_id = null
             this.note = null
+        },
+        GetHours(d) {
+            var h = parseInt(d.split(':')[0]);
+            if (d.split(':')[1].split(' ')[1] == "PM") {
+                h = h + 12;
+            }
+            return h;
+        },
+        GetMinutes(d) {
+            return parseInt(d.split(':')[1].split(' ')[0]);
         }
     }
 }

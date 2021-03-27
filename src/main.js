@@ -6,6 +6,8 @@ import * as VueGoogleMaps from 'vue2-google-maps'
 import { ResizeObserver } from 'vue-resize'
 import Axios from 'axios'
 import Notifications from 'vue-notification'
+import GmapCluster from 'vue2-google-maps/dist/components/cluster' // replace src with dist if you have Babel issues
+ 
 
 Vue.prototype.$http = Axios;
 Vue.config.productionTip = false
@@ -41,6 +43,7 @@ Vue.use(VueGoogleMaps, {
   //// then disable the following:
   // installComponents: true,
 })
+Vue.component('GmapCluster', GmapCluster)
 Vue.component('gmap-cluster', VueGoogleMaps.Cluster);
 new Vue({
   el: '#app',

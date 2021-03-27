@@ -4,7 +4,7 @@
 			<div class="popup-wrapper map-popup">
 				<h3 class="popup-title desktop-view">Add Task Treatment <a @click="toggleTreatmentModal()" class="float-right"><i class="uil uil-times"></i></a></h3>
 				<h5 class="mobile-view">
-					<div class="mobile-title mb-3"><i class="fa fa-arrow-left"></i> Add Task Treatment</div>
+					<div class="mobile-title mb-3" @click="toggleTreatmentModal()"><i class="fa fa-arrow-left"></i> Add Task Treatment</div>
 				</h5>
 				
 				<form @submit.prevent="processForm">
@@ -17,6 +17,8 @@
                         <label for="exampleInputEmail1">SR ID</label>
                         <input type="text" class="form-control" v-model="srid"  placeholder="Enter SR ID">
                     </div>
+				</div>
+                <div class="form-row">
                     <div class="col">
                         <label for="exampleInputEmail1">Date</label>
                         <input type="date" class="form-control" v-model="due_date" placeholder="Enter Date" required>
@@ -134,7 +136,6 @@ export default {
    created(){
       new ProductService().getProducts().then(res => {
           this.products = res
-          console.log(res)
 	  })
 	  
   },
@@ -172,6 +173,16 @@ export default {
                     this.changeSpinnerStatus()
                     return;
                 }
+                var startTime = new Date().setHours(this.GetHours(this.start_date), this.GetMinutes(this.start_date), 0);
+                var endTime = new Date(startTime)
+                endTime = endTime.setHours(this.GetHours(this.end_date), this.GetMinutes(this.end_date), 0);
+                if (startTime > endTime) {
+                    
+                    this.$notify({ group: 'app', type: 'warn', text: 'Start Time is greater than end time' })
+                    this.changeSpinnerStatus()
+                    return;
+                }
+                let user = localStorage.getItem('user')
                 const data = {}
                 data.siteid = this.siteid
                 data.srid = parseInt(this.srid)
@@ -181,8 +192,10 @@ export default {
                 data.end_date = this.end_date
                 data.tpid = parseInt(this.product)
                 data.area_treated = this.area_treated
+                data.area = this.area_treated_unit
                 data.amount_applied = this.amount_applied
-        
+                data.amount_unit = this.amount_applied_unit
+                data.userid = user.iUserId
                 await new MapService().addTaskTreatment(data).then(result => {
                     console.log(result)
                     this.$notify({ group: 'app', text: 'Task Created Successfully' })
@@ -209,6 +222,16 @@ export default {
             this.area_treated_unit = null
             this.amount_applied = null
             this.amount_applied_unit = null
+        },
+        GetHours(d) {
+            var h = parseInt(d.split(':')[0]);
+            if (d.split(':')[1].split(' ')[1] == "PM") {
+                h = h + 12;
+            }
+            return h;
+        },
+        GetMinutes(d) {
+            return parseInt(d.split(':')[1].split(' ')[0]);
         }
     }
 }

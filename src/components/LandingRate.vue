@@ -4,7 +4,7 @@
 			<div class="popup-wrapper map-popup">
 				<h3 class="popup-title desktop-view">Add Task Landing Rate <a @click="toggleLandingRateModal()" class="float-right"><i class="uil uil-times"></i></a></h3>
 				<h5 class="mobile-view">
-					<div class="mobile-title mb-3"><i class="fa fa-arrow-left"></i> Add Task Landing Rate</div>
+					<div class="mobile-title mb-3" @click="toggleLandingRateModal()"><i class="fa fa-arrow-left"></i> Add Task Landing Rate</div>
 				</h5>
 				
 				<form @submit.prevent="processForm">
@@ -17,6 +17,8 @@
                         <label for="exampleInputEmail1">SR ID</label>
                         <input type="text" class="form-control"  v-model="srid"  placeholder="Enter SR ID">
                     </div>
+				</div>
+                <div class="form-row">
                     <div class="col">
                         <label for="exampleInputEmail1">Date</label>
                         <input type="date" class="form-control" v-model="due_date" placeholder="Enter Date" required />
@@ -37,7 +39,7 @@
                     <div class="col">
                         <label for="exampleInputEmail1">Max Landing rate</label>
                         <select class="form-control" v-model="max_landing_rate">
-                            <option value="">Select Landing Rate</option>
+                            <option value="" selected="selected">Select Landing Rate</option>
                             <option value="0-Found">0-Found</option>
                             <option value="1-5">1-5</option>
                             <option value="6-10">6-10</option>
@@ -49,7 +51,8 @@
                     </div>
                     <div class="col">
                         <label for="exampleInputEmail1">Species</label>
-                        <select v-model="species_id" class="form-control">
+                        <select v-model="species_id" class="form-control" multiple>
+                            <option value="">Select Species</option>
                             <option v-for="r in species" :key=r.iMSpeciesId :value="r.iMSpeciesId">{{r.tDescription}}</option>
                         </select>
                         
@@ -121,6 +124,8 @@ export default {
         async processForm(){
             this.changeSpinnerStatus(true)
             try{
+                let user = localStorage.getItem('user')
+                console.log(user)
                 if(this.due_date == null){
                     this.$notify({ group: 'app', type: 'warn', text: 'Select Due Date' })
                     this.changeSpinnerStatus()
@@ -136,12 +141,22 @@ export default {
                     this.changeSpinnerStatus()
                     return;
                 }
+                var startTime = new Date().setHours(this.GetHours(this.start_date), this.GetMinutes(this.start_date), 0);
+                var endTime = new Date(startTime)
+                endTime = endTime.setHours(this.GetHours(this.end_date), this.GetMinutes(this.end_date), 0);
+                if (startTime > endTime) {
+                    
+                    this.$notify({ group: 'app', type: 'warn', text: 'Start Time is greater than end time' })
+                    this.changeSpinnerStatus()
+                    return;
+                }
                 const data = {}
                 data.siteid = this.siteid
                 data.srid = parseInt(this.srid)
                 data.due_date = this.due_date
                 data.start_date = this.start_date
                 data.end_date = this.end_date
+                data.userid = user.iUserId
                 if(this.max_landing_rate != ''){
                     data.max_landing_rate = this.max_landing_rate
                 }
@@ -173,6 +188,16 @@ export default {
             this.max_landing_rate = null
             this.species_id = null
             this.note = null
+        },
+        GetHours(d) {
+            var h = parseInt(d.split(':')[0]);
+            if (d.split(':')[1].split(' ')[1] == "PM") {
+                h = h + 12;
+            }
+            return h;
+        },
+        GetMinutes(d) {
+            return parseInt(d.split(':')[1].split(' ')[0]);
         }
     }
 }

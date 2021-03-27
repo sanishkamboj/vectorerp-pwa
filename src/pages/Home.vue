@@ -1,7 +1,9 @@
 <template>
 	<div class="map">
 		
-		<gmap-map ref="map" :center="center" map-type-id="roadmap" :zoom="10" style="width: 100%; height: 100%">
+		<gmap-map ref="map" :center="center" map-type-id="roadmap" :zoom="10" style="width: 100%; height: 100%" :options="{
+			fullscreenControl: false, mapTypeControl: false
+		}">
 			<gmap-polygon :paths="paths" :editable="polygonEditable" ref="polygon" @paths_changed="updatePolygone($event)">
 			</gmap-polygon>
 			<gmap-polyline v-if="lines" :path="lines" v-bind:options="{ strokeColor:'#008000'}" :editable="lineEditable" ref="polyline" @path_changed="updatePolyline($event)">
@@ -19,6 +21,7 @@
 			<gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
 				<InfoWindow v-bind:shouldRender="this.shouldRender" v-bind:infoWindowSearch="this.infoWindowSearch" v-bind="this.siteid" @landingRateModal="landingRateModal" @larvalModal="larvalModal"  @treatmentModal="treatmentModal" @trapModal="trapModal" @otherModal="otherModal" ref="history" />
 			</gmap-info-window>
+			
 	        <gmap-marker v-for="(m, index) in markers"
 	          :position="m.position"
 	          :clickable="true" :draggable="markerEditable"
@@ -26,6 +29,7 @@
 	          :key="index"
 			  @click="toggleInfoWindow(m,index)"
 	          ></gmap-marker>
+			  
 		</gmap-map>
 		<div class="right-bar" :class="sidebarClass" >
 			<h5 class="mobile-view">
@@ -41,11 +45,13 @@
 		<div class="map-icon-outer desktop-view">
 			<a class="filter-icon" @click="createSiteModel()"><i class="uil uil-plus"></i></a>
 			<a class="filter-icon" @click="logOut()"><i class="uil uil-exit"></i></a>
+			<a class="filter-icon" @click="manualSyncData()"><i class="uil uil-sync"></i></a>
 		</div>
 		
 		<a class="filter-icon filter mobile-view" @click="$store.commit('toggleSidebarMobile')"><i class="uil uil-filter"></i></a>
 		<a class="filter-icon logout mobile-view" @click="logOut()"><i class="uil uil-exit"></i></a>
 		<a class="filter-icon add mobile-view" @click="createSiteModel()"><i class="uil uil-plus"></i></a>
+		<a class="filter-icon sync mobile-view" @click="manualSyncData()"><i class="uil uil-sync"></i></a>
 		
 		<div class="popup-overlay" :class="siteModalClass">
 			<div class="popup-wrapper">
@@ -179,6 +185,7 @@ import Other  from "../components/Other";
 import _ from 'lodash';
 import {gmapApi} from 'vue2-google-maps';
 import { MapService } from '../service/map_service';
+
 const geoarea = require('geo-area')(/*options*/{x: 'lng', y: 'lat'});
 export default {
   name: "Home",
@@ -219,9 +226,9 @@ export default {
 		await this.getData()
 		this.$store.dispatch('loadingText', 'Fetching Zone Data...');
 		await this.getZoneData()
+		await this.$refs.childFilter.fetchFilterData();
 		this.$store.dispatch('loadingText', 'Fetching Sites Data...');
 		await this.getSiteData()
-		await this.$refs.childFilter.fetchFilterData();
 		this.changeSpinnerStatus()
       } else {
 		console.log("db opened");
@@ -244,10 +251,14 @@ export default {
 	}
 	this.geolocation();
 	this.$store.commit('set',['map', this.$refs.map])
-	
+	if(navigator.onLine){
+		this.connectionStatus = "Connected to internet.";
+		}else{
+		this.connectionStatus = "Unable to connect to internet.";	
+		}
 	//UPLOAD LOCAL DATA TO SERVER
 	window.setInterval(() => {
-		this.uploadData()
+		//this.uploadData().then()
 		//this.downloadData()
 	}, 4000000)
   },
@@ -303,6 +314,7 @@ export default {
 			coords: [10, 10, 10, 15, 15, 15, 15, 10],
 			type: 'poly'
 			},
+		connectionStatus: '',
 		shouldRender: true,
 		infoWindowSearch: '',
 		infoWindowPos: null,
@@ -352,6 +364,14 @@ export default {
 	
   },
   methods: {
+	async manualSyncData(){
+		this.changeSpinnerStatus(true)
+		await this.uploadData()
+		//this.downloadData()
+		var syncTimestamp = new Date();
+		localStorage.setItem('sync_timestamp', syncTimestamp.toISOString())
+		this.changeSpinnerStatus()
+	},
 	showSite(newMarkers){
 		this.markers = newMarkers;
 		if(newMarkers && newMarkers.length) {
@@ -360,6 +380,7 @@ export default {
   		
 	},
   	changeMarkers(newMarkers) {
+		console.log(newMarkers)
   		this.markers = newMarkers;
   		if(newMarkers && newMarkers.length) {
   			this.center = newMarkers[0].position;
@@ -411,6 +432,12 @@ export default {
 					let trapType = response.data.data.trap_type
 					let taskType = response.data.data.task_type
 					let srDetails = response.data.data.sr_details
+					let taskLrData = response.data.data.taskLandingRate
+					let taskTreatment = response.data.data.taskTreatment
+					let taskTrap = response.data.data.taskTrap
+					let taskOther = response.data.data.taskOther
+					let taskLarval = response.data.data.taskLarval
+
 					siteTypes.map(function(value) {
 						new SiteTypeService().addSiteType(value)
 					});
@@ -450,6 +477,31 @@ export default {
 					srDetails.map(function(value){
 						new SrDetailService().addSrDetail(value)
 					})
+					
+					taskLrData.map(function(value){
+						value.synced = 1
+						new MapService().addTaskLandingRate(value)
+					})
+
+					taskTreatment.map(function(value){
+						value.synced = 1
+						new MapService().addTaskTreatment(value)
+					})
+					
+					taskLarval.map(function(value){
+						value.synced = 1
+						new MapService().addTasklarval(value)
+					})
+
+					taskTrap.map(function(value){
+						value.synced = 1
+						new MapService().addTaskTrap(value)
+					})
+
+					taskOther.map(function(value){
+						value.synced = 1
+						new MapService().addTaskOther(value)
+					})
 					//this.changeSpinnerStatus()
 				} else {
 					//this.changeSpinnerStatus()
@@ -462,53 +514,53 @@ export default {
 			});
 	},
 	async getSiteData(){
+		this.$store.dispatch('loadingText', 'Adding Site Data...');
 		const country = localStorage.getItem('country')
 		let page = 0
 		let apiFlag = true
-		const url = `${this.API_URL}/user/get-sites?country=`+country+`&page=`+page
-		
-		//while(apiFlag){
-			await this.$http.get(url)
-			.then(response => {
+		let url = ''
+		do{
+			url = `${this.API_URL}/user/get-sites?country=`+country+`&page=`+page
+			let response = await this.$http.get(url)
+			if(response.data.data.sites != undefined){
+				let sites = response.data.data.sites
+				//console.log(sites)
 				
-				if(response.data.status == 200){
-					let sites = response.data.data.sites
-					//console.log(sites)
-					this.$store.dispatch('loadingText', 'Adding Site Data...');
-					sites.map(function(value) {
+				await sites.map(function(value) {
 
-						var siteData = {
-							'site_name': value.site_name,
-							'siteid': value.siteid,
-							'cityId': value.cityid,
-							'siteTypeId': value.stypeid,
-							'zoneId': value.zoneid,
-							'icon': value.icon,
-							'site_attr_name': value.site_attr_name,
-							'site_type_name': value.site_type_name,
-							'address': value.address
-						}
-						if(value.point != null){
-							siteData.point = JSON.stringify(value.point)
-						}
-						if(value.poly_line != null){
-							siteData.poly_line = JSON.stringify(value.poly_line)
-						}
-						if(value.polygon != null){
-							siteData.polygon = JSON.stringify(value.polygon)
-							siteData.polyCenter = JSON.stringify(value.polyCenter)
-						}
-						//console.log(siteData)
-						new SiteDataService().addSiteData(siteData)
-					});
-				} else {
-					apiFlag = false
+					var siteData = {
+						'site_name': value.site_name,
+						'siteid': value.siteid,
+						'cityId': value.cityid,
+						'siteTypeId': value.stypeid,
+						'zoneId': value.zoneid,
+						'icon': value.icon,
+						'site_attr_name': value.site_attr_name,
+						'site_type_name': value.site_type_name,
+						'address': value.address
+					}
+					if(value.point != null){
+						siteData.point = JSON.stringify(value.point)
+					}
+					if(value.poly_line != null){
+						siteData.poly_line = JSON.stringify(value.poly_line)
+					}
+					if(value.polygon != null){
+						siteData.polygon = JSON.stringify(value.polygon)
+						siteData.polyCenter = JSON.stringify(value.polyCenter)
+					}
+					//console.log(siteData)
+					new SiteDataService().addSiteData(siteData)
+					
+				});
+				if(page == 2){
+					this.changeSpinnerStatus()
 				}
-			})
-			.catch(function (error) {
-				//this.$notify({ group: 'app', type: 'warn', text: 'Data import error. resync again' })
-			});
-		//}
+			} else {
+				apiFlag = false
+			}
+			page = page + 1
+		}while(page < 10)
 	},
 	async getZoneData(){
 		const country = localStorage.getItem('country')
@@ -567,7 +619,9 @@ export default {
 	async createSite(e){
 		try {
 			
-			let country = 'lee'
+			const country = localStorage.getItem('country')
+			let user = localStorage.getItem('user')
+			let logggedInUserName = user.vFirstName+" "+user.vFirstName
 			//console.log(this.createSite);
 			if(this.createSite.siteName == null){
 				this.$notify({ group: 'app', type: 'warn', text: 'Site name cannot be null' })
@@ -602,7 +656,8 @@ export default {
 				latitude: String(this.createSite.address.geometry.location.lat()),
 				longitude: String(this.createSite.address.geometry.location.lng()),
 				created: new Date(),
-				status: parseInt(this.createSite.status)
+				status: parseInt(this.createSite.status),
+				loginUserName: logggedInUserName
 			}
 			//console.log(data)
 			await new SitesService().addSite(data).then(res => {
@@ -820,9 +875,8 @@ export default {
 		this.infoWindowPos = marker.position;
 		this.siteid = marker.siteid;
 		//console.log(this.siteid)
-		this.$refs.history.getHistory(this.siteid.siteid);
-		
 		if(this.siteid != undefined){
+			this.$refs.history.getHistory(this.siteid.siteid);
 			this.shouldRender = true
 		} else
 		if(marker.content != undefined){
@@ -872,9 +926,14 @@ export default {
 		console.log(data)
 		let response = await this.$http.post(url, data)
 		if(response){ 
-			var syncTimestamp = new Date();
+			
 			new SitesService().updateSiteSync()
-			localStorage.setItem('sync_timestamp', syncTimestamp.toISOString())
+			new MapService().updateLRSync()
+			new MapService().updateLarvalSync()
+			new MapService().updateTrapSync()
+			new MapService().updateTreatmentSync()
+			new MapService().updateOtherSync()
+			
 		}
 	},
 	async downloadData(){
@@ -900,7 +959,7 @@ export default {
 			let taskTreatment = response.data.data.taskTreatment
 			let task_type = response.data.data.task_type
 			let trap_type = response.data.data.trap_type
-			if(sites.length){
+			if(sites != undefined){
 				sites.map(function(value) {
 					var siteData = {
 						'site_name': value.site_name,

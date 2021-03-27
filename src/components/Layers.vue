@@ -82,28 +82,46 @@ export default {
 			try{
 				const country = localStorage.getItem('country')
 				this.changeSpinnerStatus(true)
+				this.$store.commit('toggleLayerSideBar')
 				this.$store.dispatch('loadingText', 'Fetching Data...');
 				if(this.sr){
 					await new SrDetailService().getSrDetails().then(res => {
-						console.log(res)
+						
 						let points = []
 						res.map(function(_r){
+							
 							let icon = ''
+							let infoWindowHtml = ''
+							let status = ''
+							let vRequestType =''
 							if(_r.iStatus == 1){
 								icon = "https://"+country+".vectorcontrolsystem.com/images/sr_red.png";
+								status = 'Draft'
 							} else if(_r.iStatus == 2){
 								icon = "https://"+country+".vectorcontrolsystem.com/images/sr_yellow.png";
+								status = 'Assigned'
 							} else if(_r.iStatus == 3){
 								icon = "https://"+country+".vectorcontrolsystem.com/images/sr_green.png";
+								status = 'Review'
 							} else if(_r.iStatus == 4){
 								icon = "https://"+country+".vectorcontrolsystem.com/images/sr_black.png";
+								status = 'Complete'
 							}
+							if(_r.bMosquitoService) {
+								vRequestType = 'Mosquito Inspection/Treatment';
+							}else if(_r.bMosquitoService && _r.bCarcassService) {
+								vRequestType = 'Carcass Removal';
+							}else if(_r.bMosquitoService && _r.bCarcassService) {
+								vRequestType = 'Mosquito Inspection/Treatment | Carcass Removal';
+							}
+							infoWindowHtml = `<div><div cellpadding="5" cellspacing="5" class="info_box" id="info_box"><h5 class="border-bottom pb-2 mb-3">SR Id `+_r.iSRId+` ()</h5><div class="d-flex"><h6>`+vRequestType+`</h6></div><div class="d-flex"><span>`+_r.vStreet+`  </span></div><div class="d-flex"><b>Assign To : </b>&nbsp;<span> </span></div><div class="d-flex"><b>Status : </b>&nbsp;<span>`+status+`</span></div><div class="button mt-3"><a class="btn btn-primary  mr-2 text-white" href="https://`+country+`.vectorcontrolsystem.com/sr/edit&amp;mode=Update&amp;iSRId=`+_r.iSRId+`" target="_blank">Edit SR</a></div></div></div>`
 							let point = {
 								position: {
 									lat: parseFloat(_r.vLatitude),
 									lng: parseFloat(_r.vLongitude)
 								},
-								icon: icon
+								icon: icon,
+								content: infoWindowHtml
 							}
 							points.push(point)
 						})

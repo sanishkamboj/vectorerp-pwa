@@ -25,7 +25,11 @@ body {
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: 'Euclid Circular B',  sans-serif;
   margin: 0px; }
-
+  input[type='text'],
+  input[type='number'],
+  textarea {
+	font-size: 16px !important;
+  }
 .map{
 	
 	background-size:cover;
@@ -44,16 +48,16 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	margin-right:10px;
 }
 .filter-icon{
-	background: #ffffff;
-    width:40px;
-    height:40px;
+	background: #ff7f50;
+    width:50px;
+    height:50px;
     display:inline-block;
     border-radius: 40px;
     z-index:1;
     display: flex!important;
     align-items: center;
     justify-content: center;
-    color:#6360FF!important;
+    color:white !important;
     box-shadow:0px 0px 10px #cccccc;
 }
 .right-bar{
@@ -180,7 +184,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 .filter-icon.filter{top:20px;left:20px;position:absolute;display:flex!important;}
 .filter-icon.logout{top:20px;right:20px;position:absolute;display:flex!important;}
-.filter-icon.add{bottom:20px;right:20px;position:absolute;display:flex!important;}
+.filter-icon.add{bottom:20px;left:20px;position:absolute;display:flex!important;}
+.filter-icon.sync{bottom:20px;right:20px;position:absolute;display:flex!important;}
 .filter-icon.mobile-view{display:none!important;}
 .map-icon-outer.desktop-view{display:flex!important;}
 .btn-blue{

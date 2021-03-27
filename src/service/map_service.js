@@ -222,4 +222,128 @@ export class MapService {
             }
         })
     }
+    async getTrapHistory(siteid){
+        let history = []
+        let records = []
+        
+        records = await connection.select({
+            from: this.taskTrap,
+            where: {
+                siteid: siteid
+            }
+        })
+        for(let i = 0; i < records.length; i++){
+           
+            let data = await connection.select({
+                from: 'trap_type_mas',
+                where:{
+                    iTrapTypeId: records[i].trap_type_id
+                }
+            })
+                
+            history.push({
+                trap_placed: records[i].trap_placed,
+                trap_type: data[0].vTrapName
+            })
+            
+        }
+
+        return history;
+    }
+    async getTreatmentHistory(siteid){
+        let history = []
+        let records = []
+
+        records = await connection.select({
+            from: this.taskTreatment,
+            where: {
+                siteid: siteid
+            }
+        })
+
+        for(let i = 0; i<records.length; i++){
+            let data = await connection.select({
+                from: 'treatment_product',
+                where: {
+                    iTPId: records[i].tpid
+                }
+            })
+            history.push({
+                date: records[i].due_date,
+                area: records[i].area_treated,
+                area_unit: records[i].area,
+                amount_applied: records[i].amount_applied,
+                amount_unit: records[i].amount_unit,
+                product: data[0].vName
+            })
+        }
+        return history;
+    }
+
+    async getOtherHistory(siteid){
+        let history = []
+        let records = []
+
+        records = await connection.select({
+            from: this.taskOther,
+            where: {
+                siteid: siteid
+            }
+        })
+
+        for(let i=0;i<records.length;i++){
+            let data = await connection.select({
+                from: 'task_type_mas',
+                where: {
+                    iTaskTypeId: records[i].task_type_id
+                }
+            })
+
+            history.push({
+                date: records[i].due_date,
+                task: data[0].vTypeName
+            })
+        }
+        return history;
+    }
+    updateLRSync(){
+        return connection.update({
+            in: this.taskLandingRate,
+            set: {
+                synced: 1,
+            }
+        })
+    }
+    updateLarvalSync(){
+        return connection.update({
+            in: this.taskLarval,
+            set: {
+                synced: 1,
+            }
+        })
+    }
+    updateTreatmentSync(){
+        return connection.update({
+            in: this.taskTreatment,
+            set: {
+                synced: 1,
+            }
+        })
+    }
+    updateTrapSync(){
+        return connection.update({
+            in: this.taskTrap,
+            set: {
+                synced: 1,
+            }
+        })
+    }
+    updateOtherSync(){
+        return connection.update({
+            in: this.taskOther,
+            set: {
+                synced: 1,
+            }
+        })
+    }
 }
