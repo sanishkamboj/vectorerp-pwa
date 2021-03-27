@@ -260,7 +260,7 @@ export default {
 	window.setInterval(() => {
 		//this.uploadData().then()
 		//this.downloadData()
-	}, 4000000)
+	}, 40000000)
   },
   data() {
     return {
